@@ -12,6 +12,17 @@ public class PlanetUI : MonoBehaviour {
     [SerializeField] Text m_growthRate;
     [SerializeField] Text m_happyPopulation;
 
+    // Food Details
+    [SerializeField] Text m_foodAvailable;
+    [SerializeField] Text m_foodProduction;
+    [SerializeField] Text m_foodConsumption;
+
+    // Power Details
+    [SerializeField] Text m_powerAvailable;
+    [SerializeField] Text m_powerProduction;
+    [SerializeField] Text m_powerConsumption;
+
+    [SerializeField] ScrollRect m_resources;
     // Use this for initialization
     void Start () {
 		
@@ -22,5 +33,13 @@ public class PlanetUI : MonoBehaviour {
         m_totalPopulation.text = planet.GetCurrentPopulation().ToString();
         m_growthRate.text = planet.GetGrowthRate().ToString("0.00");
         m_happyPopulation.text = planet.GetHappyPopPerc().ToString("0.00");
+
+        m_foodAvailable.text = planet.GetFoodAvailable().ToString();
+        m_foodProduction.text = planet.GetFoodProduction().ToString("0.00");
+        m_foodConsumption.text = planet.GetFoodConsumption().ToString("0.00");
+
+        m_powerAvailable.text = planet.GetPowerAvailable().ToString();
+        m_powerProduction.text = planet.GetPowerProduction().ToString("0.00");
+        m_powerConsumption.text = planet.GetPowerConsumption().ToString("0.00");
     }
 }
