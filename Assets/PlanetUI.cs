@@ -24,12 +24,14 @@ public class PlanetUI : MonoBehaviour {
 
     [SerializeField] ScrollRect m_resources;
     // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    void Start()
+    {
+        var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
+        cameraRaycaster.onMouseOverPlanet += ProcessMouseOverPlanet;
+    }
+
+    // Update is called once per frame
+    void Update () {
         m_totalPopulation.text = planet.GetCurrentPopulation().ToString();
         m_growthRate.text = planet.GetGrowthRate().ToString("0.00");
         m_happyPopulation.text = planet.GetHappyPopPerc().ToString("0.00");
@@ -41,5 +43,15 @@ public class PlanetUI : MonoBehaviour {
         m_powerAvailable.text = planet.GetPowerAvailable().ToString();
         m_powerProduction.text = planet.GetPowerProduction().ToString("0.00");
         m_powerConsumption.text = planet.GetPowerConsumption().ToString("0.00");
+    }
+
+
+    private void ProcessMouseOverPlanet(Planet planet)
+    {
+        if (Input.GetMouseButton(0) == true)
+        {
+            StopAllCoroutines();
+            this.planet = planet;
+        }
     }
 }

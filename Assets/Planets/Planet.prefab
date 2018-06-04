@@ -36,8 +36,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1433968954026342}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -8.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -57,7 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 16e0b3760c942b04f9656718815f6da3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -95,13 +95,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b689dca62bd0349a9d0be950805fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_universe: {fileID: 0}
   m_currentPopulation: 100
   m_happyPopulationPerc: 100
   m_powerAvailable: 100
+  m_powerProduction: 10
   m_powerConsumption: 50
-  m_foodAvailable: 100
+  m_foodAvailable: 1000
+  m_foodProduction: 100
   m_foodConsumption: 50
-  m_growthRate: 0.2
+  m_growthRate: 0.1
+  owner: {fileID: 0}
 --- !u!135 &135460862447510566
 SphereCollider:
   m_ObjectHideFlags: 1

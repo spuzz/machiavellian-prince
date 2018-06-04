@@ -18,6 +18,8 @@ public class Planet : MonoBehaviour {
 
     [SerializeField] float m_growthRate;
 
+    [SerializeField] Player owner;
+
     public int GetCurrentPopulation() { return m_currentPopulation; }
     public float GetGrowthRate() { return m_growthRate; }
     public float GetHappyPopPerc() { return m_happyPopulationPerc; }
@@ -28,10 +30,60 @@ public class Planet : MonoBehaviour {
     public float GetPowerProduction() { return m_powerProduction; }
     public float GetPowerConsumption() { return m_powerConsumption; }
 
+    float theta_scale = 0.01f;        //Set lower to add more points
+    int size; //Total number of points in circle
+    float radius = 3f;
+    LineRenderer lineRenderer;
+    void Awake()
+    {
+        SetOrbit();
+    }
+
+    private void SetOrbit()
+    {
+        float sizeValue = (2.0f * Mathf.PI) / theta_scale;
+        size = (int)sizeValue;
+        size++;
+        lineRenderer = gameObject.AddComponent<LineRenderer>();
+        lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+        lineRenderer.startWidth = 0.02f;
+        lineRenderer.endWidth = 0.02f;
+        lineRenderer.positionCount = size;
+        lineRenderer.startColor = new Color(1, 1, 1, 0.1f);
+        lineRenderer.endColor =  new Color(1, 1, 1, 0.1f);
+
+    }
+
     public void Start()
     {
         m_universe = FindObjectOfType<Universe>();
         m_universe.onDayChanged += ProcessDayChange;
+        if (owner)
+        {
+            GetComponent<Renderer>().material.SetColor("_OutlineColor", owner.GetPlayerColor());
+        }
+
+    }
+    void Update()
+    {
+        UpdateOrbit();
+    }
+
+    private void UpdateOrbit()
+    {
+        radius = Vector3.Distance(transform.position, transform.parent.position);
+        Vector3 pos;
+        float theta = 0f;
+        for (int i = 0; i < size; i++)
+        {
+            theta += (2.0f * Mathf.PI * theta_scale);
+            float x = radius * Mathf.Cos(theta);
+            float y = radius * Mathf.Sin(theta);
+            x += gameObject.transform.parent.position.x;
+            y += gameObject.transform.parent.position.y;
+            pos = new Vector3(x, 0,y);
+            lineRenderer.SetPosition(i, pos);
+        }
     }
 
     private void ProcessDayChange(int days)
