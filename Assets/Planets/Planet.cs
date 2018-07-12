@@ -18,7 +18,10 @@ public class Planet : MonoBehaviour {
 
     [SerializeField] float m_growthRate;
 
-    [SerializeField] Player owner;
+    Player m_owner;
+
+    [SerializeField] Leader m_currentLeader;
+    List<Leader> m_potentialLeaders;
 
     public int GetCurrentPopulation() { return m_currentPopulation; }
     public float GetGrowthRate() { return m_growthRate; }
@@ -34,6 +37,34 @@ public class Planet : MonoBehaviour {
     int size; //Total number of points in circle
     float radius = 3f;
     LineRenderer lineRenderer;
+
+    public void SetLeader(Leader leader)
+    {
+        if(m_potentialLeaders.Contains(leader))
+        {
+            m_currentLeader = leader;
+            SetOwner();
+        }
+    }
+
+    public Leader GetLeader()
+    {
+        return m_currentLeader;
+    }
+
+    private void SetOwner()
+    {
+        if(m_currentLeader)
+        {
+            m_owner = m_currentLeader.m_controlledBy;
+            if (m_owner)
+            {
+                GetComponent<Renderer>().material.SetColor("_OutlineColor", m_owner.GetPlayerColor());
+            }
+        }
+        
+    }
+
     void Awake()
     {
         SetOrbit();
@@ -54,19 +85,17 @@ public class Planet : MonoBehaviour {
 
     }
 
+    
     public void Start()
     {
         m_universe = FindObjectOfType<Universe>();
         m_universe.onDayChanged += ProcessDayChange;
-        if (owner)
-        {
-            GetComponent<Renderer>().material.SetColor("_OutlineColor", owner.GetPlayerColor());
-        }
 
     }
     void Update()
     {
         UpdateOrbit();
+        SetOwner();
     }
 
     private void UpdateOrbit()

@@ -23,6 +23,8 @@ public class PlanetUI : MonoBehaviour {
     [SerializeField] Text m_powerConsumption;
 
     [SerializeField] ScrollRect m_resources;
+
+    [SerializeField] Leader m_leader;
     // Use this for initialization
     void Start()
     {
@@ -43,6 +45,8 @@ public class PlanetUI : MonoBehaviour {
         m_powerAvailable.text = planet.GetPowerAvailable().ToString();
         m_powerProduction.text = planet.GetPowerProduction().ToString("0.00");
         m_powerConsumption.text = planet.GetPowerConsumption().ToString("0.00");
+
+        m_leader = planet.GetLeader();
     }
 
 
