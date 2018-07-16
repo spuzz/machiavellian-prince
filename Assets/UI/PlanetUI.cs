@@ -26,6 +26,11 @@ public class PlanetUI : MonoBehaviour {
 
     [SerializeField] Leader m_leader;
     // Use this for initialization
+
+    public Planet GetPlanet()
+    {
+        return planet;
+    }
     void Start()
     {
         var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();

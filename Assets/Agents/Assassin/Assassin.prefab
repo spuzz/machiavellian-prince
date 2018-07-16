@@ -9,30 +9,30 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1028917090819386}
+  m_RootGameObject: {fileID: 1438597438079014}
   m_IsPrefabParent: 1
---- !u!1 &1028917090819386
+--- !u!1 &1438597438079014
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4645934845947922}
-  - component: {fileID: 114387593807456930}
+  - component: {fileID: 4300542226078018}
+  - component: {fileID: 114077686731515790}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Assassin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4645934845947922
+--- !u!4 &4300542226078018
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1028917090819386}
+  m_GameObject: {fileID: 1438597438079014}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -40,21 +40,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114387593807456930
+--- !u!114 &114077686731515790
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1028917090819386}
+  m_GameObject: {fileID: 1438597438079014}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fae8d9bc9302d2f4091ac042426140b9, type: 3}
+  m_Script: {fileID: 11500000, guid: dfaccef93675053449358b148e1587b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: Spuz
-  playerNumber: 1
-  playerColor: {r: 0, g: 0, b: 0, a: 0}
-  agents: []
-  AgentTypes:
-  - {fileID: 11400000, guid: 845392894c9f5bd4aa16befe01caa343, type: 2}
-  gold: 0
+  player: {fileID: 0}
