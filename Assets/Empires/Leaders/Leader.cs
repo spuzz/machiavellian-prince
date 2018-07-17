@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Leader : MonoBehaviour {
+public class Leader : MonoBehaviour{
 
-	[SerializeField] Dictionary<Player, float> m_playerInfluence = new Dictionary<Player, float>();
+	Dictionary<Player, float> m_playerInfluence = new Dictionary<Player, float>();
+    [SerializeField] string leaderName;
     const float MinimumInfluence = 100f;
     const float MinimumInfluenceToOverthrow = 1.1f;
     public Player m_controlledBy;
+    
+    public string GetName()
+    {
+        return leaderName;
+    }
 	// Use this for initialization
 	void Start () {
 		

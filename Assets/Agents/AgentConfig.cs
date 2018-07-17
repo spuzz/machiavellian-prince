@@ -17,4 +17,9 @@ public class AgentConfig : ScriptableObject {
     {
         return baseCost;
     }
+
+    public List<AbilityConfig> GetAbilities()
+    {
+        return abilities;
+    }
 }

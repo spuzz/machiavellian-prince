@@ -5,12 +5,19 @@ using UnityEngine;
 
 public abstract class AbilityConfig : ScriptableObject
 {
+    public enum TARGETTYPE
+    {
+        Leader,
+        Planet
+    };
 
     [Header("Special Ability General")]
     [SerializeField] int cost = 10;
     [SerializeField] GameObject particlePrefab = null;
     [SerializeField] AnimationClip abilityAnimation;
     [SerializeField] AudioClip[] audioClips;
+    [SerializeField] string abilityName;
+    [SerializeField] TARGETTYPE targetType;
 
     protected AbilityBehaviour behaviour;
 
@@ -30,6 +37,15 @@ public abstract class AbilityConfig : ScriptableObject
     public float GetCost()
     {
         return cost;
+    }
+    public string GetName()
+    {
+        return abilityName;
+    }
+
+    public TARGETTYPE GetTargetType()
+    {
+        return targetType;
     }
 
     public GameObject GetParticlePrefab()

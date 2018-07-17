@@ -19,9 +19,8 @@ public class Planet : MonoBehaviour {
     [SerializeField] float m_growthRate;
 
     Player m_owner;
-
-    [SerializeField] Leader m_currentLeader;
-    List<Leader> m_potentialLeaders;
+    [SerializeField] Empire empire;
+    List<Agent> agents = new List<Agent>();
 
     public int GetCurrentPopulation() { return m_currentPopulation; }
     public float GetGrowthRate() { return m_growthRate; }
@@ -38,25 +37,33 @@ public class Planet : MonoBehaviour {
     float radius = 3f;
     LineRenderer lineRenderer;
 
-    public void SetLeader(Leader leader)
+
+    public void AddAgent(Agent agent)
     {
-        if(m_potentialLeaders.Contains(leader))
+        agents.Add(agent);
+    }
+
+    public List<Agent> GetAgents()
+    {
+        return agents;
+    }
+
+    public Empire GetEmpire()
+    {
+        return empire;
+    }
+    public void RemoveAgent(Agent agent)
+    {
+        if(agents.Find(c => c.GetAgentName() == agent.GetAgentName()))
         {
-            m_currentLeader = leader;
-            SetOwner();
+            agents.Remove(agent);
         }
     }
-
-    public Leader GetLeader()
-    {
-        return m_currentLeader;
-    }
-
     private void SetOwner()
     {
-        if(m_currentLeader)
+        if(empire)
         {
-            m_owner = m_currentLeader.m_controlledBy;
+            m_owner = empire.GetLeader().m_controlledBy;
             if (m_owner)
             {
                 GetComponent<Renderer>().material.SetColor("_OutlineColor", m_owner.GetPlayerColor());

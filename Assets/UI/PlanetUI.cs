@@ -24,7 +24,7 @@ public class PlanetUI : MonoBehaviour {
 
     [SerializeField] ScrollRect m_resources;
 
-    [SerializeField] Leader m_leader;
+    [SerializeField] Empire m_empire;
     // Use this for initialization
 
     public Planet GetPlanet()
@@ -51,7 +51,7 @@ public class PlanetUI : MonoBehaviour {
         m_powerProduction.text = planet.GetPowerProduction().ToString("0.00");
         m_powerConsumption.text = planet.GetPowerConsumption().ToString("0.00");
 
-        m_leader = planet.GetLeader();
+        m_empire = planet.GetEmpire();
     }
 
 

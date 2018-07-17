@@ -15,4 +15,6 @@ MonoBehaviour:
   particlePrefab: {fileID: 0}
   abilityAnimation: {fileID: 0}
   audioClips: []
+  abilityName: Bribe
+  targetType: 0
   influence: 100

@@ -27,7 +27,13 @@ public class Player : MonoBehaviour {
         {
             GameObject agent = Instantiate(agentConfig.GetAgentPrefab(), planet.transform);
             agent.GetComponent<Agent>().SetPlayer(this);
-            agents.Add(agent);
+            agent.GetComponent<Agent>().SetTargetPlanet(planet);
+            agent.GetComponent<Agent>().SetAgentName("Agent Smith");
+            foreach(AbilityConfig ability in agentConfig.GetAbilities())
+            {
+                agent.GetComponent<Agent>().AddAbility(ability);
+            }
+            
             gold -= agentConfig.GetCost();
             return true;
         }

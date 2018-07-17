@@ -10,7 +10,7 @@ namespace RPG.Characters
         public override void Use(GameObject target = null, Agent agent = null)
         {
             Leader leader = target.GetComponent<Leader>();
-            if(leader && agent)
+            if (leader != null && agent)
             {
                 leader.IncreaseInfluence(agent.GetPlayer(), (config as BribeConfig).GetInfluence());
             }
