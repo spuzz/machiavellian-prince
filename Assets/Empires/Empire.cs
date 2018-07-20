@@ -7,11 +7,30 @@ public class Empire : MonoBehaviour {
     [SerializeField] string EmpireName;
     Leader m_currentLeader;
     List<Leader> m_allPotentialLeaders;
+    List<Planet> m_ownedPlanets = new List<Planet>();
 	// Use this for initialization
 
     public Leader GetLeader()
     {
         return m_currentLeader;
+    }
+
+    public void GivePlanet(Planet planet)
+    {
+        if(!m_ownedPlanets.Find(c => c.GetName() == planet.GetName()))
+        {
+            m_ownedPlanets.Add(planet);
+        }
+        
+    }
+
+    public void TakePlanet(Planet planet)
+    {
+        if (m_ownedPlanets.Find(c => c.GetName() == planet.GetName()))
+        {
+            m_ownedPlanets.Remove(planet);
+        }
+
     }
 
     public List<Leader> GetPotentialLeaders()

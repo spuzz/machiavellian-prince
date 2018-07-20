@@ -75,6 +75,10 @@ public class AgentUI : MonoBehaviour {
 
     public void UpdateTarget()
     {
+        if (!selectedAgent)
+        {
+            return;
+        }
         AbilityConfig ability = selectedAgent.GetAbilities().Find(c => c.GetName() == operations.options[agents.value].text);
         if(!ability)
         {

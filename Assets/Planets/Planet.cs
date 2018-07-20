@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Planet : MonoBehaviour {
+    [SerializeField] string m_name;
     [SerializeField] Universe m_universe;
     [SerializeField] int m_currentPopulation;
     [Range(0, 100)] [SerializeField] float m_happyPopulationPerc;
@@ -37,6 +38,10 @@ public class Planet : MonoBehaviour {
     float radius = 3f;
     LineRenderer lineRenderer;
 
+    public string GetName()
+    {
+        return m_name;
+    }
 
     public void AddAgent(Agent agent)
     {
@@ -52,6 +57,14 @@ public class Planet : MonoBehaviour {
     {
         return empire;
     }
+
+    public void SetEmpire(Empire empire)
+    {
+        this.empire.TakePlanet(this);
+        empire.GivePlanet(this);
+        this.empire = empire;
+    }
+
     public void RemoveAgent(Agent agent)
     {
         if(agents.Find(c => c.GetAgentName() == agent.GetAgentName()))
@@ -75,6 +88,10 @@ public class Planet : MonoBehaviour {
     void Awake()
     {
         SetOrbit();
+        if(empire)
+        {
+            empire.GivePlanet(this);
+        }
     }
 
     private void SetOrbit()

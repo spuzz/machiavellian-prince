@@ -22,6 +22,7 @@ public class Universe : MonoBehaviour {
         cameraRaycaster.onMouseOverPlanet += ProcessMouseOverPlanet;
     }
 
+
     private void ProcessMouseOverPlanet(Planet planet)
     {
         if(Input.GetMouseButton(0) == true)
