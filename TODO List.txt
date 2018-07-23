@@ -1,0 +1,24 @@
+// Demo Requirements:
+
+Change Planets to Systems
+Empire borders
+Empire AI
+Empire Resources
+System build (armies/infastructure)
+System Colonisation
+Army + combat system
+Player Resources
+Player Intel gathering
+Player - Empire Diplomacy
+Victory/Defeat
+
+// Complete Game
+Diplomacy between empires (relationship factors)
+Trade System
+Save game
+Load Game
+Game Settings
+Splash Startup Screen + Main Menu
+Procedural Map generation / Player game choices
+Empire personalities
+Tutorial

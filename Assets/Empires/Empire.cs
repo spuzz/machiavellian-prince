@@ -5,30 +5,36 @@ using UnityEngine;
 public class Empire : MonoBehaviour {
 
     [SerializeField] string EmpireName;
+    [SerializeField] Color empireColour;
     Leader m_currentLeader;
     List<Leader> m_allPotentialLeaders;
-    List<Planet> m_ownedPlanets = new List<Planet>();
+    List<SolarSystem> m_ownedSystems = new List<SolarSystem>();
+
 	// Use this for initialization
 
+    public Color GetColor()
+    {
+        return empireColour;
+    }
     public Leader GetLeader()
     {
         return m_currentLeader;
     }
 
-    public void GivePlanet(Planet planet)
+    public void GiveSystem(SolarSystem system)
     {
-        if(!m_ownedPlanets.Find(c => c.GetName() == planet.GetName()))
+        if(!m_ownedSystems.Find(c => c.GetName() == system.GetName()))
         {
-            m_ownedPlanets.Add(planet);
+            m_ownedSystems.Add(system);
         }
         
     }
 
-    public void TakePlanet(Planet planet)
+    public void TakeSystem(SolarSystem system)
     {
-        if (m_ownedPlanets.Find(c => c.GetName() == planet.GetName()))
+        if (m_ownedSystems.Find(c => c.GetName() == system.GetName()))
         {
-            m_ownedPlanets.Remove(planet);
+            m_ownedSystems.Remove(system);
         }
 
     }

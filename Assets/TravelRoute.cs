@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class TravelRoute : MonoBehaviour {
 
-    [SerializeField] Planet planetOne;
-    [SerializeField] Planet planetTwo;
+    [SerializeField] SolarSystem systemOne;
+    [SerializeField] SolarSystem systemTwo;
     ParticleSystem moveParticleSystem;
 
-    float distanceBetweenPlanets;
+    float distanceBetweenSystems;
     // Use this for initialization
     void Start ()
     {
-        distanceBetweenPlanets = Vector3.Distance(planetOne.transform.position, planetTwo.transform.position);
-        gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x, gameObject.transform.localScale.y, distanceBetweenPlanets);
-        gameObject.transform.position = planetOne.transform.position + (planetTwo.transform.position - planetOne.transform.position) / 2;
-        gameObject.transform.LookAt(planetTwo.transform);
+        distanceBetweenSystems = Vector3.Distance(systemOne.transform.position, systemTwo.transform.position);
+        gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x, gameObject.transform.localScale.y, distanceBetweenSystems);
+        gameObject.transform.position = systemOne.transform.position + (systemTwo.transform.position - systemOne.transform.position) / 2;
+        gameObject.transform.LookAt(systemTwo.transform);
 
         Transform lineRendererOffsetLeft = transform.Find("LineRendererOffsetLeft");
         Transform lineRendererOffsetRight = transform.Find("LineRendererOffsetRight");
-        ConfigureMovementSystem(transform.Find("PlanetOneToTwo").gameObject, lineRendererOffsetLeft.position, lineRendererOffsetLeft.position + (planetOne.transform.position - planetTwo.transform.position));
-        ConfigureMovementSystem(transform.Find("PlanetTwoToOne").gameObject, lineRendererOffsetRight.position, lineRendererOffsetRight.position + (planetOne.transform.position - planetTwo.transform.position));
+        ConfigureMovementSystem(transform.Find("SystemOneToTwo").gameObject, lineRendererOffsetLeft.position, lineRendererOffsetLeft.position + (systemOne.transform.position - systemTwo.transform.position));
+        ConfigureMovementSystem(transform.Find("SystemTwoToOne").gameObject, lineRendererOffsetRight.position, lineRendererOffsetRight.position + (systemOne.transform.position - systemTwo.transform.position));
     }
 
     private void ConfigureMovementSystem(GameObject moveSystem, Vector3 startPosition, Vector3 endPosition)
@@ -31,7 +31,7 @@ public class TravelRoute : MonoBehaviour {
         //moveParticleSystem.Stop();
         //moveParticleSystem.transform.position = moveSystem.transform.position;
         //var main = moveParticleSystem.main;
-        //main.startLifetime = distanceBetweenPlanets / 5;
+        //main.startLifetime = distanceBetweenSystems / 5;
         //moveParticleSystem.Play();
 
         LineRenderer lineRenderer = moveSystem.GetComponent<LineRenderer>();

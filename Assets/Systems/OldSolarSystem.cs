@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SolarSystem : MonoBehaviour {
+public class OldSolarSystem : MonoBehaviour {
 
 	bool m_hasTradeHub;
-	List<Planet> m_planets;
+	List<SolarSystem> m_systems;
 	// Use this for initialization
 	void Start () {
 		

@@ -9,7 +9,7 @@ public class Agent : MonoBehaviour
     [SerializeField] string agentName;
     [SerializeField] Player player;
     [SerializeField] List<AbilityConfig> abilities;
-    [SerializeField] Planet targetPlanet;
+    [SerializeField] SolarSystem targetSystem;
     public Player GetPlayer()
     {
         return player;
@@ -30,20 +30,20 @@ public class Agent : MonoBehaviour
         this.player = player;
     }
 
-    public Planet GetTargetPlanet()
+    public SolarSystem GetTargetSystem()
     {
-        return targetPlanet;
+        return targetSystem;
     }
 
-    public void SetTargetPlanet(Planet planet)
+    public void SetTargetSystem(SolarSystem system)
     {
         // TODO Travel time
-        if(targetPlanet)
+        if(targetSystem)
         {
-            targetPlanet.RemoveAgent(this);
+            targetSystem.RemoveAgent(this);
         }
-        planet.AddAgent(this);
-        targetPlanet = planet;
+        system.AddAgent(this);
+        targetSystem = system;
     }
 
     public void AddAbility(AbilityConfig ability)

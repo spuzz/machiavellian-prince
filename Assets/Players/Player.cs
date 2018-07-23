@@ -10,24 +10,24 @@ public class Player : MonoBehaviour {
     [SerializeField] List<GameObject> agents;
     [SerializeField] List<AgentConfig> AgentTypes;
     [SerializeField] long gold;
-    PlanetUI planetUI;
+    SystemUI systemUI;
 
     private void Start()
     {
-        planetUI = FindObjectOfType<PlanetUI>();
-        HireAgent(AgentTypes[0], planetUI.GetPlanet());
+        systemUI = FindObjectOfType<SystemUI>();
+        HireAgent(AgentTypes[0], systemUI.GetSystem());
     }
     public int GetPlayerNumber() { return playerNumber;  }
     public string GetPlayerName() { return playerName; }
     public Color GetPlayerColor() { return playerColor; }
 
-    public bool HireAgent(AgentConfig agentConfig,Planet planet)
+    public bool HireAgent(AgentConfig agentConfig,SolarSystem system)
     {
         if(gold >= agentConfig.GetCost())
         {
-            GameObject agent = Instantiate(agentConfig.GetAgentPrefab(), planet.transform);
+            GameObject agent = Instantiate(agentConfig.GetAgentPrefab(), system.transform);
             agent.GetComponent<Agent>().SetPlayer(this);
-            agent.GetComponent<Agent>().SetTargetPlanet(planet);
+            agent.GetComponent<Agent>().SetTargetSystem(system);
             agent.GetComponent<Agent>().SetAgentName("Agent Smith");
             foreach(AbilityConfig ability in agentConfig.GetAbilities())
             {

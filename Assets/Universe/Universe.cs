@@ -13,24 +13,26 @@ public class Universe : MonoBehaviour {
     private GameObject selected;
     private Shader shaderOutline;
     private Shader shaderNoOutline;
+    private int xSize = 100;
+    private int ySize = 100;
 
     void Start () {
         currentDay = 1;
         shaderOutline = Shader.Find("Outlined/Uniform");
         shaderNoOutline = Shader.Find("Standard");
         var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
-        cameraRaycaster.onMouseOverPlanet += ProcessMouseOverPlanet;
+        cameraRaycaster.onMouseOverSystem += ProcessMouseOverSystem;
     }
 
 
-    private void ProcessMouseOverPlanet(Planet planet)
+    private void ProcessMouseOverSystem(SolarSystem system)
     {
         if(Input.GetMouseButton(0) == true)
         {
             
             ClearSelection();
-            selected = planet.gameObject;
-            planet.GetComponent<Renderer>().material.shader = shaderOutline;
+            selected = system.gameObject;
+            system.GetComponent<Renderer>().material.shader = shaderOutline;
         }
 
     }

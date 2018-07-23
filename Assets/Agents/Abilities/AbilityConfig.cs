@@ -8,7 +8,7 @@ public abstract class AbilityConfig : ScriptableObject
     public enum TARGETTYPE
     {
         Leader,
-        Planet
+        System
     };
 
     [Header("Special Ability General")]

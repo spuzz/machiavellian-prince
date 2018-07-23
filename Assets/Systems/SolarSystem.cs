@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Planet : MonoBehaviour {
+public class SolarSystem : MonoBehaviour {
     [SerializeField] string m_name;
     [SerializeField] Universe m_universe;
     [SerializeField] int m_currentPopulation;
@@ -19,6 +19,7 @@ public class Planet : MonoBehaviour {
 
     [SerializeField] float m_growthRate;
 
+    GameObject border;
     Player m_owner;
     [SerializeField] Empire empire;
     List<Agent> agents = new List<Agent>();
@@ -36,7 +37,6 @@ public class Planet : MonoBehaviour {
     float theta_scale = 0.01f;        //Set lower to add more points
     int size; //Total number of points in circle
     float radius = 3f;
-    LineRenderer lineRenderer;
 
     public string GetName()
     {
@@ -60,9 +60,22 @@ public class Planet : MonoBehaviour {
 
     public void SetEmpire(Empire empire)
     {
-        this.empire.TakePlanet(this);
-        empire.GivePlanet(this);
+        this.empire.TakeSystem(this);
+        empire.GiveSystem(this);
         this.empire = empire;
+        UpdateBorders();
+    }
+
+    private void UpdateBorders()
+    {
+        if(empire)
+        {
+            border.GetComponent<Renderer>().material.color = new Color(this.empire.GetColor().r, this.empire.GetColor().g, this.empire.GetColor().b, 0.5f);
+        }
+        else
+        {
+            border.GetComponent<Renderer>().material.color = new Color(0, 0, 0, 0.5f);
+        }
     }
 
     public void RemoveAgent(Agent agent)
@@ -87,27 +100,15 @@ public class Planet : MonoBehaviour {
 
     void Awake()
     {
-        SetOrbit();
-        if(empire)
+        border = transform.Find("Border").gameObject;
+        UpdateBorders();
+        if (empire)
         {
-            empire.GivePlanet(this);
+            
+            empire.GiveSystem(this);
         }
     }
 
-    private void SetOrbit()
-    {
-        float sizeValue = (2.0f * Mathf.PI) / theta_scale;
-        size = (int)sizeValue;
-        size++;
-        lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
-        lineRenderer.startWidth = 0.02f;
-        lineRenderer.endWidth = 0.02f;
-        lineRenderer.positionCount = size;
-        lineRenderer.startColor = new Color(1, 1, 1, 0.1f);
-        lineRenderer.endColor =  new Color(1, 1, 1, 0.1f);
-
-    }
 
     
     public void Start()
@@ -118,26 +119,9 @@ public class Planet : MonoBehaviour {
     }
     void Update()
     {
-        UpdateOrbit();
         SetOwner();
     }
 
-    private void UpdateOrbit()
-    {
-        radius = Vector3.Distance(transform.position, transform.parent.position);
-        Vector3 pos;
-        float theta = 0f;
-        for (int i = 0; i < size; i++)
-        {
-            theta += (2.0f * Mathf.PI * theta_scale);
-            float x = radius * Mathf.Cos(theta);
-            float y = radius * Mathf.Sin(theta);
-            x += gameObject.transform.parent.position.x;
-            y += gameObject.transform.parent.position.y;
-            pos = new Vector3(x, 0,y);
-            lineRenderer.SetPosition(i, pos);
-        }
-    }
 
     private void ProcessDayChange(int days)
     {

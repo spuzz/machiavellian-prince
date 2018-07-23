@@ -8,18 +8,18 @@ public class AgentUI : MonoBehaviour {
     Dropdown agents;
     Dropdown operations;
     Dropdown targets;
-    [SerializeField] Planet planet;
+    [SerializeField] SolarSystem system;
     Agent selectedAgent;
 	// Use this for initialization
 	void Start () {
         var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
-        cameraRaycaster.onMouseOverPlanet += ProcessMouseOverPlanet;
+        cameraRaycaster.onMouseOverSystem += ProcessMouseOverSystem;
         agents = transform.Find("Agent").GetComponent<Dropdown>();
         operations = transform.Find("Operation").GetComponent<Dropdown>();
         targets = transform.Find("Target").GetComponent<Dropdown>();
-        if (planet)
+        if (system)
         {
-            UpdateAgents(planet);
+            UpdateAgents(system);
             UpdateOperation();
             UpdateTarget();
         }
@@ -34,21 +34,21 @@ public class AgentUI : MonoBehaviour {
     {
 
     }
-    private void ProcessMouseOverPlanet(Planet planet)
+    private void ProcessMouseOverSystem(SolarSystem system)
     {
         if (Input.GetMouseButton(0) == true)
         {
             StopAllCoroutines();
-            UpdateAgents(planet);
+            UpdateAgents(system);
 
 
         }
     }
-    private void UpdateAgents(Planet planet)
+    private void UpdateAgents(SolarSystem system)
     {
         agents.options.Clear();
         List<string> options = new List<string>();
-        foreach (Agent agent in planet.GetAgents())
+        foreach (Agent agent in system.GetAgents())
         {
             options.Add(agent.GetAgentName());
 
@@ -60,7 +60,7 @@ public class AgentUI : MonoBehaviour {
     {
         operations.options.Clear();
         List<string> options = new List<string>();
-        selectedAgent = planet.GetAgents().Find(c => c.GetAgentName() == agents.options[agents.value].text);
+        selectedAgent = system.GetAgents().Find(c => c.GetAgentName() == agents.options[agents.value].text);
         if(!selectedAgent)
         {
             return;
@@ -87,7 +87,7 @@ public class AgentUI : MonoBehaviour {
         switch (ability.GetTargetType())
         {
             case AbilityConfig.TARGETTYPE.Leader:
-                List<Leader> leaders = selectedAgent.GetTargetPlanet().GetEmpire().GetPotentialLeaders();
+                List<Leader> leaders = selectedAgent.GetTargetSystem().GetEmpire().GetPotentialLeaders();
                 targets.options.Clear();
                 List<string> options = new List<string>();
                 foreach (Leader leader in leaders)
