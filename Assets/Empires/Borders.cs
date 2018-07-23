@@ -21,18 +21,31 @@ public class Borders : MonoBehaviour {
         {
             for(int y=0;y< texture.height; y++)
             {
-                color[(x * texture.height) + y] = Color.black;
+                color[(y * texture.height) + x]  = new Color(0, 0, 0, 0);
                 float localX  = (x / 512.0f - 0.5f) * 10.0f;
                 float localY  = (y / 512.0f - 0.5f) * 10.0f;
                 var worldPos = transform.TransformPoint(new Vector3(localX, 0.0f, localY));
+                float influence = 0;
                 foreach(Planet planet in planets)
                 {
-                    if(Vector3.Distance(planet.transform.position,worldPos) < 5)
+                    float distance = Vector3.Distance(planet.transform.position, worldPos);
+                    if(distance < 10.0f)
                     {
-                        color[(x * texture.height) + y] = Color.blue;
+                        influence += 1.0f / distance;
                     }
                 }
-
+                if (influence != 0)
+                {
+                    if(influence <= 0.11)
+                    {
+                        color[(y * texture.height) + x] = new Color(0, 0, 0.1f, 1.0f);
+                    }
+                    else
+                    {
+                        color[(y * texture.height) + x] = new Color(0, 0, 0.1f, 0.5f);
+                    }
+                    
+                }
             }
         }
         texture.SetPixels(color);

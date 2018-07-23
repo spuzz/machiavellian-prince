@@ -4,8 +4,11 @@ Shader "Custom/ZoneShader" {
 	Properties{
 		_MainTex("Base (RGBA)", 2D) = "white" {}
 	_ResColor("Res Color", Color) = (0,1,0,0.5)
-		_ComColor("Com Color", Color) = (0,0,1,0.5)
+		_ComColor("Com Color", Color) = (0,0,0.1,0.5)
 		_AgrColor("Agr Color", Color) = (1,0,0,0.5)
+		_ResColorBorder("Res Color Border", Color) = (0,1,0,0.5)
+		_ComColorBorder("Com Color Border", Color) = (0,0,0.1,0.5)
+		_AgrColorBorder("Agr Color Border", Color) = (1,0,0,0.5)
 	}
 		SubShader{
 		Tags{ "Queue" = "Transparent" "RenderType" = "Transparent" }
