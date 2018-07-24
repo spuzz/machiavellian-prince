@@ -19,10 +19,13 @@ public class SolarSystem : MonoBehaviour {
 
     [SerializeField] float m_growthRate;
 
+    [SerializeField] Empire empire;
+
+    [SerializeField] GameObject travelRoutePrefab;
     GameObject border;
     Player m_owner;
-    [SerializeField] Empire empire;
     List<Agent> agents = new List<Agent>();
+    Dictionary<SolarSystem, float> nearbySystems = new Dictionary<SolarSystem, float>();
 
     public int GetCurrentPopulation() { return m_currentPopulation; }
     public float GetGrowthRate() { return m_growthRate; }
@@ -113,10 +116,36 @@ public class SolarSystem : MonoBehaviour {
     
     public void Start()
     {
+        
         m_universe = FindObjectOfType<Universe>();
         m_universe.onDayChanged += ProcessDayChange;
+        FindNearbySystems();
 
     }
+
+    private void FindNearbySystems()
+    {
+        SolarSystem[] systems = SolarSystem.FindObjectsOfType<SolarSystem>();
+        foreach(SolarSystem system in systems)
+        {
+            float distance = Vector3.Distance(transform.position, system.transform.position);
+            if(distance > 0 && distance <= m_universe.GetMaxTravelDistance())
+            {
+                nearbySystems.Add(system,distance);
+                CreateLineRenderer(system);
+            }
+        }
+    }
+
+    private void CreateLineRenderer(SolarSystem destination)
+    {
+        var travelRoute = Instantiate(travelRoutePrefab, transform.position, transform.rotation);
+        LineRenderer lineRenderer = travelRoute.GetComponent<LineRenderer>();
+        lineRenderer.SetPosition(0, transform.position);
+        lineRenderer.SetPosition(1, destination.transform.position);
+        lineRenderer.transform.SetParent(transform.Find("TravelRoutes"));
+    }
+
     void Update()
     {
         SetOwner();

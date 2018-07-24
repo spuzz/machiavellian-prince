@@ -6,6 +6,7 @@ using UnityEngine;
 public class Universe : MonoBehaviour {
 
     [SerializeField] float timePerDay = 1.0f;
+    [SerializeField] float maxTravelDistance = 1000.0f;
     public int mainPlayer = 1;
     int currentDay;
 
@@ -16,6 +17,10 @@ public class Universe : MonoBehaviour {
     private int xSize = 100;
     private int ySize = 100;
 
+    public float GetMaxTravelDistance()
+    {
+        return maxTravelDistance;
+    }
     void Start () {
         currentDay = 1;
         shaderOutline = Shader.Find("Outlined/Uniform");

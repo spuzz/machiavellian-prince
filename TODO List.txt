@@ -1,9 +1,7 @@
 // Demo Requirements:
 
-Change Planets to Systems
-Empire borders
-Empire AI
 Empire Resources
+Empire AI
 System build (armies/infastructure)
 System Colonisation
 Army + combat system
@@ -13,6 +11,7 @@ Player - Empire Diplomacy
 Victory/Defeat
 
 // Complete Game
+Empire borders
 Diplomacy between empires (relationship factors)
 Trade System
 Save game
