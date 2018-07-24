@@ -10,7 +10,60 @@ public class Empire : MonoBehaviour {
     List<Leader> m_allPotentialLeaders;
     List<SolarSystem> m_ownedSystems = new List<SolarSystem>();
 
+    // Resources
+    [SerializeField] int gold;
+    [SerializeField] int buildingMaterial;
+    [SerializeField] int spaceshipMaterial;
+
+
 	// Use this for initialization
+    public void AddGold(int gold)
+    {
+        this.gold += gold;
+    }
+
+    public bool UseGold(int gold)
+    {
+        if(this.gold > gold)
+        {
+            this.gold -= gold;
+            return true;
+        }
+        return false;
+        
+    }
+
+    public void AddBuildingMaterial(int buildingMaterial)
+    {
+        this.buildingMaterial += buildingMaterial;
+    }
+
+    public bool UseBuildingMaterial(int buildingMaterial)
+    {
+        if (this.buildingMaterial > buildingMaterial)
+        {
+            this.buildingMaterial -= buildingMaterial;
+            return true;
+        }
+        return false;
+
+    }
+
+    public void AddSpaceshipMaterial(int spaceshipMaterial)
+    {
+        this.spaceshipMaterial += spaceshipMaterial;
+    }
+
+    public bool UseSpaceshipMaterial(int spaceshipMaterial)
+    {
+        if (this.spaceshipMaterial > spaceshipMaterial)
+        {
+            this.spaceshipMaterial -= spaceshipMaterial;
+            return true;
+        }
+        return false;
+
+    }
 
     public Color GetColor()
     {
