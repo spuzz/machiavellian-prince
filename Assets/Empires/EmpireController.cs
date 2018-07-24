@@ -13,7 +13,7 @@ public class EmpireController : MonoBehaviour {
         Grow,
     }
 
-    MissionState currentState;
+    [SerializeField] MissionState currentState;
     Empire empire;
 
 

@@ -163,8 +163,21 @@ public class SolarSystem : MonoBehaviour {
             CalculateConsumption();
             m_foodAvailable = m_foodAvailable + m_foodProduction - m_foodConsumption;
             m_powerAvailable = m_powerAvailable + m_powerProduction - m_powerConsumption;
+
+            CalculateProduction();
         }
         
+    }
+
+    private void CalculateProduction()
+    {
+        if(empire)
+        {
+            empire.AddGold(100);
+            empire.AddBuildingMaterial(10);
+            empire.AddSpaceshipMaterial(10);
+        }
+
     }
 
     private void CalculateConsumption()
