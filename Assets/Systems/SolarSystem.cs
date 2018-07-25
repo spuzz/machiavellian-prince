@@ -25,6 +25,7 @@ public class SolarSystem : MonoBehaviour {
     GameObject border;
     Player m_owner;
     List<Agent> agents = new List<Agent>();
+    List<Army> armies = new List<Army>();
     Dictionary<SolarSystem, float> nearbySystems = new Dictionary<SolarSystem, float>();
 
     public int GetCurrentPopulation() { return m_currentPopulation; }
@@ -61,6 +62,57 @@ public class SolarSystem : MonoBehaviour {
         return empire;
     }
 
+    public void AddArmy(Army army)
+    {
+        armies.Add(army);
+    }
+
+    public void RemoveArmy(Army army)
+    {
+        armies.Remove(army);
+    }
+
+    // TODO - battle component
+    public void Defend(Army attackingArmy)
+    {
+        int totalDefence = 0;
+        foreach(Army army in armies)
+        {
+            totalDefence += army.GetDefenceValue();
+        }
+
+
+        if(attackingArmy.GetAttackValue() > totalDefence)
+        {
+            int attackLeft = attackingArmy.GetAttackValue() - totalDefence;
+            float percLost = ((float)attackLeft / (float)attackingArmy.GetAttackValue());
+            attackingArmy.DepleteArmy(percLost);
+
+            foreach (Army army in armies)
+            {
+                army.DestroyArmy();
+            }
+            armies.Clear();
+            SetEmpire(attackingArmy.GetEmpire());
+            armies.Add(attackingArmy);
+        }
+        else
+        {
+            int defenceLeft = totalDefence - attackingArmy.GetAttackValue();
+            if (defenceLeft == 0)
+            {
+                defenceLeft = 1;
+            }
+            float percLost = ((float)defenceLeft / (float)totalDefence);
+
+            foreach (Army army in armies)
+            {
+                army.DepleteArmy(percLost);
+            }
+            attackingArmy.DestroyArmy();
+        }
+
+    }
     public void SetEmpire(Empire empire)
     {
         this.empire.TakeSystem(this);
@@ -69,6 +121,10 @@ public class SolarSystem : MonoBehaviour {
         UpdateBorders();
     }
 
+    public Dictionary<SolarSystem, float> GetNearbySystems()
+    {
+        return nearbySystems;
+    }
     private void UpdateBorders()
     {
         if(empire)

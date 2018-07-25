@@ -8,6 +8,7 @@ public class Empire : MonoBehaviour {
     [SerializeField] Color empireColour;
     Leader m_currentLeader;
     List<Leader> m_allPotentialLeaders;
+    List<Army> armies;
     List<SolarSystem> m_ownedSystems = new List<SolarSystem>();
 
     // Resources
@@ -92,6 +93,10 @@ public class Empire : MonoBehaviour {
 
     }
 
+    public void RemoveArmy(Army army)
+    {
+        armies.Remove(army);
+    }
     public List<Leader> GetPotentialLeaders()
     {
         return m_allPotentialLeaders;
@@ -102,7 +107,14 @@ public class Empire : MonoBehaviour {
         {
             m_currentLeader = m_allPotentialLeaders[0];
         }
-	}
+
+        armies = new List<Army>(GetComponentsInChildren<Army>());
+        foreach(Army army in armies)
+        {
+            army.SetEmpire(this);
+        }
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
