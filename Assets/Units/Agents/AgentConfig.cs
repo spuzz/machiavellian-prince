@@ -13,6 +13,7 @@ public class AgentConfig : ScriptableObject {
     {
         return agentPrefab;
     }
+
     public int GetCost()
     {
         return baseCost;
