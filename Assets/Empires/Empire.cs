@@ -6,15 +6,15 @@ public class Empire : MonoBehaviour {
 
     [SerializeField] string EmpireName;
     [SerializeField] Color empireColour;
+    [SerializeField] List<UnitConfig> buildableUnits;
     Leader m_currentLeader;
     List<Leader> m_allPotentialLeaders;
-    List<Army> armies;
+    List<Army> armies = new List<Army>();
+    List<ColonyShip> colonyShips = new List<ColonyShip>();
     List<SolarSystem> m_ownedSystems = new List<SolarSystem>();
 
     // Resources
     [SerializeField] int gold;
-    [SerializeField] int buildingMaterial;
-    [SerializeField] int spaceshipMaterial;
 
 
 	// Use this for initialization
@@ -34,37 +34,6 @@ public class Empire : MonoBehaviour {
         
     }
 
-    public void AddBuildingMaterial(int buildingMaterial)
-    {
-        this.buildingMaterial += buildingMaterial;
-    }
-
-    public bool UseBuildingMaterial(int buildingMaterial)
-    {
-        if (this.buildingMaterial > buildingMaterial)
-        {
-            this.buildingMaterial -= buildingMaterial;
-            return true;
-        }
-        return false;
-
-    }
-
-    public void AddSpaceshipMaterial(int spaceshipMaterial)
-    {
-        this.spaceshipMaterial += spaceshipMaterial;
-    }
-
-    public bool UseSpaceshipMaterial(int spaceshipMaterial)
-    {
-        if (this.spaceshipMaterial > spaceshipMaterial)
-        {
-            this.spaceshipMaterial -= spaceshipMaterial;
-            return true;
-        }
-        return false;
-
-    }
 
     public Color GetColor()
     {
@@ -93,13 +62,41 @@ public class Empire : MonoBehaviour {
 
     }
 
+    public List<SolarSystem> GetSystems()
+    {
+        return m_ownedSystems;
+    }
+
+    public List<Army> GetArmies()
+    {
+        return armies;
+    }
+
+
     public void RemoveArmy(Army army)
     {
         armies.Remove(army);
     }
+    public List<ColonyShip> GetColonyShips()
+    {
+        return colonyShips;
+    }
+
+
+    public void RemoveColonyShip(ColonyShip colonyShip)
+    {
+        colonyShips.Remove(colonyShip);
+    }
+
     public List<Leader> GetPotentialLeaders()
     {
         return m_allPotentialLeaders;
+    }
+
+    public void AddArmy(Army army)
+    {
+        army.SetEmpire(this);
+        armies.Add(army);
     }
 	void Start () {
         m_allPotentialLeaders = new List<Leader>(GetComponentsInChildren<Leader>());
@@ -112,12 +109,27 @@ public class Empire : MonoBehaviour {
         foreach(Army army in armies)
         {
             army.SetEmpire(this);
+            if (!army.GetComponent<MovementController>().GetSystemLocation())
+            {
+                army.GetComponent<MovementController>().SetLocation(m_ownedSystems[0]);
+            }
+        }
+
+        colonyShips = new List<ColonyShip>(GetComponentsInChildren<ColonyShip>());
+        foreach (ColonyShip colonyShip in colonyShips)
+        {
+            colonyShip.SetEmpire(this);
+            if(!colonyShip.GetComponent<MovementController>().GetSystemLocation())
+            {
+                colonyShip.GetComponent<MovementController>().SetLocation(m_ownedSystems[0]);
+            }
         }
 
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        m_ownedSystems[0].GetComponent<BuildController>().BuildUnit(buildableUnits[1]);
+
+    }
 }

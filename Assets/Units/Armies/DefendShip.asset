@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 165ea3ded8b538d4e9ca6842922f7a75, type: 3}
+  m_Name: DefendShip
+  m_EditorClassIdentifier: 
+  unitPrefab: {fileID: 1578640926330050, guid: 5f5db062cc90e764aa7f3a283180557e, type: 2}
+  Name: Defend Ship
+  baseCost: 500
+  joinArmy: 1
+  buildType: 1
+  attackStrength: 20
+  defenceStrength: 100
+  buildTime: 0

@@ -72,6 +72,29 @@ public class SolarSystem : MonoBehaviour {
         armies.Remove(army);
     }
 
+    public bool HasArmy()
+    {
+        if (armies.Count != 0)
+            return true;
+        return false;
+    }
+
+    public void AddToArmy(int index, UnitConfig unitConfig)
+    {
+        if(index < armies.Count)
+        {
+            armies[index].Addunit(unitConfig);
+        }
+    }
+
+    public void Colonised(Empire empire)
+    {
+        if(!this.empire)
+        {
+            SetEmpire(empire);
+        }
+    }
+
     // TODO - battle component
     public void Defend(Army attackingArmy)
     {
@@ -115,7 +138,10 @@ public class SolarSystem : MonoBehaviour {
     }
     public void SetEmpire(Empire empire)
     {
-        this.empire.TakeSystem(this);
+        if(this.empire)
+        {
+            this.empire.TakeSystem(this);
+        }
         empire.GiveSystem(this);
         this.empire = empire;
         UpdateBorders();
@@ -230,8 +256,6 @@ public class SolarSystem : MonoBehaviour {
         if(empire)
         {
             empire.AddGold(100);
-            empire.AddBuildingMaterial(10);
-            empire.AddSpaceshipMaterial(10);
         }
 
     }

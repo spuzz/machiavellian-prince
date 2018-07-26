@@ -17,6 +17,11 @@ public class MovementController : MonoBehaviour {
     [SerializeField] float movementSpeed = 1f;
     Queue<SolarSystem> path = new Queue<SolarSystem>();
 
+    public void SetLocation(SolarSystem systemLocation)
+    {
+        this.systemLocation = systemLocation;
+        transform.position = systemLocation.transform.position;
+    }
     public SolarSystem GetSystemLocation()
     {
         return systemLocation;
@@ -43,6 +48,10 @@ public class MovementController : MonoBehaviour {
 
 	}
 
+    public void MoveTo(SolarSystem system)
+    {
+        systemTarget = system;
+    }
     private void CreatePath()
     {
         SystemPathNode currentNode = new SystemPathNode();

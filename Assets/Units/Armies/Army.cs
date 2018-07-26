@@ -24,6 +24,13 @@ public class Army : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    public void Merge(Army army)
+    {
+        attackValue += army.attackValue;
+        defenceValue += army.defenceValue;
+        army.DestroyArmy();
+    }
+
     public void DepleteArmy(float perc)
     {
         if(perc > 100)
@@ -53,7 +60,11 @@ public class Army : MonoBehaviour {
         movementController.onReachedSystem += OnReachedSystem;
         movementController.onLeaveSystem += OnLeaveSystem;
 
-        movementController.GetSystemLocation().AddArmy(this);
+        if (movementController.GetSystemLocation())
+        {
+            movementController.GetSystemLocation().AddArmy(this);
+        }
+        
     }
 
     private void OnReachedSystem(SolarSystem system)
@@ -91,6 +102,11 @@ public class Army : MonoBehaviour {
         
     }
 
+    public void Addunit(UnitConfig unitConfig)
+    {
+        attackValue += unitConfig.GetAttackStrength();
+        defenceValue += unitConfig.GetDefenceStrength();
+    }
     // Update is called once per frame
     void Update () {
 		
