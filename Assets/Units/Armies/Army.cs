@@ -20,6 +20,7 @@ public class Army : MonoBehaviour {
     }
     public void DestroyArmy()
     {
+        movementController.GetSystemLocation().RemoveArmy(this);
         empire.RemoveArmy(this);
         Destroy(gameObject);
     }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitPrefab: {fileID: 1578640926330050, guid: 5f5db062cc90e764aa7f3a283180557e, type: 2}
   Name: AttackShip
-  baseCost: 500
+  baseCost: 1000
   joinArmy: 1
   buildType: 2
   attackStrength: 80

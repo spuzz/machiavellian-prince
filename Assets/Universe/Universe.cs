@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Universe : MonoBehaviour {
 
@@ -54,6 +55,7 @@ public class Universe : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+
         int newDay = Mathf.FloorToInt(Time.time / timePerDay);
         if(newDay != currentDay)
         {
@@ -63,6 +65,22 @@ public class Universe : MonoBehaviour {
 
     }
 
+    public void CheckEndGame()
+    {
+        Empire[] empires = FindObjectsOfType<Empire>();
+        int empiresAlive = 0;
+        foreach(Empire empire in empires)
+        {
+            if(empire.IsAlive() == true)
+            {
+                empiresAlive += 1;
+            }
+        }
+        if (empiresAlive <= 1)
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
     public delegate void OnDayChanged(int days); // declare new delegate type
     public event OnDayChanged onDayChanged; // instantiate an observer set
 }

@@ -58,11 +58,18 @@ public class BuildController : MonoBehaviour {
                     {
                         Empire empire = localSystem.GetEmpire();
                         Army army = Instantiate(unitToBuild.GetUnitPrefab(), empire.transform.Find("Armies").transform).GetComponent<Army>();
+                        army.Addunit(unitToBuild);
                         army.GetComponent<MovementController>().SetLocation(localSystem);
                         empire.AddArmy(army);
                     }
                 }
-                Instantiate(unitToBuild.GetUnitPrefab());
+                else
+                {
+                    Empire empire = localSystem.GetEmpire();
+                    ColonyShip ship = Instantiate(unitToBuild.GetUnitPrefab(), empire.transform.Find("ColonyShips").transform).GetComponent<ColonyShip>();
+                    ship.GetComponent<MovementController>().SetLocation(localSystem);
+                    empire.AddColonyShip(ship);
+                }
                 unitToBuild = null;
             }
         }

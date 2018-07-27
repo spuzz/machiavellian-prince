@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EmpireController : MonoBehaviour {
 
-    List<SolarSystem> enemyBorderSystems = new List<SolarSystem>();
     List<SolarSystem> neutralBorderSystems = new List<SolarSystem>();
+    Dictionary<SolarSystem, SolarSystem> enemyBorderSystems = new Dictionary<SolarSystem, SolarSystem>();
+    [SerializeField] List<UnitConfig> buildableUnits;
     enum MissionState
     {
         Idle,
@@ -19,10 +21,11 @@ public class EmpireController : MonoBehaviour {
 
     [SerializeField] MissionState currentState;
     Empire empire;
-
+    DiplomacyController diplomacy;
 
     void Start () {
         empire = gameObject.GetComponent<Empire>();
+        diplomacy = gameObject.GetComponent<DiplomacyController>();
         UpdateState(currentState);
 
     }
@@ -36,12 +39,45 @@ public class EmpireController : MonoBehaviour {
             case MissionState.Grow:
                 StartCoroutine("GrowEmpire");
                 break;
+            case MissionState.Attack:
+                StartCoroutine("Attack");
+                break;
         }
     }
 	// Update is called once per frame
 	void Update () {
-        Build();
+        if(empire.IsAlive())
+        {
+            FindNeutralBorderSystems();
+            FindEnemyBorderSystems();
+
+            // TODO Simple code to set off war
+            if (enemyBorderSystems.Count > 0)
+            {
+                foreach (SolarSystem system in enemyBorderSystems.Values)
+                {
+                    if (diplomacy.GetDiplomacy(system.GetEmpire()).relationship != Relationship.War)
+                    {
+                        diplomacy.DeclareWar(empire, system.GetEmpire());
+                    }
+                }
+                if (currentState != MissionState.Attack)
+                {
+                    UpdateState(MissionState.Attack);
+                }
+            }
+            else
+            {
+                if (currentState == MissionState.Attack)
+                {
+                    UpdateState(MissionState.Grow);
+                }
+            }
+            Build();
+        }
+
 	}
+
 
     public IEnumerator GrowEmpire()
     {
@@ -54,10 +90,76 @@ public class EmpireController : MonoBehaviour {
         }
 
     }
+    public IEnumerator ExpandEmpire()
+    {
+        while (true)
+        {
+
+            GuardBorders();
+            ColonisePlanets();
+            yield return new WaitForFixedUpdate();
+        }
+
+    }
+
+    public IEnumerator Attack()
+    {
+
+        while (true)
+        {
+            AttackEnemy();
+            yield return new WaitForFixedUpdate();
+        }
+
+    }
+
+    private void AttackEnemy()
+    {
+        List<Empire> enemyEmpires = diplomacy.GetEmpiresAtWar();
+        
+        foreach (Army army in empire.GetArmies())
+        {
+            MovementController armyMove = army.GetComponent<MovementController>();
+            SolarSystem system  = armyMove.GetNearestSystem(enemyEmpires);
+            if(system.GetDefence() < army.GetAttackValue())
+            {
+                armyMove.MoveTo(system);
+            }
+            else
+            {
+                List<Empire> safeEmpires = new List<Empire>();
+                safeEmpires.Add(empire);
+                SolarSystem nearestSafeSystem = armyMove.GetNearestSystem(safeEmpires, system);
+                armyMove.MoveTo(nearestSafeSystem);
+            }
+        }
+
+        foreach(SolarSystem system in empire.GetSystems())
+        {
+            system.MergeArmies();
+        }
+    }
+
+
+    public IEnumerator Defend()
+    {
+        while (true)
+        {
+
+            DefendBorders();
+            yield return new WaitForFixedUpdate();
+        }
+
+    }
+
+    private void DefendBorders()
+    {
+        throw new NotImplementedException();
+    }
 
     private void ColonisePlanets()
     {
-        FindNeutralBorderSystems();
+        
         int border = 0;
         foreach (ColonyShip colonyShip in empire.GetColonyShips())
         {
@@ -93,7 +195,7 @@ public class EmpireController : MonoBehaviour {
                 {
                     border = 0;
                 }
-                army.GetComponent<MovementController>().MoveTo(enemyBorderSystems[border]);
+                army.GetComponent<MovementController>().MoveTo(enemyBorderSystems.ElementAt(border).Key);
                 border++;
             }
         }
@@ -108,7 +210,7 @@ public class EmpireController : MonoBehaviour {
             {
                 if (neighbour.GetEmpire() && neighbour.GetEmpire() != empire)
                 {
-                    enemyBorderSystems.Add(system);
+                    enemyBorderSystems.Add(system,neighbour);
                     break;
                 }
             }
@@ -133,6 +235,28 @@ public class EmpireController : MonoBehaviour {
 
     private void Build()
     {
+        UnitConfig.BuildType buildType = UnitConfig.BuildType.Expand;
+        UnitConfig tryToBuild = null;
+        if(currentState == MissionState.Attack)
+        {
+            buildType = UnitConfig.BuildType.Attack;
+        }
+        foreach(UnitConfig unitConfig in buildableUnits)
+        {
+            if(unitConfig.GetBuildType() == buildType)
+            {
+                tryToBuild = unitConfig;
+            }
+        }
+        if(tryToBuild)
+        {
+            if (empire.GetGold() > tryToBuild.GetCost())
+            {
+                empire.GetSystems()[0].GetComponent<BuildController>().BuildUnit(tryToBuild);
+                empire.UseGold(tryToBuild.GetCost());
+            }
+        }
 
+        
     }
 }

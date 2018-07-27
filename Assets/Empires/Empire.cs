@@ -6,18 +6,41 @@ public class Empire : MonoBehaviour {
 
     [SerializeField] string EmpireName;
     [SerializeField] Color empireColour;
-    [SerializeField] List<UnitConfig> buildableUnits;
     Leader m_currentLeader;
     List<Leader> m_allPotentialLeaders;
     List<Army> armies = new List<Army>();
     List<ColonyShip> colonyShips = new List<ColonyShip>();
     List<SolarSystem> m_ownedSystems = new List<SolarSystem>();
 
+    bool isAlive = true;
     // Resources
     [SerializeField] int gold;
 
+    public void DestroyEmpire()
+    {
+        isAlive = false;
+        while(armies.Count !=0)
+        {
+            armies[0].DestroyArmy();
+        }
+        while (colonyShips.Count != 0)
+        {
+            colonyShips[0].DestroyColonyShip();
+        }
 
-	// Use this for initialization
+        FindObjectOfType<Universe>().CheckEndGame();
+    }
+
+    public bool IsAlive()
+    {
+        return isAlive;
+    }
+    public int GetGold()
+    {
+        return gold;
+
+    }
+    // Use this for initialization
     public void AddGold(int gold)
     {
         this.gold += gold;
@@ -59,6 +82,10 @@ public class Empire : MonoBehaviour {
         {
             m_ownedSystems.Remove(system);
         }
+        if(m_ownedSystems.Count == 0)
+        {
+            DestroyEmpire();
+        }
 
     }
 
@@ -82,7 +109,11 @@ public class Empire : MonoBehaviour {
         return colonyShips;
     }
 
-
+    public void AddColonyShip(ColonyShip ship)
+    {
+        ship.SetEmpire(this);
+        colonyShips.Add(ship);
+    }
     public void RemoveColonyShip(ColonyShip colonyShip)
     {
         colonyShips.Remove(colonyShip);
@@ -129,7 +160,7 @@ public class Empire : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        m_ownedSystems[0].GetComponent<BuildController>().BuildUnit(buildableUnits[1]);
+        
 
     }
 }

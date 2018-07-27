@@ -20,7 +20,7 @@ public class SolarSystem : MonoBehaviour {
     [SerializeField] float m_growthRate;
 
     [SerializeField] Empire empire;
-
+    [SerializeField] int baseDefence = 100;
     [SerializeField] GameObject travelRoutePrefab;
     GameObject border;
     Player m_owner;
@@ -79,6 +79,23 @@ public class SolarSystem : MonoBehaviour {
         return false;
     }
 
+    public void MergeArmies()
+    {
+        while(armies.Count > 1)
+        {
+            armies[0].Merge(armies[1]);
+        }
+    }
+    public int GetDefence()
+    {
+        int defence = baseDefence;
+        foreach(Army army in armies)
+        {
+            defence += army.GetDefenceValue();
+        }
+        return defence;
+    }
+
     public void AddToArmy(int index, UnitConfig unitConfig)
     {
         if(index < armies.Count)
@@ -98,22 +115,18 @@ public class SolarSystem : MonoBehaviour {
     // TODO - battle component
     public void Defend(Army attackingArmy)
     {
-        int totalDefence = 0;
-        foreach(Army army in armies)
-        {
-            totalDefence += army.GetDefenceValue();
-        }
+        int totalDefence = GetDefence();
 
 
-        if(attackingArmy.GetAttackValue() > totalDefence)
+        if (attackingArmy.GetAttackValue() > totalDefence)
         {
             int attackLeft = attackingArmy.GetAttackValue() - totalDefence;
             float percLost = ((float)attackLeft / (float)attackingArmy.GetAttackValue());
             attackingArmy.DepleteArmy(percLost);
 
-            foreach (Army army in armies)
+            while (armies.Count != 0)
             {
-                army.DestroyArmy();
+                armies[0].DestroyArmy();
             }
             armies.Clear();
             SetEmpire(attackingArmy.GetEmpire());

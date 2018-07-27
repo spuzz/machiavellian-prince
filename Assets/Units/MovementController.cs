@@ -52,6 +52,56 @@ public class MovementController : MonoBehaviour {
     {
         systemTarget = system;
     }
+
+    public SolarSystem GetNearestSystem(List<Empire> empireToFind, SolarSystem startSystem = null)
+    {
+        SystemPathNode currentNode = new SystemPathNode();
+        List<SystemPathNode> nodes = new List<SystemPathNode>();
+        List<SystemPathNode> closedNodes = new List<SystemPathNode>();
+        if(startSystem == null)
+        {
+            currentNode.system = systemLocation;
+        }
+        else
+        {
+            currentNode.system = startSystem;
+        }
+        currentNode.parent = null;
+        currentNode.travelDistanceFromStart = 0;
+
+        nodes.Add(currentNode);
+
+        while (!empireToFind.Contains(currentNode.system.GetEmpire()) )
+        {
+            foreach (SolarSystem neighbour in currentNode.system.GetNearbySystems().Keys)
+            {
+                SystemPathNode newNode = new SystemPathNode();
+                newNode.system = neighbour;
+                newNode.parent = currentNode;
+                newNode.travelDistanceFromStart = currentNode.travelDistanceFromStart + currentNode.system.GetNearbySystems()[neighbour];
+                SystemPathNode inList = nodes.Find(c => c.system == newNode.system);
+                if (inList == null || closedNodes.Exists(c => c.system == newNode.system) == false)
+                {
+                    nodes.Add(newNode);
+                }
+                else
+                {
+                    if (newNode.travelDistanceFromStart < inList.travelDistanceFromStart)
+                    {
+                        nodes.Remove(inList);
+                        nodes.Add(newNode);
+                    }
+                }
+            }
+            nodes.Remove(currentNode);
+            closedNodes.Add(currentNode);
+            nodes.Sort((l, r) => l.travelDistanceFromStart.CompareTo(r.travelDistanceFromStart));
+            currentNode = nodes[0];
+
+        }
+        return currentNode.system;
+    }
+
     private void CreatePath()
     {
         SystemPathNode currentNode = new SystemPathNode();
