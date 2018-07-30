@@ -26,7 +26,8 @@ public class SolarSystem : MonoBehaviour {
     Player m_owner;
     List<Agent> agents = new List<Agent>();
     List<Army> armies = new List<Army>();
-    Dictionary<SolarSystem, float> nearbySystems = new Dictionary<SolarSystem, float>();
+    List<SolarSystem> nearbySystems = new List<SolarSystem>();
+    List<TravelRoute> travelRoutes = new List<TravelRoute>();
 
     public int GetCurrentPopulation() { return m_currentPopulation; }
     public float GetGrowthRate() { return m_growthRate; }
@@ -160,10 +161,16 @@ public class SolarSystem : MonoBehaviour {
         UpdateBorders();
     }
 
-    public Dictionary<SolarSystem, float> GetNearbySystems()
+    public List<TravelRoute> GetTravelRoutes()
+    {
+        return travelRoutes;
+    }
+
+    public List<SolarSystem> GetNearbySystems()
     {
         return nearbySystems;
     }
+
     private void UpdateBorders()
     {
         if(empire)
@@ -226,19 +233,29 @@ public class SolarSystem : MonoBehaviour {
             float distance = Vector3.Distance(transform.position, system.transform.position);
             if(distance > 0 && distance <= m_universe.GetMaxTravelDistance())
             {
-                nearbySystems.Add(system,distance);
-                CreateLineRenderer(system);
+                nearbySystems.Add(system);
+                CreateLineRenderer(system, distance);
             }
         }
     }
 
-    private void CreateLineRenderer(SolarSystem destination)
+    private void CreateLineRenderer(SolarSystem destination, float distance)
     {
-        var travelRoute = Instantiate(travelRoutePrefab, transform.position, transform.rotation);
-        LineRenderer lineRenderer = travelRoute.GetComponent<LineRenderer>();
-        lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, destination.transform.position);
-        lineRenderer.transform.SetParent(transform.Find("TravelRoutes"));
+
+        TravelRoute route = destination.travelRoutes.Find(c => c.ContainsSystem(this) == true);
+        if(!route)
+        {
+            var travelRoute = Instantiate(travelRoutePrefab, transform.position, transform.rotation);
+            LineRenderer lineRenderer = travelRoute.GetComponent<LineRenderer>();
+            lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.SetPosition(1, destination.transform.position);
+            lineRenderer.transform.SetParent(transform.Find("TravelRoutes"));
+            route = travelRoute.GetComponent<TravelRoute>();
+            route.systemOne = this;
+            route.systemTwo = destination;
+            route.SetDistance(distance);
+        }
+        travelRoutes.Add(route);
     }
 
     void Update()

@@ -206,7 +206,7 @@ public class EmpireController : MonoBehaviour {
         enemyBorderSystems.Clear();
         foreach (SolarSystem system in empire.GetSystems())
         {
-            foreach (SolarSystem neighbour in system.GetNearbySystems().Keys)
+            foreach (SolarSystem neighbour in system.GetNearbySystems())
             {
                 if (neighbour.GetEmpire() && neighbour.GetEmpire() != empire)
                 {
@@ -222,7 +222,7 @@ public class EmpireController : MonoBehaviour {
         neutralBorderSystems.Clear();
         foreach (SolarSystem system in empire.GetSystems())
         {
-            foreach (SolarSystem neighbour in system.GetNearbySystems().Keys)
+            foreach (SolarSystem neighbour in system.GetNearbySystems())
             {
                 if (!neighbour.GetEmpire())
                 {

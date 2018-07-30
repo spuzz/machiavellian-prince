@@ -14,9 +14,11 @@ public class MovementController : MonoBehaviour {
     [SerializeField] float stoppingDistance = 1f;
     [SerializeField] SolarSystem systemLocation;
     [SerializeField] SolarSystem systemTarget;
+    [SerializeField] TravelRoute currentRoute;
     [SerializeField] float movementSpeed = 1f;
     Queue<SolarSystem> path = new Queue<SolarSystem>();
-
+    Empire currentEmpire;
+    Army army;
     public void SetLocation(SolarSystem systemLocation)
     {
         this.systemLocation = systemLocation;
@@ -44,13 +46,22 @@ public class MovementController : MonoBehaviour {
         {
             transform.position = systemLocation.transform.position;
         }
-        
-
-	}
+        currentEmpire = gameObject.GetComponentInParent<Empire>();
+        army = GetComponent<Army>();
+    }
 
     public void MoveTo(SolarSystem system)
     {
-        systemTarget = system;
+        if(systemTarget != system)
+        {
+            systemTarget = system;
+            if(systemTarget != systemLocation)
+            {
+                CreatePath();
+            }
+            
+        }
+        
     }
 
     public SolarSystem GetNearestSystem(List<Empire> empireToFind, SolarSystem startSystem = null)
@@ -73,12 +84,12 @@ public class MovementController : MonoBehaviour {
 
         while (!empireToFind.Contains(currentNode.system.GetEmpire()) )
         {
-            foreach (SolarSystem neighbour in currentNode.system.GetNearbySystems().Keys)
+            foreach (TravelRoute route in currentNode.system.GetTravelRoutes())
             {
                 SystemPathNode newNode = new SystemPathNode();
-                newNode.system = neighbour;
+                newNode.system = route.GetDestination(currentNode.system);
                 newNode.parent = currentNode;
-                newNode.travelDistanceFromStart = currentNode.travelDistanceFromStart + currentNode.system.GetNearbySystems()[neighbour];
+                newNode.travelDistanceFromStart = currentNode.travelDistanceFromStart + route.GetDistance();
                 SystemPathNode inList = nodes.Find(c => c.system == newNode.system);
                 if (inList == null || closedNodes.Exists(c => c.system == newNode.system) == false)
                 {
@@ -92,6 +103,7 @@ public class MovementController : MonoBehaviour {
                         nodes.Add(newNode);
                     }
                 }
+
             }
             nodes.Remove(currentNode);
             closedNodes.Add(currentNode);
@@ -104,6 +116,7 @@ public class MovementController : MonoBehaviour {
 
     private void CreatePath()
     {
+        path.Clear();
         SystemPathNode currentNode = new SystemPathNode();
         List<SystemPathNode> nodes = new List<SystemPathNode>();
         List<SystemPathNode> closedNodes = new List<SystemPathNode>();
@@ -115,72 +128,133 @@ public class MovementController : MonoBehaviour {
 
         while (currentNode.system != systemTarget)
         {
-            foreach (SolarSystem neighbour in currentNode.system.GetNearbySystems().Keys)
+            foreach (TravelRoute route in currentNode.system.GetTravelRoutes())
             {
-                SystemPathNode newNode = new SystemPathNode();
-                newNode.system = neighbour;
-                newNode.parent = currentNode;
-                newNode.travelDistanceFromStart = currentNode.travelDistanceFromStart + currentNode.system.GetNearbySystems()[neighbour];
-                SystemPathNode inList = nodes.Find(c => c.system == newNode.system);
-                if (inList == null || closedNodes.Exists(c => c.system == newNode.system) == false)
+                SolarSystem neighbour = route.GetDestination(currentNode.system);
+                if (!route.IsBlocked(currentEmpire))
                 {
-                    nodes.Add(newNode);
-                }
-                else
-                {
-                    if(newNode.travelDistanceFromStart < inList.travelDistanceFromStart)
+                    if(neighbour == systemTarget || !currentEmpire || !neighbour.GetEmpire() || currentEmpire == neighbour.GetEmpire())
                     {
-                        nodes.Remove(inList);
-                        nodes.Add(newNode);
+                        SystemPathNode newNode = new SystemPathNode();
+                        newNode.system = neighbour;
+                        newNode.parent = currentNode;
+                        newNode.travelDistanceFromStart = currentNode.travelDistanceFromStart + route.GetDistance();
+                        SystemPathNode inList = nodes.Find(c => c.system == newNode.system);
+                        if (inList == null || closedNodes.Exists(c => c.system == newNode.system) == false)
+                        {
+                            nodes.Add(newNode);
+                        }
+                        else
+                        {
+                            if (newNode.travelDistanceFromStart < inList.travelDistanceFromStart)
+                            {
+                                nodes.Remove(inList);
+                                nodes.Add(newNode);
+                            }
+                        }
                     }
+
                 }
             }
             nodes.Remove(currentNode);
             closedNodes.Add(currentNode);
+            if (nodes.Count == 0)
+            {
+                break;
+            }
             nodes.Sort((l, r) => l.travelDistanceFromStart.CompareTo(r.travelDistanceFromStart));
             currentNode = nodes[0];
             
         }
         List<SolarSystem> finalPath = new List<SolarSystem>();
+        if(currentNode.system != systemTarget)
+        {
+            return;
+        }
         while(currentNode.parent != null)
         {
             finalPath.Add(currentNode.system);
             currentNode = currentNode.parent;
+        }
+        if(currentRoute && finalPath.Count == 0)
+        {
+            finalPath.Add(currentNode.system);
+        }
+        else
+        {
+            currentRoute = systemLocation.GetTravelRoutes().Find(c => c.GetDestination(systemLocation) == finalPath[finalPath.Count - 1]);
+            onLeaveSystem(systemLocation);
         }
         finalPath.Reverse();
         foreach(SolarSystem system in finalPath)
         {
             path.Enqueue(system);
         }
+
         
     }
 
     // Update is called once per frame
     void Update () {
 
-        if (systemTarget && systemLocation != systemTarget && path.Count == 0)
-        {
-            if(systemLocation)
-            {
-                onLeaveSystem(systemLocation);
-            }
-            
-            CreatePath();
-        }
+
         if (path.Count > 0 && Vector3.Distance(transform.position, path.Peek().transform.position) < stoppingDistance)
         {
-            systemLocation = path.Peek();
-            path.Dequeue();
+            if (army)
+            {
+                currentRoute.finishUsingRoute(army);
+            }
+            SolarSystem system = path.Dequeue();
+            
             if (path.Count == 0)
             {
-                onReachedSystem(systemLocation);
+                onReachedSystem(system);
+                currentRoute = null;
+                systemLocation = system;
             }
-        }
-        if(path.Count > 0)
-        {
-            Vector3 direction = (path.Peek().transform.position - transform.position).normalized;
-            transform.position = transform.position + (direction * (movementSpeed/10));
+            else
+            {
+                currentRoute = system.GetTravelRoutes().Find(c => c.GetDestination(system) == path.Peek());
+            }
+            
         }
 
+        if(path.Count > 0)
+        {
+
+            if (CheckNextSystemStillViable(path.Peek()) == false)
+            {
+                CreatePath();
+            }
+            if (path.Count >  0 && CheckNextSystemStillViable(path.Peek()) == true)
+            {
+                Vector3 direction = (path.Peek().transform.position - transform.position).normalized;
+                transform.position = transform.position + (direction * (movementSpeed / 10));
+            }
+
+        }
+
+    }
+
+    private bool CheckNextSystemStillViable(SolarSystem system)
+    {
+        if(path.Count == 1 || !currentEmpire || !system.GetEmpire() || currentEmpire == system.GetEmpire())
+        {
+            if (!currentRoute)
+            {
+                currentRoute = systemLocation.GetTravelRoutes().Find(c => c.GetDestination(systemLocation) == path.Peek());
+                if (currentRoute.IsBlocked(currentEmpire))
+                {
+                    currentRoute = null;
+                    return false;
+                }
+                if (army)
+                {
+                    currentRoute.UseRoute(army);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }
