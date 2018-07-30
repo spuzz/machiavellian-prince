@@ -13,6 +13,7 @@ public class MovementController : MonoBehaviour {
     }
     [SerializeField] float stoppingDistance = 1f;
     [SerializeField] SolarSystem systemLocation;
+    [SerializeField] SolarSystem destinationSystem;
     [SerializeField] SolarSystem systemTarget;
     [SerializeField] TravelRoute currentRoute;
     [SerializeField] float movementSpeed = 1f;
@@ -55,10 +56,6 @@ public class MovementController : MonoBehaviour {
         if(systemTarget != system)
         {
             systemTarget = system;
-            if(systemTarget != systemLocation)
-            {
-                CreatePath();
-            }
             
         }
         
@@ -71,7 +68,15 @@ public class MovementController : MonoBehaviour {
         List<SystemPathNode> closedNodes = new List<SystemPathNode>();
         if(startSystem == null)
         {
-            currentNode.system = systemLocation;
+            if(systemLocation == null)
+            {
+                currentNode.system = destinationSystem;
+            }
+            else
+            {
+                currentNode.system = systemLocation;
+            }
+            
         }
         else
         {
@@ -166,25 +171,33 @@ public class MovementController : MonoBehaviour {
             currentNode = nodes[0];
             
         }
-        List<SolarSystem> finalPath = new List<SolarSystem>();
-        if(currentNode.system != systemTarget)
+
+        if (currentNode.system != systemTarget)
         {
             return;
         }
+
+        List<SolarSystem> finalPath = new List<SolarSystem>();
+
         while(currentNode.parent != null)
         {
             finalPath.Add(currentNode.system);
             currentNode = currentNode.parent;
         }
-        if(currentRoute && finalPath.Count == 0)
-        {
-            finalPath.Add(currentNode.system);
-        }
-        else
-        {
-            currentRoute = systemLocation.GetTravelRoutes().Find(c => c.GetDestination(systemLocation) == finalPath[finalPath.Count - 1]);
-            onLeaveSystem(systemLocation);
-        }
+
+        //if(currentRoute)
+        //{
+        //    finalPath.Add(currentNode.system);
+        //}
+        //else
+        //{
+        //    currentRoute = systemLocation.GetTravelRoutes().Find(c => c.GetDestination(systemLocation) == finalPath[finalPath.Count - 1]);
+        //    if (army)
+        //    {
+        //        currentRoute.UseRoute(army);
+        //    }
+        //    onLeaveSystem(systemLocation);
+        //}
         finalPath.Reverse();
         foreach(SolarSystem system in finalPath)
         {
@@ -197,62 +210,110 @@ public class MovementController : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
-
-        if (path.Count > 0 && Vector3.Distance(transform.position, path.Peek().transform.position) < stoppingDistance)
+        if (currentRoute)
         {
-            if (army)
+            CheckReachedTarget();
+        }
+        else
+        {
+            FindNextMove();
+        }
+        //if (path.Count > 0 && Vector3.Distance(transform.position, path.Peek().transform.position) < stoppingDistance)
+        //{
+        //    if (army)
+        //    {
+        //        currentRoute.finishUsingRoute(army);
+        //    }
+        //    SolarSystem system = path.Dequeue();
+
+        //    if (path.Count == 0)
+        //    {
+        //        onReachedSystem(system);
+        //        currentRoute = null;
+        //        systemLocation = system;
+        //    }
+        //    else
+        //    {
+        //        currentRoute = system.GetTravelRoutes().Find(c => c.GetDestination(system) == path.Peek());
+        //    }
+
+        //}
+
+        //if(path.Count > 0)
+        //{
+
+        //    if (CheckNextSystemStillViable(path.Peek()) == false)
+        //    {
+        //        CreatePath();
+        //    }
+        //    if (path.Count >  0 && CheckNextSystemStillViable(path.Peek()) == true)
+        //    {
+        //        Vector3 direction = (path.Peek().transform.position - transform.position).normalized;
+        //        transform.position = transform.position + (direction * (movementSpeed / 10));
+        //    }
+
+        //}
+
+    }
+
+    private void FindNextMove()
+    {
+        if (systemLocation != systemTarget)
+        {
+            CreatePath();
+        }
+        if (path.Count == 0)
+        {
+            systemTarget = systemLocation;
+        }
+        else
+        {
+            if (CheckNextSystemStillViable(path.Peek()))
             {
-                currentRoute.finishUsingRoute(army);
-            }
-            SolarSystem system = path.Dequeue();
-            
-            if (path.Count == 0)
-            {
-                onReachedSystem(system);
-                currentRoute = null;
-                systemLocation = system;
+
+                if (army)
+                {
+                    currentRoute.UseRoute(army);
+                }
+                destinationSystem = path.Dequeue();
+                onLeaveSystem(systemLocation);
+                systemLocation = null;
             }
             else
             {
-                currentRoute = system.GetTravelRoutes().Find(c => c.GetDestination(system) == path.Peek());
-            }
-            
-        }
-
-        if(path.Count > 0)
-        {
-
-            if (CheckNextSystemStillViable(path.Peek()) == false)
-            {
                 CreatePath();
             }
-            if (path.Count >  0 && CheckNextSystemStillViable(path.Peek()) == true)
-            {
-                Vector3 direction = (path.Peek().transform.position - transform.position).normalized;
-                transform.position = transform.position + (direction * (movementSpeed / 10));
-            }
-
         }
+    }
 
+    private void CheckReachedTarget()
+    {
+        if (Vector3.Distance(transform.position, destinationSystem.transform.position) < stoppingDistance)
+        {
+            systemLocation = destinationSystem;
+            onReachedSystem(destinationSystem);
+            currentRoute = null;
+            destinationSystem = null;
+        }
+        else
+        {
+            Vector3 direction = (destinationSystem.transform.position - transform.position).normalized;
+            transform.position = transform.position + (direction * (movementSpeed / 10));
+        }
     }
 
     private bool CheckNextSystemStillViable(SolarSystem system)
     {
         if(path.Count == 1 || !currentEmpire || !system.GetEmpire() || currentEmpire == system.GetEmpire())
         {
-            if (!currentRoute)
+            currentRoute = systemLocation.GetTravelRoutes().Find(c => c.GetDestination(systemLocation) == path.Peek());
+            if (currentRoute.IsBlocked(currentEmpire))
             {
-                currentRoute = systemLocation.GetTravelRoutes().Find(c => c.GetDestination(systemLocation) == path.Peek());
-                if (currentRoute.IsBlocked(currentEmpire))
-                {
-                    currentRoute = null;
-                    return false;
-                }
-                if (army)
-                {
-                    currentRoute.UseRoute(army);
-                }
+                currentRoute = null;
+                return false;
             }
+
+
             return true;
         }
         return false;
