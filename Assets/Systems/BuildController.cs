@@ -8,6 +8,7 @@ public class BuildController : MonoBehaviour {
     Universe universe;
     UnitConfig unitToBuild;
     int daysLeftOnBuild;
+    Army armyToJoin;
     bool IsBuilding()
     {
         if(unitToBuild)
@@ -16,7 +17,7 @@ public class BuildController : MonoBehaviour {
         }
         return false;
     }
-    public void BuildUnit(UnitConfig unitConfig)
+    public void BuildUnit(UnitConfig unitConfig, Army armyToJoin)
     {
         if(!IsBuilding() && localSystem)
         {
@@ -50,18 +51,7 @@ public class BuildController : MonoBehaviour {
             {
                 if (unitToBuild.WillJoinArmy())
                 {
-                    if (localSystem.HasArmy())
-                    {
-                        localSystem.AddToArmy(0, unitToBuild);
-                    }
-                    else
-                    {
-                        Empire empire = localSystem.GetEmpire();
-                        Army army = Instantiate(unitToBuild.GetUnitPrefab(), empire.transform.Find("Armies").transform).GetComponent<Army>();
-                        army.Addunit(unitToBuild);
-                        army.GetComponent<MovementController>().SetLocation(localSystem);
-                        empire.AddArmy(army);
-                    }
+                    armyToJoin.Addunit(unitToBuild);
                 }
                 else
                 {

@@ -15,6 +15,23 @@ public class MovementController : MonoBehaviour {
     [SerializeField] SolarSystem systemLocation;
     [SerializeField] SolarSystem destinationSystem;
     [SerializeField] SolarSystem systemTarget;
+
+    public void Remove()
+    {
+        if(army)
+        {
+            if (systemLocation)
+            {
+                systemLocation.RemoveArmy(army);
+            }
+            if(currentRoute)
+            {
+                currentRoute.finishUsingRoute(army);
+            }
+        }
+
+    }
+
     [SerializeField] TravelRoute currentRoute;
     [SerializeField] float movementSpeed = 1f;
     Queue<SolarSystem> path = new Queue<SolarSystem>();
@@ -136,7 +153,7 @@ public class MovementController : MonoBehaviour {
             foreach (TravelRoute route in currentNode.system.GetTravelRoutes())
             {
                 SolarSystem neighbour = route.GetDestination(currentNode.system);
-                if (!route.IsBlocked(currentEmpire))
+                if (closedNodes.Exists(c => c.system == neighbour) == false && !route.IsBlocked(currentEmpire))
                 {
                     if(neighbour == systemTarget || !currentEmpire || !neighbour.GetEmpire() || currentEmpire == neighbour.GetEmpire())
                     {
@@ -145,7 +162,7 @@ public class MovementController : MonoBehaviour {
                         newNode.parent = currentNode;
                         newNode.travelDistanceFromStart = currentNode.travelDistanceFromStart + route.GetDistance();
                         SystemPathNode inList = nodes.Find(c => c.system == newNode.system);
-                        if (inList == null || closedNodes.Exists(c => c.system == newNode.system) == false)
+                        if (inList == null)
                         {
                             nodes.Add(newNode);
                         }
@@ -292,6 +309,10 @@ public class MovementController : MonoBehaviour {
         {
             systemLocation = destinationSystem;
             onReachedSystem(destinationSystem);
+            if (army)
+            {
+                currentRoute.finishUsingRoute(army);
+            }
             currentRoute = null;
             destinationSystem = null;
         }

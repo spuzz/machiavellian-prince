@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class EmpireController : MonoBehaviour {
 
-    List<SolarSystem> neutralBorderSystems = new List<SolarSystem>();
+    Dictionary<SolarSystem, SolarSystem> neutralBorderSystems = new Dictionary<SolarSystem, SolarSystem>();
     Dictionary<SolarSystem, SolarSystem> enemyBorderSystems = new Dictionary<SolarSystem, SolarSystem>();
     [SerializeField] List<UnitConfig> buildableUnits;
     enum MissionState
@@ -83,8 +83,8 @@ public class EmpireController : MonoBehaviour {
     {
         while(true)
         {
-            
-            GuardBorders();
+
+            DefendBorders();
             ColonisePlanets();
             yield return new WaitForFixedUpdate();
         }
@@ -95,7 +95,7 @@ public class EmpireController : MonoBehaviour {
         while (true)
         {
 
-            GuardBorders();
+            DefendBorders();
             ColonisePlanets();
             yield return new WaitForFixedUpdate();
         }
@@ -115,29 +115,24 @@ public class EmpireController : MonoBehaviour {
 
     private void AttackEnemy()
     {
-        List<Empire> enemyEmpires = diplomacy.GetEmpiresAtWar();
+        
         
         foreach (Army army in empire.GetArmies())
         {
-            MovementController armyMove = army.GetComponent<MovementController>();
-            SolarSystem system  = armyMove.GetNearestSystem(enemyEmpires);
-            if(system.GetDefence() < army.GetAttackValue())
+            if(army.GetArmyStatus() != Army.ArmyStatus.Training)
             {
-                armyMove.MoveTo(system);
+                if(army.GetArmyType() == Army.ArmyType.Offensive)
+                {
+                    army.AttackNearestEnemy();
+                }
+                else
+                {
+                }
+
             }
-            else
-            {
-                List<Empire> safeEmpires = new List<Empire>();
-                safeEmpires.Add(empire);
-                SolarSystem nearestSafeSystem = armyMove.GetNearestSystem(safeEmpires, system);
-                armyMove.MoveTo(nearestSafeSystem);
-            }
+
         }
 
-        foreach(SolarSystem system in empire.GetSystems())
-        {
-            system.MergeArmies();
-        }
     }
 
 
@@ -154,7 +149,26 @@ public class EmpireController : MonoBehaviour {
 
     private void DefendBorders()
     {
-        throw new NotImplementedException();
+        FindEnemyBorderSystems();
+        
+        int border = 0;
+        foreach (Army army in empire.GetArmies())
+        {
+            if (enemyBorderSystems.Count == 0)
+            {
+                FindNeutralBorderSystems();
+                army.GetComponent<MovementController>().MoveTo(empire.GetSystems()[0]);
+            }
+            else
+            {
+                if (border >= enemyBorderSystems.Count)
+                {
+                    border = 0;
+                }
+                army.GetComponent<MovementController>().MoveTo(enemyBorderSystems.ElementAt(border).Key);
+                border++;
+            }
+        }
     }
 
     private void ColonisePlanets()
@@ -173,33 +187,12 @@ public class EmpireController : MonoBehaviour {
                 {
                     border = 0;
                 }
-                colonyShip.GetComponent<MovementController>().MoveTo(neutralBorderSystems[border]);
+                colonyShip.GetComponent<MovementController>().MoveTo(neutralBorderSystems.ElementAt(border).Key);
                 border++;
             }
         }
     }
 
-    private void GuardBorders()
-    {
-        FindEnemyBorderSystems();
-        int border = 0;
-        foreach(Army army in empire.GetArmies())
-        {
-            if(enemyBorderSystems.Count == 0)
-            {
-                army.GetComponent<MovementController>().MoveTo(empire.GetSystems()[0]);
-            }
-            else
-            {
-                if(border >= enemyBorderSystems.Count)
-                {
-                    border = 0;
-                }
-                army.GetComponent<MovementController>().MoveTo(enemyBorderSystems.ElementAt(border).Key);
-                border++;
-            }
-        }
-    }
 
     private void FindEnemyBorderSystems()
     {
@@ -226,37 +219,42 @@ public class EmpireController : MonoBehaviour {
             {
                 if (!neighbour.GetEmpire())
                 {
-                    neutralBorderSystems.Add(neighbour);
+                    neutralBorderSystems.Add(system,neighbour);
                     break;
                 }
             }
         }
     }
 
+
     private void Build()
     {
-        UnitConfig.BuildType buildType = UnitConfig.BuildType.Expand;
-        UnitConfig tryToBuild = null;
-        if(currentState == MissionState.Attack)
-        {
-            buildType = UnitConfig.BuildType.Attack;
-        }
-        foreach(UnitConfig unitConfig in buildableUnits)
-        {
-            if(unitConfig.GetBuildType() == buildType)
-            {
-                tryToBuild = unitConfig;
-            }
-        }
-        if(tryToBuild)
-        {
-            if (empire.GetGold() > tryToBuild.GetCost())
-            {
-                empire.GetSystems()[0].GetComponent<BuildController>().BuildUnit(tryToBuild);
-                empire.UseGold(tryToBuild.GetCost());
-            }
-        }
+        CheckArmies();
 
+    }
+
+    private void CheckArmies()
+    {
+        // TODO Change Hardcode when to create extra armies
+
+        if (empire.GetDefensiveArmies() < (Mathf.Ceil((float)empire.GetSystems().Count / 3.0f)) && empire.GetPredictedIncome() > 100)
+        {
+            empire.CreateArmy(Army.ArmyType.Defensive, empire.GetSystems()[0]);
+        }
         
+        if(currentState != MissionState.Attack)
+        {
+            if(empire.GetOffensiveArmies() < (Mathf.Ceil((float)empire.GetSystems().Count / 5.0f)) && empire.GetPredictedIncome() > 100)
+            {
+                empire.CreateArmy(Army.ArmyType.Offensive, empire.GetSystems()[0]);
+            }
+        }
+        else
+        {
+            if (empire.GetOffensiveArmies() < (Mathf.Ceil((float)empire.GetSystems().Count / 3.0f)) && empire.GetPredictedIncome() > 100)
+            {
+                empire.CreateArmy(Army.ArmyType.Offensive, empire.GetSystems()[0]);
+            }
+        }
     }
 }

@@ -19,6 +19,9 @@ public class SolarSystem : MonoBehaviour {
 
     [SerializeField] float m_growthRate;
 
+    [SerializeField] int income = 100;
+    [SerializeField] int maintenance = 50;
+
     [SerializeField] Empire empire;
     [SerializeField] int baseDefence = 100;
     [SerializeField] GameObject travelRoutePrefab;
@@ -39,9 +42,6 @@ public class SolarSystem : MonoBehaviour {
     public float GetPowerProduction() { return m_powerProduction; }
     public float GetPowerConsumption() { return m_powerConsumption; }
 
-    float theta_scale = 0.01f;        //Set lower to add more points
-    int size; //Total number of points in circle
-    float radius = 3f;
 
     public string GetName()
     {
@@ -281,11 +281,15 @@ public class SolarSystem : MonoBehaviour {
         
     }
 
+    public int GetNetIncome()
+    {
+        return income - maintenance;
+    }
     private void CalculateProduction()
     {
         if(empire)
         {
-            empire.AddGold(100);
+            empire.AddGold(income - maintenance);
         }
 
     }

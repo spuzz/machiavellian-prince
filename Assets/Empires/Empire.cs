@@ -11,7 +11,7 @@ public class Empire : MonoBehaviour {
     List<Army> armies = new List<Army>();
     List<ColonyShip> colonyShips = new List<ColonyShip>();
     List<SolarSystem> m_ownedSystems = new List<SolarSystem>();
-
+    [SerializeField] GameObject armyPrefab;
     bool isAlive = true;
     // Resources
     [SerializeField] int gold;
@@ -55,6 +55,20 @@ public class Empire : MonoBehaviour {
         }
         return false;
         
+    }
+
+    public int GetPredictedIncome()
+    {
+        int netIncome = 0;
+        foreach(SolarSystem system in GetSystems())
+        {
+            netIncome += system.GetNetIncome();
+        }
+        foreach(Army army in armies)
+        {
+            netIncome -= 50;
+        }
+        return netIncome;
     }
 
 
@@ -124,12 +138,41 @@ public class Empire : MonoBehaviour {
         return m_allPotentialLeaders;
     }
 
-    public void AddArmy(Army army)
+    public void CreateArmy(Army.ArmyType type, SolarSystem system)
     {
+        Army army = Instantiate(armyPrefab, transform.Find("Armies").transform).GetComponent<Army>();
+        army.GetComponent<MovementController>().SetLocation(system);
+        army.SetArmyType(type);
         army.SetEmpire(this);
         armies.Add(army);
     }
-	void Start () {
+
+    public int GetDefensiveArmies()
+    {
+        int total = 0;
+        foreach (Army army in GetArmies())
+        {
+            if (army.GetArmyType() == Army.ArmyType.Defensive)
+            {
+                total += 1;
+            }
+        }
+        return total;
+    }
+
+    public int GetOffensiveArmies()
+    {
+        int total = 0;
+        foreach (Army army in GetArmies())
+        {
+            if (army.GetArmyType() == Army.ArmyType.Defensive)
+            {
+                total += 1;
+            }
+        }
+        return total;
+    }
+    void Start () {
         m_allPotentialLeaders = new List<Leader>(GetComponentsInChildren<Leader>());
         if(m_allPotentialLeaders.Count > 0)
         {

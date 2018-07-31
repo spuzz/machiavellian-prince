@@ -128,7 +128,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stoppingDistance: 1
   systemLocation: {fileID: 0}
+  destinationSystem: {fileID: 0}
   systemTarget: {fileID: 0}
+  currentRoute: {fileID: 0}
   movementSpeed: 1
 --- !u!114 &114787615554780194
 MonoBehaviour:
@@ -141,8 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c9c081e95998224e9e0a68263ee03a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackValue: 0
-  defenceValue: 0
+  attackValue: 100
+  defenceValue: 100
 --- !u!136 &136606246955192748
 CapsuleCollider:
   m_ObjectHideFlags: 1

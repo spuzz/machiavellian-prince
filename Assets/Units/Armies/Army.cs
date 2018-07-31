@@ -5,10 +5,56 @@ using UnityEngine;
 
 public class Army : MonoBehaviour {
 
+    public enum ArmyStatus
+    {
+        Training,
+        Attacking,
+        Defending,
+        WaitingOnReinforcements,
+    }
+
+    public enum ArmyType
+    {
+        Defensive,
+        Offensive
+    }
+
     Empire empire;
     MovementController movementController;
-    [SerializeField] int attackValue = 0;
-    [SerializeField] int defenceValue = 0;
+    [SerializeField] int attackValue = 100;
+    [SerializeField] int defenceValue = 100;
+
+
+    ArmyStatus armyStatus;
+    ArmyType armyType;
+
+    public void SetArmyType(ArmyType type)
+    {
+        armyType = type;
+        if(type == ArmyType.Offensive)
+        {
+            transform.Find("Capsule").GetComponent<Material>().color = Color.red;
+        }
+        else
+        {
+            transform.Find("Capsule").GetComponent<Material>().color = Color.blue;
+        }
+    }
+
+    public void SetArmyStatus(ArmyStatus status)
+    {
+        armyStatus = status;
+    }
+
+    public ArmyStatus GetArmyStatus()
+    {
+        return armyStatus;
+    }
+    
+    public ArmyType GetArmyType()
+    {
+        return armyType;
+    }
 
     public void SetEmpire(Empire empire)
     {
@@ -20,7 +66,7 @@ public class Army : MonoBehaviour {
     }
     public void DestroyArmy()
     {
-        movementController.GetSystemLocation().RemoveArmy(this);
+        movementController.Remove();
         empire.RemoveArmy(this);
         Destroy(gameObject);
     }
@@ -65,7 +111,9 @@ public class Army : MonoBehaviour {
         {
             movementController.GetSystemLocation().AddArmy(this);
         }
-        
+        armyStatus = ArmyStatus.Defending;
+
+
     }
 
     private void OnReachedSystem(SolarSystem system)
@@ -108,8 +156,25 @@ public class Army : MonoBehaviour {
         attackValue += unitConfig.GetAttackStrength();
         defenceValue += unitConfig.GetDefenceStrength();
     }
-    // Update is called once per frame
-    void Update () {
-		
-	}
+
+    public void AttackNearestEnemy()
+    {
+        List<Empire> enemyEmpires = empire.GetComponent<DiplomacyController>().GetEmpiresAtWar();
+        MovementController armyMove = GetComponent<MovementController>();
+        SolarSystem system = armyMove.GetNearestSystem(enemyEmpires);
+        if (system.GetDefence() < GetAttackValue())
+        {
+            SetArmyStatus(Army.ArmyStatus.Attacking);
+            armyMove.MoveTo(system);
+        }
+        else
+        {
+            SetArmyStatus(Army.ArmyStatus.WaitingOnReinforcements);
+            List<Empire> safeEmpires = new List<Empire>();
+            safeEmpires.Add(empire);
+            SolarSystem nearestSafeSystem = armyMove.GetNearestSystem(safeEmpires, system);
+            armyMove.MoveTo(nearestSafeSystem);
+        }
+    }
+
 }
