@@ -9,6 +9,9 @@ public class EmpireController : MonoBehaviour {
     Dictionary<SolarSystem, SolarSystem> neutralBorderSystems = new Dictionary<SolarSystem, SolarSystem>();
     Dictionary<SolarSystem, SolarSystem> enemyBorderSystems = new Dictionary<SolarSystem, SolarSystem>();
     [SerializeField] List<UnitConfig> buildableUnits;
+    [SerializeField] Universe m_universe;
+    UnitConfig colonyShipConfig;
+    bool systemChangeUpdate = true;
     enum MissionState
     {
         Idle,
@@ -24,32 +27,27 @@ public class EmpireController : MonoBehaviour {
     DiplomacyController diplomacy;
 
     void Start () {
+        m_universe = FindObjectOfType<Universe>();
+        m_universe.onSystemOwnerChanged += onSystemChange;
+        
         empire = gameObject.GetComponent<Empire>();
         diplomacy = gameObject.GetComponent<DiplomacyController>();
+        foreach (UnitConfig config in buildableUnits)
+        {
+            if (config.name == "ColonyShip")
+            {
+                colonyShipConfig = config;
+            }
+        }
+        onSystemChange(empire.GetSystems()[0]);
         UpdateState(currentState);
 
     }
 	
-    void UpdateState(MissionState state)
-    {
-        StopAllCoroutines();
-        currentState = state;
-        switch (currentState)
-        {
-            case MissionState.Grow:
-                StartCoroutine("GrowEmpire");
-                break;
-            case MissionState.Attack:
-                StartCoroutine("Attack");
-                break;
-        }
-    }
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
         if(empire.IsAlive())
         {
-            FindNeutralBorderSystems();
-            FindEnemyBorderSystems();
 
             // TODO Simple code to set off war
             if (enemyBorderSystems.Count > 0)
@@ -73,19 +71,42 @@ public class EmpireController : MonoBehaviour {
                     UpdateState(MissionState.Grow);
                 }
             }
-            Build();
+            
         }
 
 	}
 
+    void UpdateState(MissionState state)
+    {
+        StopAllCoroutines();
+        currentState = state;
+        switch (currentState)
+        {
+            case MissionState.Grow:
+                StartCoroutine("GrowEmpire");
+                break;
+            case MissionState.Attack:
+                StartCoroutine("Attack");
+                break;
+        }
+    }
+
+    private void onSystemChange(SolarSystem system)
+    {
+        systemChangeUpdate = true;
+        FindEnemyBorderSystems();
+        FindNeutralBorderSystems();
+    }
 
     public IEnumerator GrowEmpire()
     {
         while(true)
         {
-
+            
             DefendBorders();
             ColonisePlanets();
+            BuildColonyShip();
+            Build();
             yield return new WaitForFixedUpdate();
         }
 
@@ -94,9 +115,11 @@ public class EmpireController : MonoBehaviour {
     {
         while (true)
         {
-
+            
             DefendBorders();
             ColonisePlanets();
+            BuildColonyShip();
+            Build();
             yield return new WaitForFixedUpdate();
         }
 
@@ -107,7 +130,10 @@ public class EmpireController : MonoBehaviour {
 
         while (true)
         {
+            DefendBorders();
             AttackEnemy();
+            
+            Build();
             yield return new WaitForFixedUpdate();
         }
 
@@ -125,10 +151,6 @@ public class EmpireController : MonoBehaviour {
                 {
                     army.AttackNearestEnemy();
                 }
-                else
-                {
-                }
-
             }
 
         }
@@ -149,26 +171,44 @@ public class EmpireController : MonoBehaviour {
 
     private void DefendBorders()
     {
-        FindEnemyBorderSystems();
         
-        int border = 0;
+        if(systemChangeUpdate == false)
+        {
+            return;
+        }
+        systemChangeUpdate = false;
+        List<Army> defendingArmies = new List<Army>();
         foreach (Army army in empire.GetArmies())
         {
-            if (enemyBorderSystems.Count == 0)
+            defendingArmies = new List<Army>();
+        }
+        while(defendingArmies.Count > 0)
+        {
+            foreach (SolarSystem enemySystem in enemyBorderSystems.Keys)
             {
-                FindNeutralBorderSystems();
-                army.GetComponent<MovementController>().MoveTo(empire.GetSystems()[0]);
+                Army closestArmy = FindClosestArmyToSystem(defendingArmies, enemySystem);
+                closestArmy.GetComponent<MovementController>().MoveTo(enemySystem);
+                defendingArmies.Remove(closestArmy);
             }
-            else
+
+        }
+
+    }
+
+    private Army FindClosestArmyToSystem(List<Army> armies, SolarSystem system)
+    {
+        float closestDistance =  -1;
+        Army closestArmy = null;
+        foreach(Army army in armies)
+        {
+            float distance = Vector3.Distance(army.transform.position, system.transform.position);
+            if (closestDistance == -1 || distance < closestDistance)
             {
-                if (border >= enemyBorderSystems.Count)
-                {
-                    border = 0;
-                }
-                army.GetComponent<MovementController>().MoveTo(enemyBorderSystems.ElementAt(border).Key);
-                border++;
+                closestDistance = distance;
+                closestArmy = army;
             }
         }
+        return closestArmy;
     }
 
     private void ColonisePlanets()
@@ -226,16 +266,40 @@ public class EmpireController : MonoBehaviour {
         }
     }
 
+    private void BuildColonyShip()
+    {
+        if (empire.GetGold() < colonyShipConfig.GetCost() || empire.GetColonyShips().Count >= 1)
+        {
+            return;
+        }
+        foreach (SolarSystem system in empire.GetSystems())
+        {
+            UnitConfig unitBuilding = system.GetComponent<BuildController>().GetUnitBuilding();
+            if (unitBuilding && unitBuilding == colonyShipConfig)
+            {
+                return;
+            }
+        }
+        foreach (SolarSystem system in empire.GetSystems())
+        {
+            BuildController builder = system.GetComponent<BuildController>();
+            if (builder.IsBuilding() == false)
+            {
+                builder.BuildUnit(colonyShipConfig, null);
+                empire.UseGold(colonyShipConfig.GetCost());
+            }
+        }
+    }
 
     private void Build()
     {
         CheckArmies();
-
+        BuildUpArmies();
     }
 
     private void CheckArmies()
     {
-        // TODO Change Hardcode when to create extra armies
+        // TODO Change Hardcode of when to create extra armies
 
         if (empire.GetDefensiveArmies() < (Mathf.Ceil((float)empire.GetSystems().Count / 3.0f)) && empire.GetPredictedIncome() > 100)
         {
@@ -257,4 +321,54 @@ public class EmpireController : MonoBehaviour {
             }
         }
     }
+
+    private void BuildUpArmies()
+    {
+        Army smallestArmy = null;
+        float smallestArmyValue = -1;
+        if (empire.GetGold() < buildableUnits[1].GetCost())
+        {
+            return;
+        }
+        foreach (Army army in empire.GetArmies())
+        {
+
+            if(army.GetComponent<MovementController>().IsMoving() == false)
+            {
+                float armyValue;
+                if(army.GetArmyType() == Army.ArmyType.Offensive)
+                {
+                    armyValue = army.GetAttackValue();
+                }
+                else
+                {
+                    armyValue = army.GetDefenceValue();
+                }
+                if(smallestArmyValue == -1 || armyValue < smallestArmyValue)
+                {
+                    smallestArmy = army;
+                    smallestArmyValue = armyValue;
+                }
+            }
+        }
+        if(smallestArmy)
+        {
+            SolarSystem system = smallestArmy.GetComponent<MovementController>().GetSystemLocation();
+            if (smallestArmy.GetArmyType() == Army.ArmyType.Offensive)
+            {
+  
+                system.GetComponent<BuildController>().BuildUnit(buildableUnits[1],smallestArmy);
+                empire.UseGold(buildableUnits[1].GetCost());
+            }
+            else
+            {
+                system.GetComponent<BuildController>().BuildUnit(buildableUnits[2], smallestArmy);
+                empire.UseGold(buildableUnits[2].GetCost());
+            }
+            
+        }
+    }
+    
+
+
 }

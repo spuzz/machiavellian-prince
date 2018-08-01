@@ -10,7 +10,8 @@ public class Universe : MonoBehaviour {
     [SerializeField] float maxTravelDistance = 1000.0f;
     public int mainPlayer = 1;
     int currentDay;
-
+    public delegate void OnSystemOwnerChanged(SolarSystem system); // declare new delegate type
+    public event OnSystemOwnerChanged onSystemOwnerChanged; // instantiate an observer set
     float startTime;
     private GameObject selected;
     private Shader shaderOutline;
@@ -43,7 +44,11 @@ public class Universe : MonoBehaviour {
 
     }
 
-    
+    public void SystemChange(SolarSystem system)
+    {
+        onSystemOwnerChanged(system);
+    }
+
     private void ClearSelection()
     {
         if(selected)

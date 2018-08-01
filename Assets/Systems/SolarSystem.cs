@@ -159,6 +159,7 @@ public class SolarSystem : MonoBehaviour {
         empire.GiveSystem(this);
         this.empire = empire;
         UpdateBorders();
+        m_universe.SystemChange(this);
     }
 
     public List<TravelRoute> GetTravelRoutes()

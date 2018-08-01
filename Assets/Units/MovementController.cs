@@ -78,6 +78,15 @@ public class MovementController : MonoBehaviour {
         
     }
 
+    public bool IsMoving()
+    {
+        if(systemTarget != systemLocation || currentRoute)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public SolarSystem GetNearestSystem(List<Empire> empireToFind, SolarSystem startSystem = null)
     {
         SystemPathNode currentNode = new SystemPathNode();

@@ -9,39 +9,39 @@ public class BuildController : MonoBehaviour {
     UnitConfig unitToBuild;
     int daysLeftOnBuild;
     Army armyToJoin;
-    bool IsBuilding()
+
+    public UnitConfig GetUnitBuilding()
     {
-        if(unitToBuild)
-        {
-            return true;
-        }
-        return false;
+        return unitToBuild;
     }
-    public void BuildUnit(UnitConfig unitConfig, Army armyToJoin)
-    {
-        if(!IsBuilding() && localSystem)
-        {
-            unitToBuild = unitConfig;
-        }
-        daysLeftOnBuild = unitToBuild.GetBuildTime();
-    }
-	// Use this for initialization
+
 	void Start () {
         universe = FindObjectOfType<Universe>();
         universe.onDayChanged += OnDayChange;
 
         localSystem = GetComponent<SolarSystem>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
-    public void SetSystem()
+    public bool IsBuilding()
     {
-
+        if (unitToBuild)
+        {
+            return true;
+        }
+        return false;
     }
+
+    public void BuildUnit(UnitConfig unitConfig, Army armyToJoin)
+    {
+        if (!IsBuilding() && localSystem)
+        {
+            unitToBuild = unitConfig;
+            this.armyToJoin = armyToJoin;
+            daysLeftOnBuild = unitToBuild.GetBuildTime();
+        }
+        
+    }
+
     public void OnDayChange(int days)
     {
         if(IsBuilding())

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +13,9 @@ public class Empire : MonoBehaviour {
     List<ColonyShip> colonyShips = new List<ColonyShip>();
     List<SolarSystem> m_ownedSystems = new List<SolarSystem>();
     [SerializeField] GameObject armyPrefab;
+
     bool isAlive = true;
+
     // Resources
     [SerializeField] int gold;
 
@@ -138,6 +141,46 @@ public class Empire : MonoBehaviour {
         return m_allPotentialLeaders;
     }
 
+    void Start()
+    {
+
+        m_allPotentialLeaders = new List<Leader>(GetComponentsInChildren<Leader>());
+        if (m_allPotentialLeaders.Count > 0)
+        {
+            m_currentLeader = m_allPotentialLeaders[0];
+        }
+
+        armies = new List<Army>(GetComponentsInChildren<Army>());
+        foreach (Army army in armies)
+        {
+            army.SetEmpire(this);
+            if (!army.GetComponent<MovementController>().GetSystemLocation())
+            {
+                army.GetComponent<MovementController>().SetLocation(m_ownedSystems[0]);
+            }
+        }
+
+        colonyShips = new List<ColonyShip>(GetComponentsInChildren<ColonyShip>());
+        foreach (ColonyShip colonyShip in colonyShips)
+        {
+            colonyShip.SetEmpire(this);
+            if (!colonyShip.GetComponent<MovementController>().GetSystemLocation())
+            {
+                colonyShip.GetComponent<MovementController>().SetLocation(m_ownedSystems[0]);
+            }
+        }
+
+    }
+
+
+
+    // Update is called once per frame
+    void Update()
+    {
+
+
+    }
+
     public void CreateArmy(Army.ArmyType type, SolarSystem system)
     {
         Army army = Instantiate(armyPrefab, transform.Find("Armies").transform).GetComponent<Army>();
@@ -172,38 +215,5 @@ public class Empire : MonoBehaviour {
         }
         return total;
     }
-    void Start () {
-        m_allPotentialLeaders = new List<Leader>(GetComponentsInChildren<Leader>());
-        if(m_allPotentialLeaders.Count > 0)
-        {
-            m_currentLeader = m_allPotentialLeaders[0];
-        }
-
-        armies = new List<Army>(GetComponentsInChildren<Army>());
-        foreach(Army army in armies)
-        {
-            army.SetEmpire(this);
-            if (!army.GetComponent<MovementController>().GetSystemLocation())
-            {
-                army.GetComponent<MovementController>().SetLocation(m_ownedSystems[0]);
-            }
-        }
-
-        colonyShips = new List<ColonyShip>(GetComponentsInChildren<ColonyShip>());
-        foreach (ColonyShip colonyShip in colonyShips)
-        {
-            colonyShip.SetEmpire(this);
-            if(!colonyShip.GetComponent<MovementController>().GetSystemLocation())
-            {
-                colonyShip.GetComponent<MovementController>().SetLocation(m_ownedSystems[0]);
-            }
-        }
-
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        
-
-    }
+    
 }
