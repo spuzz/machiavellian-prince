@@ -46,7 +46,7 @@ public class BuildController : MonoBehaviour {
     {
         if(IsBuilding())
         {
-            daysLeftOnBuild -= daysLeftOnBuild;
+            daysLeftOnBuild -= days;
             if (daysLeftOnBuild <= 0)
             {
                 if (unitToBuild.WillJoinArmy())

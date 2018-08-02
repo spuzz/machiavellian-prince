@@ -9,7 +9,7 @@ public class TravelRoute : MonoBehaviour {
     public SolarSystem systemTwo;
     
     float distance;
-    List<Army> armiesTravelling;
+    List<Army> armiesTravelling = new List<Army>();
 
     public float GetDistance()
     {

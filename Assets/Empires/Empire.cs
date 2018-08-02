@@ -51,7 +51,7 @@ public class Empire : MonoBehaviour {
 
     public bool UseGold(int gold)
     {
-        if(this.gold > gold)
+        if(this.gold >= gold)
         {
             this.gold -= gold;
             return true;

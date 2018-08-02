@@ -18,4 +18,4 @@ MonoBehaviour:
   buildType: 0
   attackStrength: 0
   defenceStrength: 0
-  buildTime: 0
+  buildTime: 5

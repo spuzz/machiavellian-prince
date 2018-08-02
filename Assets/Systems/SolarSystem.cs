@@ -32,6 +32,7 @@ public class SolarSystem : MonoBehaviour {
     List<SolarSystem> nearbySystems = new List<SolarSystem>();
     List<TravelRoute> travelRoutes = new List<TravelRoute>();
 
+    bool initSystem = true;
     public int GetCurrentPopulation() { return m_currentPopulation; }
     public float GetGrowthRate() { return m_growthRate; }
     public float GetHappyPopPerc() { return m_happyPopulationPerc; }
@@ -102,6 +103,38 @@ public class SolarSystem : MonoBehaviour {
         if(index < armies.Count)
         {
             armies[index].Addunit(unitConfig);
+        }
+    }
+
+    void Awake()
+    {
+        border = transform.Find("Border").gameObject;
+        UpdateBorders();
+        if (empire)
+        {
+
+            empire.GiveSystem(this);
+        }
+    }
+
+
+
+    public void Start()
+    {
+
+        m_universe = FindObjectOfType<Universe>();
+        m_universe.onDayChanged += ProcessDayChange;
+        FindNearbySystems();
+
+    }
+
+    void Update()
+    {
+        SetOwner();
+        if (initSystem == true && empire)
+        {
+            m_universe.SystemChange(this);
+            initSystem = false;
         }
     }
 
@@ -204,27 +237,7 @@ public class SolarSystem : MonoBehaviour {
         
     }
 
-    void Awake()
-    {
-        border = transform.Find("Border").gameObject;
-        UpdateBorders();
-        if (empire)
-        {
-            
-            empire.GiveSystem(this);
-        }
-    }
 
-
-    
-    public void Start()
-    {
-        
-        m_universe = FindObjectOfType<Universe>();
-        m_universe.onDayChanged += ProcessDayChange;
-        FindNearbySystems();
-
-    }
 
     private void FindNearbySystems()
     {
@@ -259,10 +272,6 @@ public class SolarSystem : MonoBehaviour {
         travelRoutes.Add(route);
     }
 
-    void Update()
-    {
-        SetOwner();
-    }
 
 
     private void ProcessDayChange(int days)

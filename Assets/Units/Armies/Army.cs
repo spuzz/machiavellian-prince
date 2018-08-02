@@ -33,11 +33,11 @@ public class Army : MonoBehaviour {
         armyType = type;
         if(type == ArmyType.Offensive)
         {
-            transform.Find("Capsule").GetComponent<Material>().color = Color.red;
+            transform.Find("Capsule").GetComponent<Renderer>().material.color = Color.red;
         }
         else
         {
-            transform.Find("Capsule").GetComponent<Material>().color = Color.blue;
+            transform.Find("Capsule").GetComponent<Renderer>().material.color = Color.blue;
         }
     }
 
