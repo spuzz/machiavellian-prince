@@ -9,6 +9,7 @@ public class EmpireController : MonoBehaviour {
     List<SolarSystem> neutralBorderSystems = new List<SolarSystem>();
     List<SolarSystem> enemyBorderSystems = new List<SolarSystem>();
     List<SolarSystem> empireEnemyBorderSystems = new List<SolarSystem>();
+    [SerializeField] PersonalityConfig personality;
     Queue<UnitConfig> buildOrder = new Queue<UnitConfig>();
     [SerializeField] List<UnitConfig> buildableUnits;
     [SerializeField] Universe m_universe;
@@ -277,6 +278,29 @@ public class EmpireController : MonoBehaviour {
             }
         }
     }
+    private void Build()
+    {
+        CheckArmies();
+        buildOrder.Clear();
+        BuildMinimumArmies();
+        if (currentState == MissionState.Expand)
+        {
+            BuildColonyShip();
+        }
+
+        BuildUpArmies();
+    }
+
+    private void BuildMinimumArmies()
+    {
+        float maxEcon = personality.m
+        int total = 0;
+        foreach(UnitConfig config in empire.GetBuildingInProgress())
+        {
+            total += config.GetDefenceStrength();
+        }
+        if(empire.GetDefensiveArmies() + total < personality.)
+    }
 
     private void BuildColonyShip()
     {
@@ -303,17 +327,7 @@ public class EmpireController : MonoBehaviour {
         }
     }
 
-    private void Build()
-    {
-        CheckArmies();
-        buildOrder.Clear();
-        if(currentState == MissionState.Expand || currentState == MissionState.Grow)
-        {
-            BuildColonyShip();
-        }
-        
-        BuildUpArmies();
-    }
+
 
     private void CheckArmies()
     {

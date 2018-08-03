@@ -121,6 +121,40 @@ public class Empire : MonoBehaviour {
     {
         armies.Remove(army);
     }
+
+    public float GetTotalDefence()
+    {
+        float total = 0;
+        foreach(Army army in armies)
+        {
+            total += army.GetDefenceValue();
+        }
+        return total;
+    }
+
+    public List<UnitConfig> GetBuildingInProgress()
+    {
+        List < UnitConfig > buildList = new List<UnitConfig>();
+        foreach (SolarSystem system in m_ownedSystems)
+        {
+            if(system.GetComponent<BuildController>().IsBuilding())
+            {
+                buildList.Add(system.GetComponent<BuildController>().GetUnitBuilding());
+            }
+        }
+        return buildList;
+    }
+
+    public float GetTotalOffence()
+    {
+        float total = 0;
+        foreach (Army army in armies)
+        {
+            total += army.GetAttackValue();
+        }
+        return total;
+    }
+
     public List<ColonyShip> GetColonyShips()
     {
         return colonyShips;
