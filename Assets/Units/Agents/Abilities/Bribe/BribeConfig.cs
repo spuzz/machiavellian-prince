@@ -5,7 +5,7 @@ using UnityEngine;
 namespace RPG.Characters
 {
     [CreateAssetMenu(menuName =("Ability/Bribe"))]
-    public class BribeConfig : AbilityConfig
+    public class DefaultConfig : AbilityConfig
     {
         [Header("Bribe Specific")]
         [SerializeField]
@@ -13,7 +13,7 @@ namespace RPG.Characters
 
         public override AbilityBehaviour GetBehaviourComponent(GameObject gameObjectToAttachTo)
         {
-            return gameObjectToAttachTo.AddComponent<BribeBehaviour>();
+            return gameObjectToAttachTo.AddComponent<DefaultBehaviour>();
         }
 
         public float GetInfluence()

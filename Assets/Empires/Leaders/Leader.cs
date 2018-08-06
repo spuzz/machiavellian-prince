@@ -9,6 +9,7 @@ public class Leader : MonoBehaviour{
     const float MinimumInfluence = 100f;
     const float MinimumInfluenceToOverthrow = 1.1f;
     public Player m_controlledBy;
+    [SerializeField] PersonalityConfig personality;
     
     public string GetName()
     {
@@ -16,13 +17,18 @@ public class Leader : MonoBehaviour{
     }
 	// Use this for initialization
 	void Start () {
-		
+        personality.GetBehaviourComponent(gameObject);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
+
+    public void LeadEmpire(Empire empire,EmpireController empireController)
+    {
+        personality.MakeDecisions(empire, empireController);
+    }
 
     public void IncreaseInfluence(Player player, float value)
     {

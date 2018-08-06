@@ -13,6 +13,7 @@ public class Empire : MonoBehaviour {
     List<ColonyShip> colonyShips = new List<ColonyShip>();
     List<SolarSystem> m_ownedSystems = new List<SolarSystem>();
     [SerializeField] GameObject armyPrefab;
+    Universe universe;
 
     bool isAlive = true;
 
@@ -60,7 +61,7 @@ public class Empire : MonoBehaviour {
         
     }
 
-    public int GetPredictedIncome()
+    public int GetPredictedNetIncome()
     {
         int netIncome = 0;
         foreach(SolarSystem system in GetSystems())
@@ -73,6 +74,17 @@ public class Empire : MonoBehaviour {
         }
         return netIncome;
     }
+
+    public int GetPredictedGrossIncome()
+    {
+        int netIncome = 0;
+        foreach (SolarSystem system in GetSystems())
+        {
+            netIncome += system.GetNetIncome();
+        }
+        return netIncome;
+    }
+
 
 
     public Color GetColor()
@@ -177,7 +189,8 @@ public class Empire : MonoBehaviour {
 
     void Start()
     {
-
+        universe = FindObjectOfType<Universe>();
+        universe.onDayChanged += ProcessDayChange;
         m_allPotentialLeaders = new List<Leader>(GetComponentsInChildren<Leader>());
         if (m_allPotentialLeaders.Count > 0)
         {
@@ -206,14 +219,11 @@ public class Empire : MonoBehaviour {
 
     }
 
-
-
-    // Update is called once per frame
-    void Update()
+    private void ProcessDayChange(int days)
     {
-
-
+        m_currentLeader.LeadEmpire(this, GetComponent<EmpireController>());
     }
+
 
     public void CreateArmy(Army.ArmyType type, SolarSystem system)
     {

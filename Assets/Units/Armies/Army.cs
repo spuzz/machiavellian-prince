@@ -7,10 +7,11 @@ public class Army : MonoBehaviour {
 
     public enum ArmyStatus
     {
+        Idle,
         Training,
         Attacking,
         Defending,
-        WaitingOnReinforcements,
+        
     }
 
     public enum ArmyType
@@ -169,7 +170,7 @@ public class Army : MonoBehaviour {
         }
         else
         {
-            SetArmyStatus(Army.ArmyStatus.WaitingOnReinforcements);
+            SetArmyStatus(Army.ArmyStatus.Idle);
             List<Empire> safeEmpires = new List<Empire>();
             safeEmpires.Add(empire);
             SolarSystem nearestSafeSystem = armyMove.GetNearestSystem(safeEmpires, system);

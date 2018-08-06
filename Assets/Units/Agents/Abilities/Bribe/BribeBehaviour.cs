@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RPG.Characters
 {
-    public class BribeBehaviour : AbilityBehaviour
+    public class DefaultBehaviour : AbilityBehaviour
     {
 
         public override void Use(GameObject target = null, Agent agent = null)
@@ -12,7 +12,7 @@ namespace RPG.Characters
             Leader leader = target.GetComponent<Leader>();
             if (leader != null && agent)
             {
-                leader.IncreaseInfluence(agent.GetPlayer(), (config as BribeConfig).GetInfluence());
+                leader.IncreaseInfluence(agent.GetPlayer(), (config as DefaultConfig).GetInfluence());
             }
             
             PlayParticleEffect();
