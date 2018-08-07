@@ -7,6 +7,15 @@ using UnityEngine;
 public class BuildUp : State
 {
 
+    public BuildUp()
+    {
+        
+        buildFunctions.Add(CheckArmies);
+        buildFunctions.Add(CheckMinDefence);
+        buildFunctions.Add(CheckMinOffence);
+        defaultBuildFunctions.Add(BuildInfrastructure);
+        defaultBuildFunctions.Add(TrainArmy);
+    }
     public override void RunArmyBehaviour(Empire empire, EmpireController empireController)
     {
         List<Army> armies = empire.GetArmies();
@@ -25,43 +34,5 @@ public class BuildUp : State
         {
             status = Build(empire);
         }
-    }
-
-    private bool Build(Empire empire)
-    {
-        isInDefaultBuild = false;
-        if ((float)empire.GetPredictedNetIncome() / (float)empire.GetPredictedGrossIncome() > GetEconomyAvailable())
-        {
-            return false;
-        }
-
-        if (CheckArmies(empire))
-        {
-            return true;
-        }
-
-        if (CheckMinDefence(empire))
-        {
-            return true;
-        }
-
-        if (CheckMinOffence(empire))
-        {
-            return true;
-        }
-
-        isInDefaultBuild = true;
-
-        if (BuildInfrastructure(empire))
-        {
-            return true;
-        }
-
-        if (TrainArmy(empire))
-        {
-            return true;
-        }
-
-        return false;
     }
 }

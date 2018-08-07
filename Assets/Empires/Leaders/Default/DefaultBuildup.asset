@@ -13,5 +13,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Expand
   stateName: 
   percOfEconomyAvailable: 100
-  minDefencePerSystem: 0
-  minOffencePerSystem: 0
+  minDefencePerSystem: 200
+  minOffencePerSystem: 100

@@ -11,6 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13018e5d6906886499ea6f953ef03745, type: 3}
   m_Name: DefaultGrow
   m_EditorClassIdentifier: 
+  stateName: 
   percOfEconomyAvailable: 100
-  minDefencePerSystem: 0
-  minOffencePerSystem: 0
+  minDefencePerSystem: 100
+  minOffencePerSystem: 50

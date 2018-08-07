@@ -5,6 +5,14 @@ using UnityEngine;
 [CreateAssetMenu(menuName = ("State/Attack"))]
 public class Attack : State
 {
+    public Attack()
+    {
+        buildFunctions = new List<BuildFunction>();
+        buildFunctions.Add(CheckArmies);
+        buildFunctions.Add(CheckMinDefence);
+        buildFunctions.Add(CheckMinOffence);
+        defaultBuildFunctions.Add(TrainArmy);
+    }
     public override void RunArmyBehaviour(Empire empire, EmpireController empireController)
     {
         return;
@@ -17,37 +25,5 @@ public class Attack : State
         {
             status = Build(empire);
         }
-    }
-
-    private bool Build(Empire empire)
-    {
-        isInDefaultBuild = false;
-        if ((float)empire.GetPredictedNetIncome() / (float)empire.GetPredictedGrossIncome() > GetEconomyAvailable())
-        {
-            return false;
-        }
-
-        if (CheckArmies(empire))
-        {
-            return true;
-        }
-
-        if (CheckMinDefence(empire))
-        {
-            return true;
-        }
-
-        if (CheckMinOffence(empire))
-        {
-            return true;
-        }
-
-        isInDefaultBuild = true;
-        if (TrainArmy(empire))
-        {
-            return true;
-        }
-
-        return false;
     }
 }

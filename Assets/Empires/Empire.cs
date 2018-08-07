@@ -13,6 +13,7 @@ public class Empire : MonoBehaviour {
     List<ColonyShip> colonyShips = new List<ColonyShip>();
     List<SolarSystem> m_ownedSystems = new List<SolarSystem>();
     [SerializeField] GameObject armyPrefab;
+    [SerializeField] GameObject colonyShipPrefab;
     [SerializeField] BuildingConfig colonyShipConfig;
     [SerializeField] UnitConfig attackUnit;
     [SerializeField] UnitConfig defenceUnit;
@@ -37,6 +38,11 @@ public class Empire : MonoBehaviour {
         }
 
         FindObjectOfType<Universe>().CheckEndGame();
+    }
+
+    public GameObject GetColonyShipPrefab()
+    {
+        return colonyShipPrefab;
     }
 
     public BuildingConfig GetColonyShipConfig()

@@ -47,7 +47,7 @@ public class BuildController : MonoBehaviour {
     private void InstantiateColonyShip()
     {
         Empire empire = localSystem.GetEmpire();
-        ColonyShip ship = Instantiate(colonyShip, empire.transform.Find("ColonyShips").transform).GetComponent<ColonyShip>();
+        ColonyShip ship = Instantiate(empire.GetColonyShipPrefab(), empire.transform.Find("ColonyShips").transform).GetComponent<ColonyShip>();
         ship.GetComponent<MovementController>().SetLocation(localSystem);
         empire.AddColonyShip(ship);
     }

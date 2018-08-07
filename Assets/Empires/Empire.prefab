@@ -166,6 +166,8 @@ MonoBehaviour:
   EmpireName: Default Empire
   empireColour: {r: 1, g: 1, b: 1, a: 0}
   armyPrefab: {fileID: 1578640926330050, guid: 5f5db062cc90e764aa7f3a283180557e, type: 2}
+  colonyShipPrefab: {fileID: 1719958672899598, guid: 02769157d80d22049a64c64d5c73437a,
+    type: 2}
   colonyShipConfig: {fileID: 11400000, guid: d20304e1a0c134c4a994ac995fefede5, type: 2}
   attackUnit: {fileID: 11400000, guid: 61af22e9a1e0a0c49bd8c6eec519ecc2, type: 2}
   defenceUnit: {fileID: 11400000, guid: 53a453f3f6d30ee46985f529d31528b9, type: 2}

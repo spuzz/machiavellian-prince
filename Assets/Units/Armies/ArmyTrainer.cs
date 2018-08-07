@@ -29,6 +29,11 @@ public class ArmyTrainer : MonoBehaviour {
 
     public bool TrainUnit(UnitConfig unitConfig)
     {
+        if(!army)
+        {
+            return false;
+        }
+
         if (!IsBuilding() && army.GetEmpire().UseGold(unitConfig.GetCost()))
         {
             unitToBuild = unitConfig;

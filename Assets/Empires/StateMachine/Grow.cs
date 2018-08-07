@@ -7,7 +7,16 @@ using UnityEngine;
 [CreateAssetMenu(menuName = ("State/Grow"))]
 public class Grow : State
 {
+    
+    public Grow()
+    {
+        buildFunctions = new List<BuildFunction>();
+        buildFunctions.Add(CheckArmies);
+        buildFunctions.Add(CheckMinDefence);
+        buildFunctions.Add(CheckMinOffence);
+        buildFunctions.Add(BuildColonyShip);
 
+    }
     public override void RunArmyBehaviour(Empire empire, EmpireController empireController)
     {
         List<Army> armies = empire.GetArmies();
@@ -28,35 +37,5 @@ public class Grow : State
         }
     }
 
-    private bool Build(Empire empire)
-    {
-        isInDefaultBuild = false;
-        if ((float)empire.GetPredictedNetIncome() / (float)empire.GetPredictedGrossIncome() > GetEconomyAvailable())
-        {
-            return false;
-        }
 
-        if(CheckArmies(empire))
-        {
-            return true;
-        }
-
-        if(CheckMinDefence(empire))
-        {
-            return true;
-        }
-
-        if(CheckMinOffence(empire))
-        {
-            return true;
-        }
-        isInDefaultBuild = true;
-        if (BuildColonyShip(empire))
-        {
-            return true;
-        }
-
-
-        return false;
-    }
 }
