@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,7 +12,12 @@ public abstract class State : ScriptableObject {
     [SerializeField] [Range(0,100)] int percOfEconomyAvailable = 100;
     [SerializeField] int minDefencePerSystem = 0;
     [SerializeField] int minOffencePerSystem = 0;
+    protected bool isInDefaultBuild = false;
 
+    public bool GetIsInDefaultBuildMode()
+    {
+        return isInDefaultBuild;
+    }
     public string GetStateName()
     {
         return stateName;
@@ -79,7 +85,7 @@ public abstract class State : ScriptableObject {
     {
 
         int total = 0;
-        foreach (UnitConfig config in empire.GetBuildingInProgress())
+        foreach (UnitConfig config in empire.GetTrainingInProgress())
         {
             total += config.GetDefenceStrength();
         }
@@ -89,8 +95,14 @@ public abstract class State : ScriptableObject {
             if(armies.Count > 0)
             {
                 armies.OrderBy(c => c.GetDefenceValue());
-                //armies[0].buildUnit();
-                return true;
+                if (armies[0].GetComponent<ArmyTrainer>().TrainUnit(empire.GetDefenceConfig()))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
         return false;
@@ -101,7 +113,7 @@ public abstract class State : ScriptableObject {
     {
 
         int total = 0;
-        foreach (UnitConfig config in empire.GetBuildingInProgress())
+        foreach (UnitConfig config in empire.GetTrainingInProgress())
         {
             total += config.GetAttackStrength();
         }
@@ -111,8 +123,14 @@ public abstract class State : ScriptableObject {
             if (armies.Count > 0)
             {
                 armies.OrderBy(c => c.GetAttackValue());
-                //armies[0].buildUnit();
-                return true;
+                if (armies[0].GetComponent<ArmyTrainer>().TrainUnit(empire.GetAttackConfig()))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
         return false;
@@ -124,80 +142,102 @@ public abstract class State : ScriptableObject {
     }
     protected bool BuildColonyShip(Empire empire)
     {
+
+        foreach (SolarSystem system in empire.GetSystems())
+        {
+            BuildController builder = system.GetComponent<BuildController>();
+            if (builder.IsBuilding() == false)
+            {
+                if (builder.BuildBuilding(empire.GetColonyShipConfig()))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
         return false;
-        //if (empire.GetColonyShips().Count >= 1)
-        //{
-        //    return;
-        //}
-        //foreach (SolarSystem system in empire.GetSystems())
-        //{
-        //    UnitConfig unitBuilding = system.GetComponent<BuildController>().GetUnitBuilding();
-        //    if (unitBuilding && unitBuilding == colonyShipConfig)
-        //    {
-        //        return;
-        //    }
-        //}
-        //foreach (SolarSystem system in empire.GetSystems())
-        //{
-        //    BuildController builder = system.GetComponent<BuildController>();
-        //    if (builder.IsBuilding() == false)
-        //    {
-        //        buildOrder.Enqueue(colonyShipConfig);
-        //        break;
-        //    }
-        //}
     }
 
+    protected void DefendBorders(Empire empire, List<Army> armies, List<SolarSystem> enemyBorderSystems)
+    {
+        
+        foreach (SolarSystem system in enemyBorderSystems)
+        {
+            SolarSystem nearestSystem = Navigation.GetNearestSystem(new List<Empire>() { empire }, system);
+            int defenceRouted = 0;
+            while (nearestSystem.GetDefence() + defenceRouted < system.GetOffence() && armies.Count > 0)
+            {
+                Army closestArmy = FindClosestArmy(armies, system);
+                defenceRouted += closestArmy.GetDefenceValue();
+                armies.Remove(closestArmy);
+            }
+        }
+    }
 
-
-
+    private Army FindClosestArmy(List<Army> armies, SolarSystem system)
+    {
+        Army closestArmy = null;
+        int distance = -1;
+        foreach(Army army in armies)
+        {
+            if(distance == -1 || Vector3.Distance(army.transform.position, system.transform.position) < distance)
+            {
+                closestArmy = army;
+            }
+        }
+        return closestArmy;
+    }
 
     protected bool TrainArmy(Empire empire)
     {
+        Army smallestArmy = null;
+        float smallestArmyValue = -1;
+        foreach (Army army in empire.GetArmies())
+        {
+
+            if (army.GetComponent<MovementController>().IsMoving() == false)
+            {
+                float armyValue;
+                if (army.GetArmyType() == Army.ArmyType.Offensive)
+                {
+                    armyValue = army.GetAttackValue();
+                }
+                else
+                {
+                    armyValue = army.GetDefenceValue();
+                }
+                if (smallestArmyValue == -1 || armyValue < smallestArmyValue)
+                {
+                    smallestArmy = army;
+                    smallestArmyValue = armyValue;
+                }
+            }
+        }
+        if (smallestArmy)
+        {
+            if (smallestArmy.GetArmyType() == Army.ArmyType.Offensive)
+            {
+
+                if(smallestArmy.GetComponent<ArmyTrainer>().TrainUnit(empire.GetAttackConfig()))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (smallestArmy.GetComponent<ArmyTrainer>().TrainUnit(empire.GetDefenceConfig()))
+                {
+                    return true;
+                }
+                
+            }
+
+        }
+
         return false;
-        //Army smallestArmy = null;
-        //float smallestArmyValue = -1;
-        //if (empire.GetGold() < buildableUnits[1].GetCost())
-        //{
-        //    return;
-        //}
-        //foreach (Army army in empire.GetArmies())
-        //{
-
-        //    if (army.GetComponent<MovementController>().IsMoving() == false)
-        //    {
-        //        float armyValue;
-        //        if (army.GetArmyType() == Army.ArmyType.Offensive)
-        //        {
-        //            armyValue = army.GetAttackValue();
-        //        }
-        //        else
-        //        {
-        //            armyValue = army.GetDefenceValue();
-        //        }
-        //        if (smallestArmyValue == -1 || armyValue < smallestArmyValue)
-        //        {
-        //            smallestArmy = army;
-        //            smallestArmyValue = armyValue;
-        //        }
-        //    }
-        //}
-        //if (smallestArmy)
-        //{
-        //    SolarSystem system = smallestArmy.GetComponent<MovementController>().GetSystemLocation();
-        //    if (smallestArmy.GetArmyType() == Army.ArmyType.Offensive)
-        //    {
-
-        //        system.GetComponent<BuildController>().BuildUnit(buildableUnits[1], smallestArmy);
-        //        empire.UseGold(buildableUnits[1].GetCost());
-        //    }
-        //    else
-        //    {
-        //        system.GetComponent<BuildController>().BuildUnit(buildableUnits[2], smallestArmy);
-        //        empire.UseGold(buildableUnits[2].GetCost());
-        //    }
-
-        //}
     }
 
     //private void AttackEnemy()
@@ -245,25 +285,25 @@ public abstract class State : ScriptableObject {
 
     //}
 
-    //private void ColonisePlanets()
-    //{
+    protected void ColonisePlanets(Empire empire, EmpireController empireController)
+    {
 
-    //    int border = 0;
-    //    foreach (ColonyShip colonyShip in empire.GetColonyShips())
-    //    {
-    //        if (neutralBorderSystems.Count == 0)
-    //        {
-    //            colonyShip.GetComponent<MovementController>().MoveTo(empire.GetSystems()[0]);
-    //        }
-    //        else
-    //        {
-    //            if (border >= neutralBorderSystems.Count)
-    //            {
-    //                border = 0;
-    //            }
-    //            colonyShip.GetComponent<MovementController>().MoveTo(neutralBorderSystems.ElementAt(border));
-    //            border++;
-    //        }
-    //    }
-    //}
+        int border = 0;
+        foreach (ColonyShip colonyShip in empire.GetColonyShips())
+        {
+            if (empireController.GetNeutralBorderSystems().Count == 0)
+            {
+                colonyShip.GetComponent<MovementController>().MoveTo(empire.GetSystems()[0]);
+            }
+            else
+            {
+                if (border >= empireController.GetNeutralBorderSystems().Count)
+                {
+                    border = 0;
+                }
+                colonyShip.GetComponent<MovementController>().MoveTo(empireController.GetNeutralBorderSystems().ElementAt(border));
+                border++;
+            }
+        }
+    }
 }

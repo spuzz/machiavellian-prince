@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = ("State/Grow"))]
-public class Grow : State
+[CreateAssetMenu(menuName = ("State/BuildUp"))]
+public class BuildUp : State
 {
 
     public override void RunArmyBehaviour(Empire empire, EmpireController empireController)
@@ -22,7 +21,7 @@ public class Grow : State
     public override void RunBuildBehaviour(Empire empire, EmpireController empireController)
     {
         bool status = true;
-        while(status == true)
+        while (status == true)
         {
             status = Build(empire);
         }
@@ -36,26 +35,32 @@ public class Grow : State
             return false;
         }
 
-        if(CheckArmies(empire))
+        if (CheckArmies(empire))
         {
             return true;
         }
 
-        if(CheckMinDefence(empire))
+        if (CheckMinDefence(empire))
         {
             return true;
         }
 
-        if(CheckMinOffence(empire))
+        if (CheckMinOffence(empire))
         {
             return true;
         }
+
         isInDefaultBuild = true;
-        if (BuildColonyShip(empire))
+
+        if (BuildInfrastructure(empire))
         {
             return true;
         }
 
+        if (TrainArmy(empire))
+        {
+            return true;
+        }
 
         return false;
     }

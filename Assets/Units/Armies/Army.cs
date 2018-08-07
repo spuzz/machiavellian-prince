@@ -162,7 +162,7 @@ public class Army : MonoBehaviour {
     {
         List<Empire> enemyEmpires = empire.GetComponent<DiplomacyController>().GetEmpiresAtWar();
         MovementController armyMove = GetComponent<MovementController>();
-        SolarSystem system = armyMove.GetNearestSystem(enemyEmpires);
+        SolarSystem system = Navigation.GetNearestSystem(enemyEmpires,armyMove.GetSystemLocation());
         if (system.GetDefence() < GetAttackValue())
         {
             SetArmyStatus(Army.ArmyStatus.Attacking);
@@ -173,7 +173,7 @@ public class Army : MonoBehaviour {
             SetArmyStatus(Army.ArmyStatus.Idle);
             List<Empire> safeEmpires = new List<Empire>();
             safeEmpires.Add(empire);
-            SolarSystem nearestSafeSystem = armyMove.GetNearestSystem(safeEmpires, system);
+            SolarSystem nearestSafeSystem = Navigation.GetNearestSystem(safeEmpires, system);
             armyMove.MoveTo(nearestSafeSystem);
         }
     }

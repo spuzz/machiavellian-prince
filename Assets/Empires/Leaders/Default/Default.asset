@@ -14,3 +14,4 @@ MonoBehaviour:
   personalityName: Default
   grow: {fileID: 11400000, guid: 71e0c844298153b42a744b9ba030214b, type: 2}
   attack: {fileID: 11400000, guid: 8910032245b540f478417fe3710a67ae, type: 2}
+  buildUp: {fileID: 11400000, guid: d7ba1723982621b4c886e85a2acf80cb, type: 2}

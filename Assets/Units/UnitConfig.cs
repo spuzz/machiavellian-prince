@@ -14,7 +14,6 @@ public class UnitConfig : ScriptableObject
     [SerializeField] GameObject unitPrefab;
     [SerializeField] string Name;
     [SerializeField] int baseCost;
-    [SerializeField] bool joinArmy;
     [SerializeField] BuildType buildType;
     [SerializeField] int attackStrength;
     [SerializeField] int defenceStrength;
@@ -47,8 +46,4 @@ public class UnitConfig : ScriptableObject
         return baseCost;
     }
 
-    public bool WillJoinArmy()
-    {
-        return joinArmy;
-    }
 }

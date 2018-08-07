@@ -9,11 +9,16 @@ public class DefaultConfig : PersonalityConfig
     [Header("Default Specific")]
     [SerializeField] Grow grow;
     [SerializeField] Attack attack;
-
+    [SerializeField] BuildUp buildUp;
 
     public Attack GetAttack()
     {
         return attack;
+    }
+
+    public BuildUp GetBuildUp()
+    {
+        return buildUp;
     }
 
     public Grow GetGrow()

@@ -21,6 +21,7 @@ public class Attack : State
 
     private bool Build(Empire empire)
     {
+        isInDefaultBuild = false;
         if ((float)empire.GetPredictedNetIncome() / (float)empire.GetPredictedGrossIncome() > GetEconomyAvailable())
         {
             return false;
@@ -41,16 +42,7 @@ public class Attack : State
             return true;
         }
 
-        if (BuildInfrastructure(empire))
-        {
-            return true;
-        }
-
-        if (BuildColonyShip(empire))
-        {
-            return true;
-        }
-
+        isInDefaultBuild = true;
         if (TrainArmy(empire))
         {
             return true;

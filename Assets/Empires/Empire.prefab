@@ -151,13 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3b5d370cff200d4380a6df09c550ba6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  personality: {fileID: 11400000, guid: ca9ffbd9a132749449041b851666caf5, type: 2}
-  buildableUnits:
-  - {fileID: 11400000, guid: d20304e1a0c134c4a994ac995fefede5, type: 2}
-  - {fileID: 11400000, guid: 61af22e9a1e0a0c49bd8c6eec519ecc2, type: 2}
-  - {fileID: 11400000, guid: 53a453f3f6d30ee46985f529d31528b9, type: 2}
   m_universe: {fileID: 0}
-  currentState: 0
 --- !u!114 &114782035467463608
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -172,4 +166,7 @@ MonoBehaviour:
   EmpireName: Default Empire
   empireColour: {r: 1, g: 1, b: 1, a: 0}
   armyPrefab: {fileID: 1578640926330050, guid: 5f5db062cc90e764aa7f3a283180557e, type: 2}
+  colonyShipConfig: {fileID: 11400000, guid: d20304e1a0c134c4a994ac995fefede5, type: 2}
+  attackUnit: {fileID: 11400000, guid: 61af22e9a1e0a0c49bd8c6eec519ecc2, type: 2}
+  defenceUnit: {fileID: 11400000, guid: 53a453f3f6d30ee46985f529d31528b9, type: 2}
   gold: 1000

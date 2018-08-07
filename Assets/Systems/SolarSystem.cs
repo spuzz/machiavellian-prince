@@ -98,6 +98,16 @@ public class SolarSystem : MonoBehaviour {
         return defence;
     }
 
+    public int GetOffence()
+    {
+        int offence = 0;
+        foreach (Army army in armies)
+        {
+            offence += army.GetAttackValue();
+        }
+        return offence;
+    }
+
     public void AddToArmy(int index, UnitConfig unitConfig)
     {
         if(index < armies.Count)

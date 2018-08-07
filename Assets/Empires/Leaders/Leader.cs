@@ -17,7 +17,7 @@ public class Leader : MonoBehaviour{
     }
 	// Use this for initialization
 	void Start () {
-        personality.GetBehaviourComponent(gameObject);
+        personality.AddComponent(gameObject);
 	}
 	
 	// Update is called once per frame

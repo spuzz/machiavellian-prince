@@ -13,6 +13,10 @@ public class Empire : MonoBehaviour {
     List<ColonyShip> colonyShips = new List<ColonyShip>();
     List<SolarSystem> m_ownedSystems = new List<SolarSystem>();
     [SerializeField] GameObject armyPrefab;
+    [SerializeField] BuildingConfig colonyShipConfig;
+    [SerializeField] UnitConfig attackUnit;
+    [SerializeField] UnitConfig defenceUnit;
+
     Universe universe;
 
     bool isAlive = true;
@@ -34,6 +38,23 @@ public class Empire : MonoBehaviour {
 
         FindObjectOfType<Universe>().CheckEndGame();
     }
+
+    public BuildingConfig GetColonyShipConfig()
+    {
+        return colonyShipConfig;
+    }
+
+    public UnitConfig GetDefenceConfig()
+    {
+        return attackUnit;
+    }
+
+
+    public UnitConfig GetAttackConfig()
+    {
+        return defenceUnit;
+    }
+
 
     public bool IsAlive()
     {
@@ -144,14 +165,27 @@ public class Empire : MonoBehaviour {
         return total;
     }
 
-    public List<UnitConfig> GetBuildingInProgress()
+    public List<BuildingConfig> GetBuildingInProgress()
     {
-        List < UnitConfig > buildList = new List<UnitConfig>();
+        List <BuildingConfig> buildList = new List<BuildingConfig>();
         foreach (SolarSystem system in m_ownedSystems)
         {
             if(system.GetComponent<BuildController>().IsBuilding())
             {
-                buildList.Add(system.GetComponent<BuildController>().GetUnitBuilding());
+                buildList.Add(system.GetComponent<BuildController>().GetBuildingInConstruction());
+            }
+        }
+        return buildList;
+    }
+
+    public List<UnitConfig> GetTrainingInProgress()
+    {
+        List<UnitConfig> buildList = new List<UnitConfig>();
+        foreach (Army army in armies)
+        {
+            if (army.GetComponent<ArmyTrainer>().IsBuilding())
+            {
+                buildList.Add(army.GetComponent<ArmyTrainer>().GetUnitBuilding());
             }
         }
         return buildList;
@@ -259,5 +293,28 @@ public class Empire : MonoBehaviour {
         }
         return total;
     }
-    
+
+    public bool HasOrBuildingColonyShip()
+    {
+        if(GetColonyShips().Count > 0)
+        {
+            return true;
+        }
+        foreach(SolarSystem system in m_ownedSystems)
+        {
+            if(system.GetComponent<BuildController>().IsBuilding() && system.GetComponent<BuildController>().GetBuildingInConstruction().GetName() == "ColonyShip")
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // TODO Add some checks to see if empire is in a good state ( and therefore could expand )
+    public bool CheckSystemHealth()
+    {
+        return true;
+    }
+
+
 }

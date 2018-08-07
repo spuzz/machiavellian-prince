@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,10 @@ public class DefaultBehaviour : PersonalityBehaviour
 
     private void CheckState(Empire empire, EmpireController empireController)
     {
+        if(!currentState)
+        {
+            UpdateState((config as DefaultConfig).GetGrow());
+        }
         if (empire.IsAlive())
         {
 
@@ -37,12 +42,27 @@ public class DefaultBehaviour : PersonalityBehaviour
             }
             else
             {
-                if (currentState.GetStateName() != "Grow")
-                {
-                    UpdateState((config as DefaultConfig).GetGrow());
-                }
+                CheckGrowOrBuildUp(empire, empireController);
             }
 
+        }
+    }
+
+    private void CheckGrowOrBuildUp(Empire empire, EmpireController empireController)
+    {
+        if(currentState == (config as DefaultConfig).GetGrow())
+        {
+            if(empire.HasOrBuildingColonyShip())
+            {
+                UpdateState((config as DefaultConfig).GetBuildUp());
+            }
+        }
+        else if(currentState == (config as DefaultConfig).GetBuildUp())
+        {
+            if(empireController.GetNeutralBorderSystems().Count > 0  && empire.CheckSystemHealth() && currentState.GetIsInDefaultBuildMode())
+            {
+                UpdateState((config as DefaultConfig).GetGrow());
+            }
         }
     }
 }
