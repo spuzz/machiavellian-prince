@@ -15,19 +15,19 @@ public class Player : MonoBehaviour {
     private void Start()
     {
         systemUI = FindObjectOfType<SystemUI>();
-        HireAgent(AgentTypes[0], systemUI.GetSystem());
+        HireAgent(AgentTypes[0]);
     }
     public int GetPlayerNumber() { return playerNumber;  }
     public string GetPlayerName() { return playerName; }
     public Color GetPlayerColor() { return playerColor; }
 
-    public bool HireAgent(AgentConfig agentConfig,SolarSystem system)
+    public bool HireAgent(AgentConfig agentConfig)
     {
         if(gold >= agentConfig.GetCost())
         {
-            GameObject agent = Instantiate(agentConfig.GetAgentPrefab(), system.transform);
+            GameObject agent = Instantiate(agentConfig.GetAgentPrefab());
             agent.GetComponent<Agent>().SetPlayer(this);
-            agent.GetComponent<Agent>().SetTargetSystem(system);
+            //agent.GetComponent<Agent>().SetTargetSystem(system);
             agent.GetComponent<Agent>().SetAgentName("Agent Smith");
             foreach(AbilityConfig ability in agentConfig.GetAbilities())
             {

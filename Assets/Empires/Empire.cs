@@ -40,6 +40,10 @@ public class Empire : MonoBehaviour {
         FindObjectOfType<Universe>().CheckEndGame();
     }
 
+    public string GetName()
+    {
+        return EmpireName;
+    }
     public GameObject GetColonyShipPrefab()
     {
         return colonyShipPrefab;

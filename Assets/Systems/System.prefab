@@ -200,6 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c2cd4c09c01e9b4992f649548e0c387, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colonyShip: {fileID: 0}
 --- !u!114 &114776703169909600
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -213,16 +214,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_name: 
   m_universe: {fileID: 0}
-  m_currentPopulation: 22216924
-  m_happyPopulationPerc: 102
-  m_powerAvailable: -7519095.5
-  m_powerProduction: 10
-  m_powerConsumption: 2221692.5
-  m_foodAvailable: -75190950
-  m_foodProduction: 100
-  m_foodConsumption: 22216924
-  m_growthRate: 0.43617466
+  m_currentPopulation: 100
+  m_happyPopulationPerc: 0
+  m_powerAvailable: 1000
+  m_powerProduction: 1
+  m_powerConsumption: 0
+  m_foodAvailable: 1000
+  m_foodProduction: 1
+  m_foodConsumption: 0
+  m_growthRate: 2
+  income: 100
+  maintenance: 50
   empire: {fileID: 0}
+  baseDefence: 100
   travelRoutePrefab: {fileID: 1117450932782704, guid: 20e2e2db12e5bf14abd758a2084ae292,
     type: 2}
 --- !u!135 &135460862447510566

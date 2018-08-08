@@ -81,6 +81,10 @@ public class SolarSystem : MonoBehaviour {
         return false;
     }
 
+    public int GetTotalArmies()
+    {
+        return armies.Count;
+    }
     public void MergeArmies()
     {
         while(armies.Count > 1)
@@ -288,8 +292,8 @@ public class SolarSystem : MonoBehaviour {
     {
         for(int day = 0; day < days; day++)
         {
-            m_currentPopulation += Mathf.FloorToInt(m_currentPopulation * m_growthRate);
-            m_growthRate += UnityEngine.Random.Range(-0.05f, 0.05f);
+            m_currentPopulation = Mathf.FloorToInt(m_currentPopulation * (1.0f + (m_growthRate /100.0f)));
+            m_growthRate += UnityEngine.Random.Range(-0.1f, 0.1f);
             m_happyPopulationPerc += UnityEngine.Random.Range(-1, 2);
 
             CalculateConsumption();
@@ -316,8 +320,8 @@ public class SolarSystem : MonoBehaviour {
 
     private void CalculateConsumption()
     {
-        m_powerConsumption = m_currentPopulation * 0.1f;
-        m_foodConsumption = m_currentPopulation * 1f;
+        //m_powerConsumption = m_currentPopulation * 0.1f;
+        //m_foodConsumption = m_currentPopulation * 1f;
     }
 
     public void UpdateStats()

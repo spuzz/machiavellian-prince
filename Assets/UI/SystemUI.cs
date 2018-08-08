@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,24 +8,18 @@ public class SystemUI : MonoBehaviour {
 
     [SerializeField] SolarSystem system;
 
-    // Pop Details
-    [SerializeField] Text m_totalPopulation;
-    [SerializeField] Text m_growthRate;
-    [SerializeField] Text m_happyPopulation;
+    [SerializeField] TextMeshProUGUI systemName;
+    [SerializeField] TextMeshProUGUI empireName;
+    [SerializeField] TextMeshProUGUI pop;
+    [SerializeField] TextMeshProUGUI food;
+    [SerializeField] TextMeshProUGUI power;
+    [SerializeField] TextMeshProUGUI armies;
+    [SerializeField] TextMeshProUGUI offence;
+    [SerializeField] TextMeshProUGUI defence;
+    [SerializeField] TextMeshProUGUI economy;
 
-    // Food Details
-    [SerializeField] Text m_foodAvailable;
-    [SerializeField] Text m_foodProduction;
-    [SerializeField] Text m_foodConsumption;
-
-    // Power Details
-    [SerializeField] Text m_powerAvailable;
-    [SerializeField] Text m_powerProduction;
-    [SerializeField] Text m_powerConsumption;
-
-    [SerializeField] ScrollRect m_resources;
-
-    [SerializeField] Empire m_empire;
+    [SerializeField] Empire empire;
+    EmpireUI empireUI;
     // Use this for initialization
 
     public SolarSystem GetSystem()
@@ -35,23 +30,32 @@ public class SystemUI : MonoBehaviour {
     {
         var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
         cameraRaycaster.onMouseOverSystem += ProcessMouseOverSystem;
+
+        empireUI = FindObjectOfType<EmpireUI>();
     }
 
     // Update is called once per frame
     void Update () {
-        m_totalPopulation.text = system.GetCurrentPopulation().ToString();
-        m_growthRate.text = system.GetGrowthRate().ToString("0.00");
-        m_happyPopulation.text = system.GetHappyPopPerc().ToString("0.00");
-
-        m_foodAvailable.text = system.GetFoodAvailable().ToString();
-        m_foodProduction.text = system.GetFoodProduction().ToString("0.00");
-        m_foodConsumption.text = system.GetFoodConsumption().ToString("0.00");
-
-        m_powerAvailable.text = system.GetPowerAvailable().ToString();
-        m_powerProduction.text = system.GetPowerProduction().ToString("0.00");
-        m_powerConsumption.text = system.GetPowerConsumption().ToString("0.00");
-
-        m_empire = system.GetEmpire();
+        empire = system.GetEmpire();
+        pop.text = system.GetCurrentPopulation().ToString();
+        food.text = system.GetFoodAvailable().ToString();
+        power.text = system.GetPowerAvailable().ToString();
+        systemName.text = system.GetName().ToString();
+        if(empire)
+        {
+            empireName.text = empire.GetName().ToString();
+            empireUI.SetEmpire(empire);
+            empireUI.gameObject.SetActive(true);
+        }
+        else
+        {
+            empireName.text = "None";
+            empireUI.gameObject.SetActive(false);
+        }
+        armies.text = system.GetTotalArmies().ToString();
+        offence.text = system.GetOffence().ToString();
+        defence.text = system.GetDefence().ToString();
+        economy.text = system.GetNetIncome().ToString();
     }
 
 
