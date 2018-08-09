@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(menuName = ("Unit"))]
 public class UnitConfig : ScriptableObject
@@ -18,6 +19,7 @@ public class UnitConfig : ScriptableObject
     [SerializeField] int attackStrength;
     [SerializeField] int defenceStrength;
     [SerializeField] int buildTime;
+    [SerializeField] Sprite portraitIcon;
 
     public int GetBuildTime()
     {
@@ -44,6 +46,11 @@ public class UnitConfig : ScriptableObject
     public int GetCost()
     {
         return baseCost;
+    }
+
+    public Sprite GetPortraitIcon()
+    {
+        return portraitIcon;
     }
 
 }

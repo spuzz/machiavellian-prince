@@ -8,7 +8,7 @@ public class BuildingConfig : ScriptableObject {
     [SerializeField] string Name;
     [SerializeField] int baseCost;
     [SerializeField] int buildTime;
-
+    [SerializeField] Sprite portraitIcon;
 
     public string GetName()
     {
@@ -21,5 +21,10 @@ public class BuildingConfig : ScriptableObject {
     public int GetCost()
     {
         return baseCost;
+    }
+
+    public Sprite GetPortraitIcon()
+    {
+        return portraitIcon;
     }
 }

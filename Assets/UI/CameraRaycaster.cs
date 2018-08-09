@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class CameraRaycaster : MonoBehaviour {
 
-    float maxRaycastDepth = 100f; // Hard coded value
+    float maxRaycastDepth = 1000f; // Hard coded value
     [SerializeField] Vector2 cursorHotspot = new Vector2(0, 0);
     [SerializeField] Texture2D systemCursor = null;
 
@@ -45,12 +45,17 @@ public class CameraRaycaster : MonoBehaviour {
         if (potentialEnemyHit) // if hit no priority object
         {
             SolarSystem system = raycastHit.collider.gameObject.GetComponent<SolarSystem>();
+            if(!system)
+            {
+                system = raycastHit.transform.GetComponentInParent<SolarSystem>();
+            }
             if (system)
             {
                 Cursor.SetCursor(systemCursor, cursorHotspot, CursorMode.Auto);
                 onMouseOverSystem(system);
                 return true;
             }
+            
         }
         return false;
     }

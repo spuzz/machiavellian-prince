@@ -17,9 +17,12 @@ public class SystemUI : MonoBehaviour {
     [SerializeField] TextMeshProUGUI offence;
     [SerializeField] TextMeshProUGUI defence;
     [SerializeField] TextMeshProUGUI economy;
+    [SerializeField] Button buildQueue;
+    [SerializeField] Image buildProgress;
 
     [SerializeField] Empire empire;
     EmpireUI empireUI;
+    BuildController buildController;
     // Use this for initialization
 
     public SolarSystem GetSystem()
@@ -37,6 +40,7 @@ public class SystemUI : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         empire = system.GetEmpire();
+        buildController = system.GetComponent<BuildController>();
         pop.text = system.GetCurrentPopulation().ToString();
         food.text = system.GetFoodAvailable().ToString();
         power.text = system.GetPowerAvailable().ToString();
@@ -56,7 +60,20 @@ public class SystemUI : MonoBehaviour {
         offence.text = system.GetOffence().ToString();
         defence.text = system.GetDefence().ToString();
         economy.text = system.GetNetIncome().ToString();
+        if(!buildController.IsBuilding())
+        {
+            buildQueue.gameObject.SetActive(false);
+            buildProgress.gameObject.SetActive(false);
+        }
+        else
+        {
+            buildQueue.gameObject.SetActive(true);
+            buildQueue.GetComponent<Image>().sprite = buildController.GetBuildingInConstruction().GetPortraitIcon();
+            buildProgress.gameObject.SetActive(true);
+            buildProgress.fillAmount = 1.0f - (float)buildController.GetDaysLeftToBuild() / (float)buildController.GetBuildingInConstruction().GetBuildTime();
+        }
     }
+
 
 
     private void ProcessMouseOverSystem(SolarSystem system)

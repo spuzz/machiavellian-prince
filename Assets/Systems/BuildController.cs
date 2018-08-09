@@ -24,6 +24,11 @@ public class BuildController : MonoBehaviour {
 
     }
 
+    public int GetDaysLeftToBuild()
+    {
+        return daysLeftOnBuild;
+    }
+
     public BuildingConfig GetBuildingInConstruction()
     {
         return buildingUnderConstruction;

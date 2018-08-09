@@ -14,3 +14,4 @@ MonoBehaviour:
   Name: ColonyShip
   baseCost: 1000
   buildTime: 10
+  portraitIcon: {fileID: 21300000, guid: 47030104e84232041b56d528ed006990, type: 3}
