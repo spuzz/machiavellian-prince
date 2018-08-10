@@ -8,6 +8,7 @@ public class Universe : MonoBehaviour {
 
     [SerializeField] float timePerDay = 1.0f;
     [SerializeField] float maxTravelDistance = 1000.0f;
+    [SerializeField] float borderDistance = 20.0f;
     public int mainPlayer = 1;
     int currentDay;
     public delegate void OnSystemOwnerChanged(SolarSystem system); // declare new delegate type
@@ -18,6 +19,7 @@ public class Universe : MonoBehaviour {
     private Shader shaderNoOutline;
     private int xSize = 100;
     private int ySize = 100;
+    SolarSystem[] systems;
 
     public float GetMaxTravelDistance()
     {
@@ -29,8 +31,56 @@ public class Universe : MonoBehaviour {
         shaderNoOutline = Shader.Find("Standard");
         var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
         cameraRaycaster.onMouseOverSystem += ProcessMouseOverSystem;
+
+        CreateUniverse();
     }
 
+    private void CreateUniverse()
+    {
+        GenerateSystems();
+        GenerateBorders();
+    }
+
+
+    // TODO: temp code to get systems from demo scene
+    private void GenerateSystems()
+    {
+        systems = FindObjectsOfType<SolarSystem>();
+
+
+    }
+    private void GenerateBorders()
+    {
+        List<BorderController> borders = new List<BorderController>();
+        foreach (SolarSystem system in systems)
+        {
+            BorderController border = system.transform.Find("Border").GetComponent<BorderController>();
+            border.SetBorderDistance(borderDistance);
+            foreach (SolarSystem possibleNeighbour in systems)
+            {
+                if (possibleNeighbour != system && Vector3.Distance(possibleNeighbour.transform.position, system.transform.position) <= borderDistance * 2)
+                {
+                    border.AddNearbySystem(possibleNeighbour);
+                }
+            }
+
+            borders.Add(border);
+        }
+
+        foreach (BorderController border in borders)
+        {
+            bool result = true;
+            while (result)
+            {
+                result = border.GrowBorder();
+            }
+            border.CreateBorderMesh();
+        }
+        foreach (SolarSystem system in systems)
+        {
+            system.UpdateBorders();
+        }
+    }
 
     private void ProcessMouseOverSystem(SolarSystem system)
     {

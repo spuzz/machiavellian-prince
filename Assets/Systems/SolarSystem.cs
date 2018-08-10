@@ -123,7 +123,7 @@ public class SolarSystem : MonoBehaviour {
     void Awake()
     {
         border = transform.Find("Border").gameObject;
-        UpdateBorders();
+        //UpdateBorders();
         if (empire)
         {
 
@@ -219,15 +219,15 @@ public class SolarSystem : MonoBehaviour {
         return nearbySystems;
     }
 
-    private void UpdateBorders()
+    public void UpdateBorders()
     {
         if(empire)
         {
-            border.GetComponent<Renderer>().material.color = new Color(this.empire.GetColor().r, this.empire.GetColor().g, this.empire.GetColor().b, 0.5f);
+            border.GetComponent<MeshRenderer>().material.color = new Color(this.empire.GetColor().r, this.empire.GetColor().g, this.empire.GetColor().b, 0.2f);
         }
         else
         {
-            border.GetComponent<Renderer>().material.color = new Color(0, 0, 0, 0.5f);
+            border.GetComponent<MeshRenderer>().material.color = new Color(0, 0, 0, 0.5f);
         }
     }
 

@@ -6122,6 +6122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timePerDay: 3
   maxTravelDistance: 30
+  borderDistance: 15
   mainPlayer: 1
 --- !u!4 &1175954170
 Transform:
@@ -11384,6 +11385,11 @@ Prefab:
       propertyPath: m_Name
       value: System (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 114985958366617232, guid: c1f31a53432463541a4e2c5963300ce9,
+        type: 2}
+      propertyPath: material
+      value: 
+      objectReference: {fileID: 2100000, guid: a131e792028336f449e9abe5ad057444, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1f31a53432463541a4e2c5963300ce9, type: 2}
   m_IsPrefabAsset: 0
