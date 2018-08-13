@@ -15,6 +15,10 @@ public class Attack : State
     }
     public override void RunArmyBehaviour(Empire empire, EmpireController empireController)
     {
+        foreach(Army army in empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Offensive))
+        {
+            army.AttackNearestEnemy();
+        }
         return;
     }
 

@@ -9,10 +9,14 @@ public class ArmyTrainer : MonoBehaviour {
     UnitConfig unitToBuild;
     int daysLeftOnBuild;
 
+    private void Awake()
+    {
+        army = GetComponent<Army>();
+    }
     void Start () {
         universe = FindObjectOfType<Universe>();
         universe.onDayChanged += OnDayChange;
-        army = GetComponent<Army>();
+        
 	}
     public UnitConfig GetUnitBuilding()
     {

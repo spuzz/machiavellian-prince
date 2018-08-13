@@ -56,13 +56,13 @@ public class Empire : MonoBehaviour {
 
     public UnitConfig GetDefenceConfig()
     {
-        return attackUnit;
+        return defenceUnit;
     }
 
 
     public UnitConfig GetAttackConfig()
     {
-        return defenceUnit;
+        return attackUnit;
     }
 
 
@@ -296,7 +296,7 @@ public class Empire : MonoBehaviour {
         int total = 0;
         foreach (Army army in GetArmies())
         {
-            if (army.GetArmyType() == Army.ArmyType.Defensive)
+            if (army.GetArmyType() == Army.ArmyType.Offensive)
             {
                 total += 1;
             }

@@ -137,7 +137,7 @@ public abstract class State : ScriptableObject {
         {
             total += config.GetDefenceStrength();
         }
-        if (empire.GetDefensiveArmies() + total < minDefencePerSystem)
+        if (empire.GetDefensiveArmies() + total < (minDefencePerSystem * empire.GetSystems().Count))
         {
             List<Army> armies = empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Defensive && c.GetArmyStatus() == Army.ArmyStatus.Idle);
             if(armies.Count > 0)

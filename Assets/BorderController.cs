@@ -169,6 +169,7 @@ public class BorderController : MonoBehaviour {
         MeshFilter filter = gameObject.AddComponent(typeof(MeshFilter)) as MeshFilter;
         gameObject.GetComponent<MeshRenderer>().material = material;
         filter.mesh = msh;
+        gameObject.AddComponent<MeshCollider>();
     }
 
     public Vector2 Vector2FromAngle(float a)

@@ -31,6 +31,7 @@ public class Navigation {
         //{
         //    currentNode.system = startSystem;
         //}
+        currentNode.system = startSystem;
         currentNode.parent = null;
         currentNode.travelDistanceFromStart = 0;
 
