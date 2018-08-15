@@ -12,6 +12,10 @@ public class Navigation {
 
     public static SolarSystem GetNearestSystem(List<Empire> empireToFind, SolarSystem startSystem)
     {
+        if(empireToFind.Count == 0)
+        {
+            return null;
+        }
         SystemPathNode currentNode = new SystemPathNode();
         List<SystemPathNode> nodes = new List<SystemPathNode>();
         List<SystemPathNode> closedNodes = new List<SystemPathNode>();

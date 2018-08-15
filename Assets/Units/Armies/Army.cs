@@ -10,7 +10,7 @@ public class Army : MonoBehaviour {
         Idle,
         Training,
         Attacking,
-        Defending,
+        Moving,
         
     }
 
@@ -34,11 +34,11 @@ public class Army : MonoBehaviour {
         armyType = type;
         if(type == ArmyType.Offensive)
         {
-            transform.Find("Capsule").GetComponent<Renderer>().material.color = Color.red;
+            transform.Find("ArmyMesh").GetComponent<Renderer>().material.color = Color.red;
         }
         else
         {
-            transform.Find("Capsule").GetComponent<Renderer>().material.color = Color.blue;
+            transform.Find("ArmyMesh").GetComponent<Renderer>().material.color = Color.blue;
         }
     }
 
@@ -112,7 +112,7 @@ public class Army : MonoBehaviour {
         {
             movementController.GetSystemLocation().AddArmy(this);
         }
-        armyStatus = ArmyStatus.Defending;
+        armyStatus = ArmyStatus.Idle;
 
 
     }
@@ -158,24 +158,27 @@ public class Army : MonoBehaviour {
         defenceValue += unitConfig.GetDefenceStrength();
     }
 
-    public void AttackNearestEnemy()
+    public void MoveToNearestEnemy()
     {
         List<Empire> enemyEmpires = empire.GetComponent<DiplomacyController>().GetEmpiresAtWar();
+        if(enemyEmpires.Count == 0)
+        {
+            return;
+        }
         MovementController armyMove = GetComponent<MovementController>();
-        SolarSystem system = Navigation.GetNearestSystem(enemyEmpires,armyMove.GetSystemLocation());
-        if (system.GetDefence() < GetAttackValue())
+        SolarSystem systemLoc = armyMove.GetSystemLocation();
+        if(!systemLoc)
         {
-            SetArmyStatus(Army.ArmyStatus.Attacking);
-            armyMove.MoveTo(system);
+            systemLoc = armyMove.GetSystemNextDesination();
         }
-        else
-        {
-            SetArmyStatus(Army.ArmyStatus.Idle);
-            List<Empire> safeEmpires = new List<Empire>();
-            safeEmpires.Add(empire);
-            SolarSystem nearestSafeSystem = Navigation.GetNearestSystem(safeEmpires, system);
-            armyMove.MoveTo(nearestSafeSystem);
-        }
+        SolarSystem system = Navigation.GetNearestSystem(enemyEmpires, systemLoc);
+
+        SetArmyStatus(Army.ArmyStatus.Idle);
+        List<Empire> safeEmpires = new List<Empire>();
+        safeEmpires.Add(empire);
+        SolarSystem nearestSafeSystem = Navigation.GetNearestSystem(safeEmpires, system);
+        armyMove.MoveTo(nearestSafeSystem);
+        armyStatus = ArmyStatus.Moving;
     }
 
 }

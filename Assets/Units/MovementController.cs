@@ -46,6 +46,11 @@ public class MovementController : MonoBehaviour {
     {
         return systemTarget;
     }
+
+    public SolarSystem GetSystemNextDesination()
+    {
+        return destinationSystem;
+    }
     // New Delegates
     public delegate void OnReachedSystem(SolarSystem system); // declare new delegate type
     public event OnReachedSystem onReachedSystem; // instantiate an observer set

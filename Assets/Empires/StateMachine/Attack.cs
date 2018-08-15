@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,11 +16,26 @@ public class Attack : State
     }
     public override void RunArmyBehaviour(Empire empire, EmpireController empireController)
     {
-        foreach(Army army in empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Offensive))
+        AttackEnemy();
+        foreach (Army army in empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Offensive 
+                && c.GetArmyStatus() != Army.ArmyStatus.Training
+                && c.GetArmyStatus() != Army.ArmyStatus.Attacking))
         {
-            army.AttackNearestEnemy();
+            army.MoveToNearestEnemy();
         }
+
+        
         return;
+    }
+
+    private void AttackEnemy()
+    {
+    //    foreach (Army army in empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Offensive
+    //            && c.GetArmyStatus() != Army.ArmyStatus.Training
+    //            && c.GetArmyStatus() != Army.ArmyStatus.Attacking))
+    //    {
+    //        army.MoveToNearestEnemy();
+    //    }
     }
 
     public override void RunBuildBehaviour(Empire empire, EmpireController empireController)
