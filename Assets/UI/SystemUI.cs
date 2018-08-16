@@ -74,13 +74,15 @@ public class SystemUI : MonoBehaviour {
         }
     }
 
-
+    public void SetSystem(SolarSystem system)
+    {
+        this.system = system;
+    }
 
     private void ProcessMouseOverSystem(SolarSystem system)
     {
         if (Input.GetMouseButton(0) == true)
         {
-            StopAllCoroutines();
             this.system = system;
         }
     }

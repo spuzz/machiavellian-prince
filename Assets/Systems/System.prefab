@@ -31,6 +31,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1558009573639124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4772633467773268}
+  - component: {fileID: 114102785705747888}
+  m_Layer: 0
+  m_Name: UISocket
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1699624023263858
 GameObject:
   m_ObjectHideFlags: 0
@@ -74,6 +90,7 @@ Transform:
   m_Children:
   - {fileID: 4645392816005836}
   - {fileID: 4560204034409336}
+  - {fileID: 4772633467773268}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -102,6 +119,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4334805525651158}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4772633467773268
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1558009573639124}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.97, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4334805525651158}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23165254098215304
 MeshRenderer:
@@ -145,6 +175,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1433968954026342}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114102785705747888
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1558009573639124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a2b79792bb5824b82213007bc28abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyCanvasPrefab: {fileID: 1122356316611208, guid: ac7d95046188a7a46af7f4e8e71b925c,
+    type: 2}
 --- !u!114 &114286564029936620
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -168,7 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b689dca62bd0349a9d0be950805fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_name: 
+  m_name: System 1
   m_universe: {fileID: 0}
   m_currentPopulation: 100
   m_happyPopulationPerc: 0

@@ -45,7 +45,7 @@ public class CameraRaycaster : MonoBehaviour {
         if (potentialEnemyHit) // if hit no priority object
         {
             SolarSystem system = raycastHit.collider.gameObject.GetComponent<SolarSystem>();
-            if(!system)
+            if (!system)
             {
                 system = raycastHit.transform.GetComponentInParent<SolarSystem>();
             }
@@ -55,8 +55,10 @@ public class CameraRaycaster : MonoBehaviour {
                 onMouseOverSystem(system);
                 return true;
             }
-            
+
         }
         return false;
     }
+
+
 }
