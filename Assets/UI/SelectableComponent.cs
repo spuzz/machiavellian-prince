@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,19 +10,42 @@ public class SelectableComponent : MonoBehaviour {
     [SerializeField]
     GameObject enemyCanvasPrefab = null;
     string name;
+    string unitSelecterText;
     Camera cameraToLookAt;
     bool changeText = false;
     Button button;
     Text text;
+    Button unitSelecter;
+    Canvas canvas;
     SystemUI systemUI;
+    float scale = 0.07f;
     void Start()
     {
         cameraToLookAt = Camera.main;
         Instantiate(enemyCanvasPrefab, transform.position, Quaternion.identity, transform);
-        text = GetComponentInChildren<Text>();
-        button = GetComponentInChildren<Button>();
+        canvas = GetComponentInChildren<Canvas>();
+
+        text = canvas.transform.Find("Button").GetComponentInChildren<Text>();
+        button = canvas.transform.Find("Button").GetComponent<Button>();
+        unitSelecter = canvas.transform.Find("UnitSelecter").GetComponent<Button>();
         button.onClick.AddListener(Selected);
+        unitSelecter.onClick.AddListener(UnitSelected);
         systemUI = FindObjectOfType<SystemUI>();
+        unitSelecter.enabled = false;
+
+    }
+
+
+    public void SetScale(float scale)
+    {
+        this.scale = scale;
+        changeText = true;
+    }
+
+    public void SetUnitSelectorText(string text)
+    {
+        unitSelecterText = text;
+        changeText = true;
     }
 
     public void UpdateName(string name)
@@ -36,6 +60,13 @@ public class SelectableComponent : MonoBehaviour {
         {
 
             text.text = name;
+            button.GetComponentInParent<Canvas>().transform.localScale = new Vector3(scale, scale, scale);
+            if(unitSelecterText != "")
+            {
+                unitSelecter.enabled = true;
+                unitSelecter.GetComponentInChildren<Text>().text = unitSelecterText;
+            }
+            
             changeText = false;
         }
 
@@ -51,4 +82,10 @@ public class SelectableComponent : MonoBehaviour {
             systemUI.SetSystem(system);
         }
     }
+
+    private void UnitSelected()
+    {
+        Console.Write("Test");
+    }
+
 }

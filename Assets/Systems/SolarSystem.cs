@@ -66,12 +66,16 @@ public class SolarSystem : MonoBehaviour {
 
     public void AddArmy(Army army)
     {
+        
         armies.Add(army);
+        GetComponentInChildren<SelectableComponent>().SetUnitSelectorText(armies.Count.ToString());
     }
 
     public void RemoveArmy(Army army)
     {
+        
         armies.Remove(army);
+        GetComponentInChildren<SelectableComponent>().SetUnitSelectorText(armies.Count.ToString());
     }
 
     public bool HasArmy()
@@ -139,6 +143,7 @@ public class SolarSystem : MonoBehaviour {
         m_universe = FindObjectOfType<Universe>();
         m_universe.onDayChanged += ProcessDayChange;
         GetComponentInChildren<SelectableComponent>().UpdateName(name);
+        GetComponentInChildren<SelectableComponent>().SetUnitSelectorText("0");
         FindNearbySystems();
 
     }

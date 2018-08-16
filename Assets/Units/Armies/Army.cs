@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Army : MonoBehaviour {
 
+    SelectableComponent selectableComponent;
     public enum ArmyStatus
     {
         Idle,
@@ -24,7 +25,7 @@ public class Army : MonoBehaviour {
     MovementController movementController;
     [SerializeField] int attackValue = 100;
     [SerializeField] int defenceValue = 100;
-
+    [SerializeField] string name = "Army";
 
     ArmyStatus armyStatus;
     ArmyType armyType;
@@ -45,6 +46,20 @@ public class Army : MonoBehaviour {
     public void SetArmyStatus(ArmyStatus status)
     {
         armyStatus = status;
+        if(armyStatus == ArmyStatus.Idle || armyStatus == ArmyStatus.Training)
+        {
+            ShowOnMap(false);
+        }
+        else
+        {
+            ShowOnMap(true);
+        }
+    }
+
+    private void ShowOnMap(bool show)
+    {
+        GetComponentInChildren<MeshRenderer>().enabled = show;
+        GetComponentInChildren<CapsuleCollider>().enabled = show;
     }
 
     public ArmyStatus GetArmyStatus()
@@ -103,6 +118,13 @@ public class Army : MonoBehaviour {
         return defenceValue;
     }
 
+    private void Awake()
+    {
+        selectableComponent = GetComponentInChildren<SelectableComponent>();
+        selectableComponent.UpdateName(name);
+        selectableComponent.SetScale(0.04f);
+    }
+
     void Start () {
         movementController = GetComponent<MovementController>();
         movementController.onReachedSystem += OnReachedSystem;
@@ -112,7 +134,7 @@ public class Army : MonoBehaviour {
         {
             movementController.GetSystemLocation().AddArmy(this);
         }
-        armyStatus = ArmyStatus.Idle;
+        SetArmyStatus(ArmyStatus.Idle);
 
 
     }
