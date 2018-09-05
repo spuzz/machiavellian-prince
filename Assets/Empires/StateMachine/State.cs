@@ -137,7 +137,7 @@ public abstract class State : ScriptableObject {
         {
             total += config.GetDefenceStrength();
         }
-        if (empire.GetDefensiveArmies() + total < (minDefencePerSystem * empire.GetSystems().Count))
+        if (empire.GetTotalDefence() + total < (minDefencePerSystem * empire.GetSystems().Count))
         {
             List<Army> armies = empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Defensive && c.GetArmyStatus() == Army.ArmyStatus.Idle);
             if(armies.Count > 0)
@@ -165,7 +165,7 @@ public abstract class State : ScriptableObject {
         {
             total += config.GetAttackStrength();
         }
-        if (empire.GetDefensiveArmies() + total < minOffencePerSystem)
+        if (empire.GetTotalOffence() + total < (minOffencePerSystem * empire.GetSystems().Count))
         {
             List<Army> armies = empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Defensive && c.GetArmyStatus() == Army.ArmyStatus.Idle);
             if (armies.Count > 0)
