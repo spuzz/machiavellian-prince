@@ -54,3 +54,4 @@ MonoBehaviour:
   leaderName: 
   m_controlledBy: {fileID: 0}
   personality: {fileID: 11400000, guid: 077f0c1613da1b545bd50cfc89f38882, type: 2}
+  currentState: {fileID: 0}

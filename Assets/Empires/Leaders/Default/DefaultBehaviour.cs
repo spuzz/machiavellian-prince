@@ -7,19 +7,19 @@ using UnityEngine;
 public class DefaultBehaviour : PersonalityBehaviour
 {
 
-    public override void MakeDecisions(Empire empire, EmpireController empireController)
+    public override void MakeDecisions(Empire empire, EmpireController empireController, ref State currentState)
     {
-        CheckState(empire, empireController);
+        CheckState(empire, empireController, ref currentState);
         currentState.RunArmyBehaviour(empire, empireController);
         currentState.RunBuildBehaviour(empire, empireController);
 
     }
 
-    private void CheckState(Empire empire, EmpireController empireController)
+    private void CheckState(Empire empire, EmpireController empireController, ref State currentState)
     {
         if(!currentState)
         {
-            UpdateState((config as DefaultConfig).GetGrow());
+            currentState = (config as DefaultConfig).GetGrow();
         }
         if (empire.IsAlive())
         {
@@ -37,31 +37,31 @@ public class DefaultBehaviour : PersonalityBehaviour
                 }
                 if (currentState.GetStateName() != "Attack")
                 {
-                    UpdateState((config as DefaultConfig).GetAttack());
+                    currentState = (config as DefaultConfig).GetAttack();
                 }
             }
             else
             {
-                CheckGrowOrBuildUp(empire, empireController);
+                CheckGrowOrBuildUp(empire, empireController, ref currentState);
             }
 
         }
     }
 
-    private void CheckGrowOrBuildUp(Empire empire, EmpireController empireController)
+    private void CheckGrowOrBuildUp(Empire empire, EmpireController empireController, ref State currentState)
     {
         if(currentState == (config as DefaultConfig).GetGrow())
         {
             if(empire.HasOrBuildingColonyShip())
             {
-                UpdateState((config as DefaultConfig).GetBuildUp());
+                currentState = (config as DefaultConfig).GetBuildUp();
             }
         }
         else if(currentState == (config as DefaultConfig).GetBuildUp())
         {
             if(empireController.GetNeutralBorderSystems().Count > 0  && empire.CheckSystemHealth() && currentState.GetIsInDefaultBuildMode())
             {
-                UpdateState((config as DefaultConfig).GetGrow());
+                currentState = (config as DefaultConfig).GetGrow();
             }
         }
     }

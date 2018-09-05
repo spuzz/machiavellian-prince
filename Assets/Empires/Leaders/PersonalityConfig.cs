@@ -16,9 +16,9 @@ public abstract class PersonalityConfig : ScriptableObject
         behaviour.SetConfig(this);
     }
 
-    public void MakeDecisions(Empire empire, EmpireController empireController)
+    public void MakeDecisions(Empire empire, EmpireController empireController, ref State currentState)
     {
-        behaviour.MakeDecisions(empire, empireController);
+        behaviour.MakeDecisions(empire, empireController, ref currentState);
     }
 
     public string GetName()

@@ -10,7 +10,7 @@ public class Leader : MonoBehaviour{
     const float MinimumInfluenceToOverthrow = 1.1f;
     public Player m_controlledBy;
     [SerializeField] PersonalityConfig personality;
-    
+    [SerializeField] State currentState;
     public string GetName()
     {
         return leaderName;
@@ -27,7 +27,7 @@ public class Leader : MonoBehaviour{
 
     public void LeadEmpire(Empire empire,EmpireController empireController)
     {
-        personality.MakeDecisions(empire, empireController);
+        personality.MakeDecisions(empire, empireController,ref currentState);
     }
 
     public void IncreaseInfluence(Player player, float value)

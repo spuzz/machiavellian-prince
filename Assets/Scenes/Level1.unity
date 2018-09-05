@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19592193, g: 0.09978139, b: 0.11995935, a: 1}
+  m_IndirectSpecularColor: {r: 0.19596928, g: 0.099721186, b: 0.12003348, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2031,6 +2031,10 @@ Prefab:
     - target: {fileID: 4377734066743590, guid: 512ae6cc388df6e4d97bfc7e41138a5b, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1548948782992572, guid: 512ae6cc388df6e4d97bfc7e41138a5b, type: 2}
+      propertyPath: m_Name
+      value: Fed-Leader
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 512ae6cc388df6e4d97bfc7e41138a5b, type: 2}
@@ -8811,6 +8815,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1548948782992572, guid: 512ae6cc388df6e4d97bfc7e41138a5b, type: 2}
+      propertyPath: m_Name
+      value: SG1-Leader
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 512ae6cc388df6e4d97bfc7e41138a5b, type: 2}
   m_IsPrefabAsset: 0
@@ -11818,6 +11826,10 @@ Prefab:
       propertyPath: leaderName
       value: Fredrick the Donkey
       objectReference: {fileID: 0}
+    - target: {fileID: 1548948782992572, guid: 512ae6cc388df6e4d97bfc7e41138a5b, type: 2}
+      propertyPath: m_Name
+      value: TOR-Leader
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 512ae6cc388df6e4d97bfc7e41138a5b, type: 2}
   m_IsPrefabAsset: 0
@@ -12465,7 +12477,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1548948782992572, guid: 512ae6cc388df6e4d97bfc7e41138a5b, type: 2}
       propertyPath: m_Name
-      value: Leader (1)
+      value: Starks-Leader
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 512ae6cc388df6e4d97bfc7e41138a5b, type: 2}
