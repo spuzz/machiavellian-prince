@@ -85,7 +85,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1433968954026342}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -23.3}
+  m_LocalPosition: {x: 50, y: 0, z: -68.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4645392816005836}
@@ -114,7 +114,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1960322719923536}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4334805525651158}
@@ -127,7 +127,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1558009573639124}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.97, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4334805525651158}
@@ -211,17 +211,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23b689dca62bd0349a9d0be950805fe5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_name: System 1
+  m_name: System 27
   m_universe: {fileID: 0}
   m_currentPopulation: 100
   m_happyPopulationPerc: 0
-  m_powerAvailable: 1000
-  m_powerProduction: 1
+  m_powerAvailable: 200
+  m_powerProduction: 20
   m_powerConsumption: 0
   m_foodAvailable: 1000
-  m_foodProduction: 1
+  m_foodProduction: 100
   m_foodConsumption: 0
-  m_growthRate: 2
+  m_growthRate: 0.1
   income: 100
   maintenance: 50
   empire: {fileID: 0}

@@ -17,8 +17,8 @@ public class SelectableComponent : MonoBehaviour {
     Text text;
     Button unitSelecter;
     Canvas canvas;
-    SystemUI systemUI;
-    float scale = 0.07f;
+    HUD hud;
+    float scale = 0.1f;
     void Start()
     {
         cameraToLookAt = Camera.main;
@@ -30,7 +30,7 @@ public class SelectableComponent : MonoBehaviour {
         unitSelecter = canvas.transform.Find("UnitSelecter").GetComponent<Button>();
         button.onClick.AddListener(Selected);
         unitSelecter.onClick.AddListener(UnitSelected);
-        systemUI = FindObjectOfType<SystemUI>();
+        hud = FindObjectOfType<HUD>();
         unitSelecter.enabled = false;
 
     }
@@ -76,11 +76,12 @@ public class SelectableComponent : MonoBehaviour {
 
     public void Selected()
     {
-        SolarSystem system = GetComponentInParent<SolarSystem>();
-        if (system)
-        {
-            systemUI.SetSystem(system);
-        }
+        hud.SelectObject(transform.parent.gameObject);
+        //SolarSystem system = GetComponentInParent<SolarSystem>();
+        //if (system)
+        //{
+        //    systemUI.SetSystem(system);
+        //}
     }
 
     private void UnitSelected()
