@@ -30,6 +30,40 @@ public class Army : MonoBehaviour {
     ArmyStatus armyStatus;
     ArmyType armyType;
 
+    private void Awake()
+    {
+        selectableComponent = GetComponentInChildren<SelectableComponent>();
+        selectableComponent.UpdateName(name);
+        selectableComponent.SetScale(0.04f);
+    }
+
+    void Start()
+    {
+        movementController = GetComponent<MovementController>();
+        movementController.onReachedSystem += OnReachedSystem;
+        movementController.onLeaveSystem += OnLeaveSystem;
+
+        if (movementController.GetSystemLocation())
+        {
+            movementController.GetSystemLocation().AddArmy(this);
+        }
+        SetArmyStatus(ArmyStatus.Idle);
+
+
+    }
+
+    public void Update()
+    {
+        if(armyStatus == ArmyStatus.Moving && movementController.IsMoving() == false)
+        {
+            SetArmyStatus(ArmyStatus.Idle);
+        }
+    }
+    public string GetName()
+    {
+        return name;
+    }
+
     public void SetArmyType(ArmyType type)
     {
         armyType = type;
@@ -60,6 +94,7 @@ public class Army : MonoBehaviour {
     {
         GetComponentInChildren<MeshRenderer>().enabled = show;
         GetComponentInChildren<CapsuleCollider>().enabled = show;
+        selectableComponent.enabled = show;
     }
 
     public ArmyStatus GetArmyStatus()
@@ -118,26 +153,7 @@ public class Army : MonoBehaviour {
         return defenceValue;
     }
 
-    private void Awake()
-    {
-        selectableComponent = GetComponentInChildren<SelectableComponent>();
-        selectableComponent.UpdateName(name);
-        selectableComponent.SetScale(0.04f);
-    }
 
-    void Start () {
-        movementController = GetComponent<MovementController>();
-        movementController.onReachedSystem += OnReachedSystem;
-        movementController.onLeaveSystem += OnLeaveSystem;
-
-        if (movementController.GetSystemLocation())
-        {
-            movementController.GetSystemLocation().AddArmy(this);
-        }
-        SetArmyStatus(ArmyStatus.Idle);
-
-
-    }
 
     private void OnReachedSystem(SolarSystem system)
     {
@@ -159,6 +175,7 @@ public class Army : MonoBehaviour {
     private void Defend(SolarSystem system)
     {
         system.AddArmy(this);
+        SetArmyStatus(ArmyStatus.Idle);
     }
 
     private void Attack(SolarSystem system)
@@ -195,12 +212,16 @@ public class Army : MonoBehaviour {
         }
         SolarSystem system = Navigation.GetNearestSystem(enemyEmpires, systemLoc);
 
-        SetArmyStatus(Army.ArmyStatus.Idle);
+       
         List<Empire> safeEmpires = new List<Empire>();
         safeEmpires.Add(empire);
         SolarSystem nearestSafeSystem = Navigation.GetNearestSystem(safeEmpires, system);
-        armyMove.MoveTo(nearestSafeSystem);
-        armyStatus = ArmyStatus.Moving;
+        if(movementController.GetSystemLocation() != nearestSafeSystem)
+        {
+            armyMove.MoveTo(nearestSafeSystem);
+            SetArmyStatus(Army.ArmyStatus.Moving);
+        }
+
     }
 
 }

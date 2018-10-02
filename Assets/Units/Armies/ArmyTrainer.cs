@@ -30,6 +30,10 @@ public class ArmyTrainer : MonoBehaviour {
         }
         return false;
     }
+    public int GetDaysLeftToBuild()
+    {
+        return daysLeftOnBuild;
+    }
 
     public bool TrainUnit(UnitConfig unitConfig)
     {
@@ -42,6 +46,7 @@ public class ArmyTrainer : MonoBehaviour {
         {
             unitToBuild = unitConfig;
             daysLeftOnBuild = unitToBuild.GetBuildTime();
+            army.SetArmyStatus(Army.ArmyStatus.Training);
             return true;
         }
         return false;
@@ -57,6 +62,7 @@ public class ArmyTrainer : MonoBehaviour {
             {
                 army.Addunit(unitToBuild);
                 unitToBuild = null;
+                army.SetArmyStatus(Army.ArmyStatus.Idle);
             }
         }
 

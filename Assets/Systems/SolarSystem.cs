@@ -64,6 +64,10 @@ public class SolarSystem : MonoBehaviour {
         return empire;
     }
 
+    public List<Army> GetArmies()
+    {
+        return armies;
+    }
     public void AddArmy(Army army)
     {
         

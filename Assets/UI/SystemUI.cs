@@ -21,20 +21,32 @@ public class SystemUI : MonoBehaviour {
     [SerializeField] Image buildProgress;
 
     [SerializeField] Empire empire;
+
+    [SerializeField] ArmyUI armyUI;
+
     EmpireUI empireUI;
     BuildController buildController;
-    // Use this for initialization
+    
 
     public SolarSystem GetSystem()
     {
         return system;
     }
+
+    public void SetSystem(SolarSystem nSystem)
+    {
+        this.system = nSystem;
+
+        armyUI.SetArmies(system.GetArmies());
+    }
+
     void Start()
     {
         var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
         cameraRaycaster.onMouseOverSystem += ProcessMouseOverSystem;
 
         empireUI = FindObjectOfType<EmpireUI>();
+        armyUI = FindObjectOfType<ArmyUI>();
     }
 
     // Update is called once per frame
@@ -74,16 +86,13 @@ public class SystemUI : MonoBehaviour {
         }
     }
 
-    public void SetSystem(SolarSystem system)
-    {
-        this.system = system;
-    }
+
 
     private void ProcessMouseOverSystem(SolarSystem system)
     {
         if (Input.GetMouseButton(0) == true)
         {
-            this.system = system;
+            SetSystem(system);
         }
     }
 }
