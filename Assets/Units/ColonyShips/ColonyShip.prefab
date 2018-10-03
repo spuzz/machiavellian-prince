@@ -151,5 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stoppingDistance: 1
   systemLocation: {fileID: 0}
+  destinationSystem: {fileID: 0}
   systemTarget: {fileID: 0}
-  movementSpeed: 1
+  currentRoute: {fileID: 0}
+  movementSpeed: 5

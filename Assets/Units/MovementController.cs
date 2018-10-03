@@ -11,6 +11,7 @@ public class MovementController : MonoBehaviour {
     [SerializeField] SolarSystem destinationSystem;
     [SerializeField] SolarSystem systemTarget;
 
+    Universe universe;
     public void Remove()
     {
         if(army)
@@ -28,10 +29,11 @@ public class MovementController : MonoBehaviour {
     }
 
     [SerializeField] TravelRoute currentRoute;
-    [SerializeField] float movementSpeed = 1f;
+    [SerializeField] float movementSpeed = 10f;
     Queue<SolarSystem> path = new Queue<SolarSystem>();
     Empire currentEmpire;
     Army army;
+
     public void SetLocation(SolarSystem systemLocation)
     {
         this.systemLocation = systemLocation;
@@ -66,6 +68,7 @@ public class MovementController : MonoBehaviour {
         }
         currentEmpire = gameObject.GetComponentInParent<Empire>();
         army = GetComponent<Army>();
+        universe = FindObjectOfType<Universe>();
     }
 
     public void MoveTo(SolarSystem system)
@@ -224,7 +227,7 @@ public class MovementController : MonoBehaviour {
         else
         {
             Vector3 direction = (destinationSystem.transform.position - transform.position).normalized;
-            transform.position = transform.position + (direction * (movementSpeed / 10));
+            transform.position = transform.position + (direction * (movementSpeed * (Time.deltaTime * universe.GetSpeed())));
         }
     }
 

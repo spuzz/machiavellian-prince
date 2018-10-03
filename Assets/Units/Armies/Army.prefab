@@ -162,7 +162,7 @@ MonoBehaviour:
   destinationSystem: {fileID: 0}
   systemTarget: {fileID: 0}
   currentRoute: {fileID: 0}
-  movementSpeed: 1
+  movementSpeed: 5
 --- !u!114 &114680680156656930
 MonoBehaviour:
   m_ObjectHideFlags: 1
