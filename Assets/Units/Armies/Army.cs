@@ -47,6 +47,7 @@ public class Army : MonoBehaviour {
         {
             movementController.GetSystemLocation().AddArmy(this);
         }
+        movementController.SetBlocking(true);
         SetArmyStatus(ArmyStatus.Idle);
 
 
@@ -54,11 +55,9 @@ public class Army : MonoBehaviour {
 
     public void Update()
     {
-        if(armyStatus == ArmyStatus.Moving && movementController.IsMoving() == false)
-        {
-            SetArmyStatus(ArmyStatus.Idle);
-        }
+
     }
+
     public string GetName()
     {
         return name;
@@ -90,13 +89,6 @@ public class Army : MonoBehaviour {
         }
     }
 
-    private void ShowOnMap(bool show)
-    {
-        GetComponentInChildren<MeshRenderer>().enabled = show;
-        GetComponentInChildren<CapsuleCollider>().enabled = show;
-        selectableComponent.enabled = show;
-    }
-
     public ArmyStatus GetArmyStatus()
     {
         return armyStatus;
@@ -117,7 +109,7 @@ public class Army : MonoBehaviour {
     }
     public void DestroyArmy()
     {
-        movementController.Remove();
+        movementController.GetSystemLocation().RemoveArmy(this);
         empire.RemoveArmy(this);
         Destroy(gameObject);
     }
@@ -153,44 +145,6 @@ public class Army : MonoBehaviour {
         return defenceValue;
     }
 
-
-
-    private void OnReachedSystem(SolarSystem system)
-    {
-        if(!system.GetEmpire() || system.GetEmpire() == empire)
-        {
-            Defend(system);
-        }
-        else
-        {
-            Attack(system);
-        }
-    }
-
-    private void OnLeaveSystem(SolarSystem system)
-    {
-        system.RemoveArmy(this);
-    }
-
-    private void Defend(SolarSystem system)
-    {
-        system.AddArmy(this);
-        SetArmyStatus(ArmyStatus.Idle);
-    }
-
-    private void Attack(SolarSystem system)
-    {
-        if(attackValue <= 0)
-        {
-            DestroyArmy();
-        }
-        else
-        {
-            system.Defend(this);
-        }
-        
-    }
-
     public void Addunit(UnitConfig unitConfig)
     {
         attackValue += unitConfig.GetAttackStrength();
@@ -200,28 +154,72 @@ public class Army : MonoBehaviour {
     public void MoveToNearestEnemy()
     {
         List<Empire> enemyEmpires = empire.GetComponent<DiplomacyController>().GetEmpiresAtWar();
-        if(enemyEmpires.Count == 0)
+        if (enemyEmpires.Count == 0)
         {
             return;
         }
         MovementController armyMove = GetComponent<MovementController>();
         SolarSystem systemLoc = armyMove.GetSystemLocation();
-        if(!systemLoc)
+        if (!systemLoc)
         {
             systemLoc = armyMove.GetSystemNextDesination();
         }
         SolarSystem system = Navigation.GetNearestSystem(enemyEmpires, systemLoc);
 
-       
+
         List<Empire> safeEmpires = new List<Empire>();
         safeEmpires.Add(empire);
         SolarSystem nearestSafeSystem = Navigation.GetNearestSystem(safeEmpires, system);
-        if(movementController.GetSystemLocation() != nearestSafeSystem)
+        if (movementController.GetSystemLocation() != nearestSafeSystem)
         {
             armyMove.MoveTo(nearestSafeSystem);
-            SetArmyStatus(Army.ArmyStatus.Moving);
         }
 
+    }
+
+
+    public void MoveTo(SolarSystem system)
+    {
+        if(movementController.MoveTo(system))
+        {
+            SetArmyStatus(ArmyStatus.Moving);
+        }
+    }
+
+    public void ResetPosition(SolarSystem system)
+    {
+        movementController.SetLocation(system);
+        movementController.MoveTo(system);
+        SetArmyStatus(ArmyStatus.Idle);
+    }
+
+    public void Defend(SolarSystem system)
+    {
+        system.AddArmy(this);
+        SetArmyStatus(ArmyStatus.Idle);
+    }
+
+    private void OnReachedSystem(SolarSystem system)
+    {
+        if(!system.GetEmpire() || system.GetEmpire() == empire)
+        {
+            Defend(system);
+        }
+    }
+
+    private void OnLeaveSystem(SolarSystem system)
+    {
+        system.RemoveArmy(this);
+        SetArmyStatus(ArmyStatus.Moving);
+    }
+
+
+
+    private void ShowOnMap(bool show)
+    {
+        GetComponentInChildren<MeshRenderer>().enabled = show;
+        GetComponentInChildren<CapsuleCollider>().enabled = show;
+        selectableComponent.enabled = show;
     }
 
 }

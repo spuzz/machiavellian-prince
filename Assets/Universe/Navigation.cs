@@ -72,4 +72,17 @@ public class Navigation {
         }
         return currentNode.system;
     }
+
+    public static bool RouteAvailable(SolarSystem systemLocation, SolarSystem targetSystem,Empire empire)
+    {
+        foreach(TravelRoute route in systemLocation.GetTravelRoutes())
+        {
+            if (route.ContainsSystem(targetSystem))
+            {
+                return route.IsBlocked(empire);
+            }
+
+        }
+        return false;
+    }
 }

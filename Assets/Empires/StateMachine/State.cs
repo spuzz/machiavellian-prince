@@ -296,51 +296,6 @@ public abstract class State : ScriptableObject {
     }
 
 
-    //private void AttackEnemy()
-    //{
-
-
-    //    foreach (Army army in empire.GetArmies())
-    //    {
-    //        if (army.GetArmyStatus() != Army.ArmyStatus.Training)
-    //        {
-    //            if (army.GetArmyType() == Army.ArmyType.Offensive)
-    //            {
-    //                army.AttackNearestEnemy();
-    //            }
-    //        }
-
-    //    }
-
-    //}
-
-
-    //private void DefendBorders()
-    //{
-
-    //    if (systemChangeUpdate == false)
-    //    {
-    //        return;
-    //    }
-    //    systemChangeUpdate = false;
-    //    List<Army> defendingArmies = new List<Army>();
-    //    foreach (Army army in empire.GetArmies())
-    //    {
-    //        defendingArmies = new List<Army>();
-    //    }
-    //    while (defendingArmies.Count > 0)
-    //    {
-    //        foreach (SolarSystem enemySystem in empireEnemyBorderSystems)
-    //        {
-    //            Army closestArmy = FindClosestArmyToSystem(defendingArmies, enemySystem);
-    //            closestArmy.GetComponent<MovementController>().MoveTo(enemySystem);
-    //            defendingArmies.Remove(closestArmy);
-    //        }
-
-    //    }
-
-    //}
-
     protected void ColonisePlanets(Empire empire, EmpireController empireController)
     {
 
@@ -349,7 +304,7 @@ public abstract class State : ScriptableObject {
         {
             if (empireController.GetNeutralBorderSystems().Count == 0)
             {
-                colonyShip.GetComponent<MovementController>().MoveTo(empire.GetSystems()[0]);
+                colonyShip.MoveTo(empire.GetSystems()[0]);
             }
             else
             {
@@ -357,7 +312,7 @@ public abstract class State : ScriptableObject {
                 {
                     border = 0;
                 }
-                colonyShip.GetComponent<MovementController>().MoveTo(empireController.GetNeutralBorderSystems().ElementAt(border));
+                colonyShip.MoveTo(empireController.GetNeutralBorderSystems().ElementAt(border));
                 border++;
             }
         }

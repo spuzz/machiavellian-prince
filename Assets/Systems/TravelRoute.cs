@@ -9,7 +9,7 @@ public class TravelRoute : MonoBehaviour {
     public SolarSystem systemTwo;
     
     float distance;
-    List<Army> armiesTravelling = new List<Army>();
+    Dictionary<Empire,int> empiresTravelling = new Dictionary<Empire, int>();
 
     public float GetDistance()
     {
@@ -22,10 +22,11 @@ public class TravelRoute : MonoBehaviour {
     }
     public bool IsBlocked(Empire empire)
     {
-        List<Empire> blockedEmpires = empire.GetComponent<DiplomacyController>().GetEmpiresAtWar();
-        foreach (Army army in armiesTravelling)
+        DiplomacyController diplomacyController = empire.GetComponent<DiplomacyController>();
+        List<Empire> blockedEmpires = diplomacyController.GetEmpiresAtWar();
+        foreach (Empire empTravelling in empiresTravelling.Keys)
         {
-            if (blockedEmpires.Contains(army.GetEmpire()))
+            if (blockedEmpires.Contains(empTravelling))
             {
                 return true;
             }
@@ -33,17 +34,33 @@ public class TravelRoute : MonoBehaviour {
         return false;
     }
 
-    public void UseRoute(Army army)
+    public void UseRoute(Empire empire)
     {
-        armiesTravelling.Add(army);
+        if(empiresTravelling.ContainsKey(empire))
+        {
+
+            empiresTravelling[empire] += 1;
+        }
+        else
+        {
+            empiresTravelling.Add(empire, 1);
+        }
     }
 
-    public void finishUsingRoute(Army army)
+    public void finishUsingRoute(Empire empire)
     {
-        armiesTravelling.Remove(army);
+        if (empiresTravelling.ContainsKey(empire))
+        {
+
+            empiresTravelling[empire]-= 1;
+            if(empiresTravelling[empire] <= 0)
+            {
+                empiresTravelling.Remove(empire);
+            }
+        }
+
     }
     void Start () {
-        armiesTravelling = new List<Army>();
     }
 	
     public SolarSystem GetDestination(SolarSystem system)

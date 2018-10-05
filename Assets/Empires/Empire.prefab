@@ -171,4 +171,6 @@ MonoBehaviour:
   colonyShipConfig: {fileID: 11400000, guid: d20304e1a0c134c4a994ac995fefede5, type: 2}
   attackUnit: {fileID: 11400000, guid: 61af22e9a1e0a0c49bd8c6eec519ecc2, type: 2}
   defenceUnit: {fileID: 11400000, guid: 53a453f3f6d30ee46985f529d31528b9, type: 2}
+  fleetPrefab: {fileID: 1283125283680274, guid: 76432f3fec03f3142817e0f773d48162,
+    type: 2}
   gold: 1000

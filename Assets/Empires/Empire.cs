@@ -17,7 +17,7 @@ public class Empire : MonoBehaviour {
     [SerializeField] BuildingConfig colonyShipConfig;
     [SerializeField] UnitConfig attackUnit;
     [SerializeField] UnitConfig defenceUnit;
-
+    [SerializeField] GameObject fleetPrefab;
     Universe universe;
 
     bool isAlive = true;
@@ -65,6 +65,10 @@ public class Empire : MonoBehaviour {
         return attackUnit;
     }
 
+    public GameObject GetFleetPrefab()
+    {
+        return fleetPrefab;
+    }
 
     public bool IsAlive()
     {

@@ -207,6 +207,9 @@ public class SolarSystem : MonoBehaviour {
         }
 
     }
+
+
+
     public void SetEmpire(Empire empire)
     {
         if(this.empire)
@@ -217,6 +220,19 @@ public class SolarSystem : MonoBehaviour {
         this.empire = empire;
         UpdateBorders();
         m_universe.SystemChange(this);
+        foreach (Army army in armies)
+        {
+            army.DestroyArmy();
+        }
+        armies.Clear();
+    }
+
+    public void DepleteArmies(float percLost)
+    {
+        foreach (Army army in armies)
+        {
+            army.DepleteArmy(percLost);
+        }
     }
 
     public List<TravelRoute> GetTravelRoutes()

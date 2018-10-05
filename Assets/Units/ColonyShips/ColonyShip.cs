@@ -7,6 +7,13 @@ public class ColonyShip : MonoBehaviour {
     Empire empire;
     MovementController movementController;
 
+    void Awake()
+    {
+        movementController = GetComponent<MovementController>();
+        movementController.onReachedSystem += OnReachedSystem;
+        movementController.onLeaveSystem += OnLeaveSystem;
+    }
+
     public void SetEmpire(Empire empire)
     {
         this.empire = empire;
@@ -20,12 +27,12 @@ public class ColonyShip : MonoBehaviour {
         empire.RemoveColonyShip(this);
         Destroy(gameObject);
     }
-    void Start()
+
+    public void MoveTo(SolarSystem system)
     {
-        movementController = GetComponent<MovementController>();
-        movementController.onReachedSystem += OnReachedSystem;
-        movementController.onLeaveSystem += OnLeaveSystem;
+        movementController.MoveTo(system);
     }
+
     private void OnReachedSystem(SolarSystem system)
     {
         ColoniseSystem(system);
@@ -46,8 +53,5 @@ public class ColonyShip : MonoBehaviour {
         // Nothing to do
     }
 
-    // Update is called once per frame
-    void Update () {
-		
-	}
+
 }

@@ -8,20 +8,13 @@ using UnityEngine.SceneManagement;
 
 public class Universe : MonoBehaviour {
 
-    enum Speed
-    {
-        PAUSE,
-        SLOW,
-        NORMAL,
-        FAST,
-        SKIP
-    }
 
-    [SerializeField] Speed speed = Speed.NORMAL;
+
+    
     [SerializeField] float timePerDay = 1.0f;
     [SerializeField] float maxTravelDistance = 1000.0f;
     [SerializeField] float borderDistance = 20.0f;
-    [SerializeField] Dictionary<Speed, float> speedValues = new Dictionary<Speed, float>(); 
+
     public int mainPlayer = 1;
     int currentDay;
     public delegate void OnSystemOwnerChanged(SolarSystem system); // declare new delegate type
@@ -34,9 +27,10 @@ public class Universe : MonoBehaviour {
     private Shader shaderOutline;
     private Shader shaderNoOutline;
 
-    private float currentSpeed;
+    
     SolarSystem[] systems;
-    int maxSpeed = Enum.GetValues(typeof(Speed)).Cast<int>().Max();
+
+    SpeedUI speedUI;
 
     public float GetMaxTravelDistance()
     {
@@ -48,21 +42,13 @@ public class Universe : MonoBehaviour {
         shaderNoOutline = Shader.Find("Standard");
         var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
         cameraRaycaster.onMouseOverSystem += ProcessMouseOverSystem;
-        speedValues.Add(Speed.PAUSE, 0);
-        speedValues.Add(Speed.SLOW, 0.5f);
-        speedValues.Add(Speed.NORMAL, 1);
-        speedValues.Add(Speed.FAST, 2);
-        speedValues.Add(Speed.SKIP, 5);
+
         
         CreateUniverse();
-        currentSpeed = speedValues[speed];
+        speedUI = FindObjectOfType<SpeedUI>();
         timeSinceLastDay = 0;
     }
 
-    public float GetSpeed()
-    {
-        return currentSpeed;
-    }
 
     private void CreateUniverse()
     {
@@ -140,8 +126,8 @@ public class Universe : MonoBehaviour {
     // Update is called once per frame
     void Update () {
 
-        currentSpeed = speedValues[speed];
-        timeSinceLastDay += Time.deltaTime * currentSpeed;
+        
+        timeSinceLastDay += Time.deltaTime * speedUI.GetSpeed();
         int daysPassed = 0;
         while(timeSinceLastDay > timePerDay)
         {
@@ -173,22 +159,7 @@ public class Universe : MonoBehaviour {
         }
     }
 
-    public void IncreaseSpeed()
-    {
-        
-        if (Enum.IsDefined(typeof(Speed),speed+1))
-        {
-            speed += 1;
-        }
-    }
 
-    public void DecreaseSpeed()
-    {
-        if(speed > 0)
-        {
-            speed -= 1;
-        }
-    }
 
     public delegate void OnDayChanged(int days); // declare new delegate type
     public event OnDayChanged onDayChanged; // instantiate an observer set

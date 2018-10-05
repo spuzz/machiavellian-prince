@@ -12,32 +12,89 @@ public class MovementController : MonoBehaviour {
     [SerializeField] SolarSystem systemTarget;
 
     Universe universe;
-    public void Remove()
-    {
-        if(army)
-        {
-            if (systemLocation)
-            {
-                systemLocation.RemoveArmy(army);
-            }
-            if(currentRoute)
-            {
-                currentRoute.finishUsingRoute(army);
-            }
-        }
+    SpeedUI speedUI;
+    //public void Remove()
+    //{
+    //    if(army)
+    //    {
+    //        if (systemLocation)
+    //        {
+    //            systemLocation.RemoveArmy(army);
+    //        }
+    //        if(currentRoute)
+    //        {
+    //            currentRoute.finishUsingRoute(army);
+    //        }
+    //    }
 
-    }
+    //}
 
     [SerializeField] TravelRoute currentRoute;
     [SerializeField] float movementSpeed = 10f;
     Queue<SolarSystem> path = new Queue<SolarSystem>();
     Empire currentEmpire;
-    Army army;
+    bool blocking;
 
-    public void SetLocation(SolarSystem systemLocation)
+    // New Delegates
+    public delegate void OnReachedSystem(SolarSystem system); // declare new delegate type
+    public event OnReachedSystem onReachedSystem; // instantiate an observer set
+
+    public delegate void OnLeaveSystem(SolarSystem system); // declare new delegate type
+    public event OnLeaveSystem onLeaveSystem; // instantiate an observer set
+
+    void Start()
     {
-        this.systemLocation = systemLocation;
-        transform.position = systemLocation.transform.position;
+
+        if (systemLocation)
+        {
+            transform.position = systemLocation.transform.position;
+        }
+        currentEmpire = gameObject.GetComponentInParent<Empire>();
+        universe = FindObjectOfType<Universe>();
+        speedUI = FindObjectOfType<SpeedUI>();
+        blocking = false;
+    }
+
+    void Update()
+    {
+
+        if (currentRoute)
+        {
+            CheckReachedTarget();
+        }
+        else
+        {
+            FindNextMove();
+        }
+
+    }
+
+    public void OnDestroy()
+    {
+        if(IsMoving())
+        {
+            if(blocking)
+            {
+                currentRoute.finishUsingRoute(currentEmpire);
+            }
+        }
+    }
+
+
+    public void SetLocation(SolarSystem system)
+    {
+        if(systemLocation != system)
+        {
+            this.systemLocation = system;
+            transform.position = systemLocation.transform.position;
+            if (currentRoute && blocking)
+            {
+                currentRoute.finishUsingRoute(currentEmpire);
+            }
+            currentRoute = null;
+            destinationSystem = null;
+        }
+
     }
     public SolarSystem GetSystemLocation()
     {
@@ -53,32 +110,22 @@ public class MovementController : MonoBehaviour {
     {
         return destinationSystem;
     }
-    // New Delegates
-    public delegate void OnReachedSystem(SolarSystem system); // declare new delegate type
-    public event OnReachedSystem onReachedSystem; // instantiate an observer set
 
-    public delegate void OnLeaveSystem(SolarSystem system); // declare new delegate type
-    public event OnLeaveSystem onLeaveSystem; // instantiate an observer set
-
-    void Start () {
-
-        if(systemLocation)
-        {
-            transform.position = systemLocation.transform.position;
-        }
-        currentEmpire = gameObject.GetComponentInParent<Empire>();
-        army = GetComponent<Army>();
-        universe = FindObjectOfType<Universe>();
+    public void SetBlocking(bool block)
+    {
+        blocking = block;
     }
 
-    public void MoveTo(SolarSystem system)
+    public bool MoveTo(SolarSystem system)
     {
+
         if(systemTarget != system)
         {
             systemTarget = system;
-            
+            return true;  
         }
-        
+
+        return false;
     }
 
     public bool IsMoving()
@@ -167,19 +214,7 @@ public class MovementController : MonoBehaviour {
         
     }
 
-    // Update is called once per frame
-    void Update () {
 
-        if (currentRoute)
-        {
-            CheckReachedTarget();
-        }
-        else
-        {
-            FindNextMove();
-        }
-
-    }
 
     private void FindNextMove()
     {
@@ -187,6 +222,11 @@ public class MovementController : MonoBehaviour {
         {
             CreatePath();
         }
+        else
+        {
+            path.Clear();
+        }
+
         if (path.Count == 0)
         {
             systemTarget = systemLocation;
@@ -196,9 +236,9 @@ public class MovementController : MonoBehaviour {
             if (CheckNextSystemStillViable(path.Peek()))
             {
 
-                if (army)
+                if (blocking)
                 {
-                    currentRoute.UseRoute(army);
+                    currentRoute.UseRoute(currentEmpire);
                 }
                 destinationSystem = path.Dequeue();
                 onLeaveSystem(systemLocation);
@@ -215,19 +255,13 @@ public class MovementController : MonoBehaviour {
     {
         if (Vector3.Distance(transform.position, destinationSystem.transform.position) < stoppingDistance)
         {
-            systemLocation = destinationSystem;
             onReachedSystem(destinationSystem);
-            if (army)
-            {
-                currentRoute.finishUsingRoute(army);
-            }
-            currentRoute = null;
-            destinationSystem = null;
+            SetLocation(destinationSystem);
         }
         else
         {
             Vector3 direction = (destinationSystem.transform.position - transform.position).normalized;
-            transform.position = transform.position + (direction * (movementSpeed * (Time.deltaTime * universe.GetSpeed())));
+            transform.position = transform.position + (direction * (movementSpeed * (Time.deltaTime * speedUI.GetSpeed())));
         }
     }
 
