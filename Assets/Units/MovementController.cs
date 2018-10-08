@@ -13,21 +13,7 @@ public class MovementController : MonoBehaviour {
 
     Universe universe;
     SpeedUI speedUI;
-    //public void Remove()
-    //{
-    //    if(army)
-    //    {
-    //        if (systemLocation)
-    //        {
-    //            systemLocation.RemoveArmy(army);
-    //        }
-    //        if(currentRoute)
-    //        {
-    //            currentRoute.finishUsingRoute(army);
-    //        }
-    //    }
 
-    //}
 
     [SerializeField] TravelRoute currentRoute;
     [SerializeField] float movementSpeed = 10f;

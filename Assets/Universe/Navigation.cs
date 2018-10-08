@@ -79,7 +79,7 @@ public class Navigation {
         {
             if (route.ContainsSystem(targetSystem))
             {
-                return route.IsBlocked(empire);
+                return !route.IsBlocked(empire);
             }
 
         }

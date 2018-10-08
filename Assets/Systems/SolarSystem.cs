@@ -32,6 +32,40 @@ public class SolarSystem : MonoBehaviour {
     List<SolarSystem> nearbySystems = new List<SolarSystem>();
     List<TravelRoute> travelRoutes = new List<TravelRoute>();
 
+    void Awake()
+    {
+        border = transform.Find("Border").gameObject;
+        //UpdateBorders();
+        if (empire)
+        {
+
+            empire.GiveSystem(this);
+        }
+    }
+
+
+
+    public void Start()
+    {
+
+        m_universe = FindObjectOfType<Universe>();
+        m_universe.onDayChanged += ProcessDayChange;
+        GetComponentInChildren<SelectableComponent>().UpdateName(m_name);
+        GetComponentInChildren<SelectableComponent>().SetUnitSelectorText("0");
+        FindNearbySystems();
+
+    }
+
+    void Update()
+    {
+        SetOwner();
+        if (initSystem == true && empire)
+        {
+            m_universe.SystemChange(this);
+            initSystem = false;
+        }
+    }
+
     bool initSystem = true;
     public int GetCurrentPopulation() { return m_currentPopulation; }
     public float GetGrowthRate() { return m_growthRate; }
@@ -128,39 +162,7 @@ public class SolarSystem : MonoBehaviour {
         }
     }
 
-    void Awake()
-    {
-        border = transform.Find("Border").gameObject;
-        //UpdateBorders();
-        if (empire)
-        {
 
-            empire.GiveSystem(this);
-        }
-    }
-
-
-
-    public void Start()
-    {
-
-        m_universe = FindObjectOfType<Universe>();
-        m_universe.onDayChanged += ProcessDayChange;
-        GetComponentInChildren<SelectableComponent>().UpdateName(m_name);
-        GetComponentInChildren<SelectableComponent>().SetUnitSelectorText("0");
-        FindNearbySystems();
-
-    }
-
-    void Update()
-    {
-        SetOwner();
-        if (initSystem == true && empire)
-        {
-            m_universe.SystemChange(this);
-            initSystem = false;
-        }
-    }
 
     public void Colonised(Empire empire)
     {
@@ -220,9 +222,9 @@ public class SolarSystem : MonoBehaviour {
         this.empire = empire;
         UpdateBorders();
         m_universe.SystemChange(this);
-        foreach (Army army in armies)
+        while (armies.Count > 0)
         {
-            army.DestroyArmy();
+            armies[0].DestroyArmy();
         }
         armies.Clear();
     }

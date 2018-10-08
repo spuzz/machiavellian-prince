@@ -6,6 +6,8 @@ using UnityEngine;
 public class Army : MonoBehaviour {
 
     SelectableComponent selectableComponent;
+    MeshRenderer meshRenderer;
+    CapsuleCollider capsuleCollider;
     public enum ArmyStatus
     {
         Idle,
@@ -35,6 +37,8 @@ public class Army : MonoBehaviour {
         selectableComponent = GetComponentInChildren<SelectableComponent>();
         selectableComponent.UpdateName(name);
         selectableComponent.SetScale(0.04f);
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
+        capsuleCollider = GetComponentInChildren<CapsuleCollider>();
     }
 
     void Start()
@@ -188,8 +192,14 @@ public class Army : MonoBehaviour {
 
     public void ResetPosition(SolarSystem system)
     {
+        SolarSystem currentSystem = movementController.GetSystemLocation();
+        if(currentSystem)
+        {
+            currentSystem.RemoveArmy(this);
+        }
         movementController.SetLocation(system);
         movementController.MoveTo(system);
+        system.AddArmy(this);
         SetArmyStatus(ArmyStatus.Idle);
     }
 
@@ -217,8 +227,8 @@ public class Army : MonoBehaviour {
 
     private void ShowOnMap(bool show)
     {
-        GetComponentInChildren<MeshRenderer>().enabled = show;
-        GetComponentInChildren<CapsuleCollider>().enabled = show;
+        meshRenderer.enabled = show;
+        capsuleCollider.enabled = show;
         selectableComponent.enabled = show;
     }
 

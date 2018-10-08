@@ -42,6 +42,7 @@ public class Fleet : MonoBehaviour
         {
             army.ResetPosition(system);
         }
+        Destroy(this.gameObject);
     }
 
     private void DestroyFleet()
@@ -50,7 +51,7 @@ public class Fleet : MonoBehaviour
         {
             army.DestroyArmy();
         }
-        Destroy(this);
+        Destroy(this.gameObject);
     }
 
 
@@ -108,7 +109,6 @@ public class Fleet : MonoBehaviour
             {
                 system.SetEmpire(empire);
                 DisbandFleet(system);
-                Destroy(this);
             }
             else
             {
