@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Fleet : MonoBehaviour
 {
-
+    SelectableComponent selectableComponent;
     List<Army> armies = new List<Army>();
     Empire empire;
     MovementController movementController;
@@ -14,6 +14,9 @@ public class Fleet : MonoBehaviour
         movementController = GetComponent<MovementController>();
         movementController.onReachedSystem += OnReachedSystem;
         movementController.onLeaveSystem += OnLeaveSystem;
+        selectableComponent = GetComponentInChildren<SelectableComponent>();
+        selectableComponent.UpdateName("Fleet");
+        selectableComponent.SetScale(0.04f);
     }
 
     private void OnLeaveSystem(SolarSystem system)
@@ -47,9 +50,9 @@ public class Fleet : MonoBehaviour
 
     private void DestroyFleet()
     {
-        foreach (Army army in armies)
+        while (armies.Count > 0)
         {
-            army.DestroyArmy();
+            armies[0].DestroyArmy();
         }
         Destroy(this.gameObject);
     }
@@ -73,6 +76,8 @@ public class Fleet : MonoBehaviour
 
     public void SetEmpire(Empire empire)
     {
+        selectableComponent.SetColor(empire.GetColor());
+        selectableComponent.UpdateName(empire.GetName() + " Fleet");
         this.empire = empire;
     }
 
@@ -83,7 +88,17 @@ public class Fleet : MonoBehaviour
             return false;
         }
         armies.Add(army);
+        army.SetFleet(this);
         return true;
+    }
+
+    public void RemoveArmy(Army army)
+    {
+        armies.Remove(army);
+        if(armies.Count == 0)
+        {
+            DestroyFleet();
+        }
     }
 
     public int GetAttackValue()

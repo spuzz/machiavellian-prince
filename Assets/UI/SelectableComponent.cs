@@ -19,6 +19,7 @@ public class SelectableComponent : MonoBehaviour {
     Canvas canvas;
     HUD hud;
     float scale = 0.1f;
+    Color color = Color.white;
     void Start()
     {
         cameraToLookAt = Camera.main;
@@ -32,9 +33,15 @@ public class SelectableComponent : MonoBehaviour {
         unitSelecter.onClick.AddListener(UnitSelected);
         hud = FindObjectOfType<HUD>();
         unitSelecter.enabled = false;
-
+        
     }
 
+
+    public void SetColor(Color color)
+    {
+        this.color = color;
+        changeText = true;
+    }
 
     public void SetScale(float scale)
     {
@@ -58,7 +65,7 @@ public class SelectableComponent : MonoBehaviour {
     {
         if(changeText == true)
         {
-
+            button.GetComponent<Image>().color = color;
             text.text = name;
             button.GetComponentInParent<Canvas>().transform.localScale = new Vector3(scale, scale, scale);
             if(unitSelecterText != "")

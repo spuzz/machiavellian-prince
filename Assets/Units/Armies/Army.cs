@@ -31,6 +31,7 @@ public class Army : MonoBehaviour {
 
     ArmyStatus armyStatus;
     ArmyType armyType;
+    Fleet fleet;
 
     private void Awake()
     {
@@ -56,11 +57,16 @@ public class Army : MonoBehaviour {
 
 
     }
-
-    public void Update()
+    public Fleet GetFleet()
     {
-
+        return fleet;
     }
+
+    public void SetFleet(Fleet fleet)
+    {
+        this.fleet = fleet;
+    }
+
 
     public string GetName()
     {
@@ -106,6 +112,7 @@ public class Army : MonoBehaviour {
     public void SetEmpire(Empire empire)
     {
         this.empire = empire;
+        selectableComponent.SetColor(empire.GetColor());
     }
     public Empire GetEmpire()
     {
@@ -115,6 +122,10 @@ public class Army : MonoBehaviour {
     {
         movementController.GetSystemLocation().RemoveArmy(this);
         empire.RemoveArmy(this);
+        if(fleet)
+        {
+            fleet.RemoveArmy(this);
+        }
         Destroy(gameObject);
     }
 

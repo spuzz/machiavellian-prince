@@ -269,7 +269,11 @@ public class Empire : MonoBehaviour {
 
     private void ProcessDayChange(int days)
     {
-        m_currentLeader.LeadEmpire(this, GetComponent<EmpireController>());
+        if(IsAlive())
+        {
+            m_currentLeader.LeadEmpire(this, GetComponent<EmpireController>());
+        }
+        
     }
 
 

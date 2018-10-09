@@ -16,6 +16,8 @@ public class Attack : State
     }
     public override void RunArmyBehaviour(Empire empire, EmpireController empireController)
     {
+        DefendBorders(empire, empireController);
+
         // Keep going until no army has an immediate target
         while (AttackEnemy(empire, empireController) == true)
         {

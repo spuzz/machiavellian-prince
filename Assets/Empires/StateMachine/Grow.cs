@@ -19,10 +19,7 @@ public class Grow : State
     }
     public override void RunArmyBehaviour(Empire empire, EmpireController empireController)
     {
-        List<Army> armies = empire.GetArmies();
-        List<SolarSystem> enemyBorderSystems = empireController.GetEnemyBorderSystems();
-        enemyBorderSystems.OrderByDescending(c => c.GetOffence());
-        DefendBorders(empire, armies, enemyBorderSystems);
+        DefendBorders(empire, empireController);
         ColonisePlanets(empire, empireController);
         return;
     }

@@ -211,6 +211,11 @@ Prefab:
       propertyPath: currentState
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 114782035467463608, guid: 68426e088882b2b44ba1d8e3279ba79e,
+        type: 2}
+      propertyPath: empireColour.a
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68426e088882b2b44ba1d8e3279ba79e, type: 2}
   m_IsPrefabAsset: 0
@@ -3371,6 +3376,11 @@ Prefab:
       propertyPath: currentState
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 114782035467463608, guid: 68426e088882b2b44ba1d8e3279ba79e,
+        type: 2}
+      propertyPath: empireColour.a
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68426e088882b2b44ba1d8e3279ba79e, type: 2}
   m_IsPrefabAsset: 0
@@ -5590,6 +5600,11 @@ Prefab:
       propertyPath: EmpireName
       value: Federation
       objectReference: {fileID: 0}
+    - target: {fileID: 114782035467463608, guid: 68426e088882b2b44ba1d8e3279ba79e,
+        type: 2}
+      propertyPath: empireColour.a
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68426e088882b2b44ba1d8e3279ba79e, type: 2}
   m_IsPrefabAsset: 0
@@ -5763,6 +5778,11 @@ Prefab:
         type: 2}
       propertyPath: currentState
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114782035467463608, guid: 68426e088882b2b44ba1d8e3279ba79e,
+        type: 2}
+      propertyPath: empireColour.a
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68426e088882b2b44ba1d8e3279ba79e, type: 2}

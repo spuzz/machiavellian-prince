@@ -265,20 +265,50 @@ public abstract class State : ScriptableObject {
         return 0;
     }
 
-    protected void DefendBorders(Empire empire, List<Army> armies, List<SolarSystem> enemyBorderSystems)
+    protected void DefendBorders(Empire empire, EmpireController empireController)
     {
-        
-        foreach (SolarSystem system in enemyBorderSystems)
+        List<SolarSystem> enemyBorderSystems = empireController.GetEmpireEnemyBorderSystems();
+        List<Army> defensiveArmies = empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Defensive);
+
+        List<Army> availableArmies;
+        availableArmies = empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Defensive
+               && c.GetArmyStatus() != Army.ArmyStatus.Training
+               && c.GetArmyStatus() != Army.ArmyStatus.Attacking);
+
+        foreach(Army army in availableArmies)
         {
-            SolarSystem nearestSystem = Navigation.GetNearestSystem(new List<Empire>() { empire }, system);
-            int defenceRouted = 0;
-            while (nearestSystem.GetDefence() + defenceRouted < system.GetOffence() && armies.Count > 0)
+            RouteDefensiveArmy(army, enemyBorderSystems, defensiveArmies, empire);
+        }
+    }
+
+    private void RouteDefensiveArmy(Army army, List<SolarSystem> enemyBorderSystems, List<Army> defensiveArmies, Empire empire)
+    {
+        // order by distance to this army
+
+        List<SolarSystem> options;
+        if (enemyBorderSystems.Count == 0)
+        {
+            options = empire.GetSystems().OrderBy(x => Vector2.Distance(army.transform.position, x.transform.position)).ToList();
+        }
+        else
+        {
+            options = enemyBorderSystems.OrderBy(x => Vector2.Distance(army.transform.position, x.transform.position)).ToList();
+        }
+
+        // Try to find closest border system with no defensive army in route
+        foreach (SolarSystem system in options)
+        {
+            if(!defensiveArmies.Find( x => x != army && x.GetComponent<MovementController>().GetSystemTarget() == system))
             {
-                Army closestArmy = FindClosestArmy(armies, system);
-                defenceRouted += closestArmy.GetDefenceValue();
-                armies.Remove(closestArmy);
+                army.MoveTo(system);
+                return;
             }
         }
+
+        // No Unoccupied systems to go to in list to move to closest
+        army.MoveTo(options[0]);
+        return;
+
     }
 
     private Army FindClosestArmy(List<Army> armies, SolarSystem system)
