@@ -40,10 +40,6 @@ public class Army : MonoBehaviour {
         selectableComponent.SetScale(0.04f);
         meshRenderer = GetComponentInChildren<MeshRenderer>();
         capsuleCollider = GetComponentInChildren<CapsuleCollider>();
-    }
-
-    void Start()
-    {
         movementController = GetComponent<MovementController>();
         movementController.onReachedSystem += OnReachedSystem;
         movementController.onLeaveSystem += OnLeaveSystem;
@@ -53,7 +49,13 @@ public class Army : MonoBehaviour {
             movementController.GetSystemLocation().AddArmy(this);
         }
         movementController.SetBlocking(true);
-        SetArmyStatus(ArmyStatus.Idle);
+        SetArmyStatus(armyStatus);
+    }
+
+    void Start()
+    {
+
+        
 
 
     }
@@ -89,13 +91,13 @@ public class Army : MonoBehaviour {
     public void SetArmyStatus(ArmyStatus status)
     {
         armyStatus = status;
-        if(armyStatus == ArmyStatus.Idle || armyStatus == ArmyStatus.Training)
+        if(armyStatus == ArmyStatus.Moving)
         {
-            ShowOnMap(false);
+            ShowOnMap(true);
         }
         else
         {
-            ShowOnMap(true);
+            ShowOnMap(false);
         }
     }
 
@@ -187,7 +189,7 @@ public class Army : MonoBehaviour {
         SolarSystem nearestSafeSystem = Navigation.GetNearestSystem(safeEmpires, system);
         if (movementController.GetSystemLocation() != nearestSafeSystem)
         {
-            armyMove.MoveTo(nearestSafeSystem);
+            MoveTo(nearestSafeSystem);
         }
 
     }
@@ -217,7 +219,11 @@ public class Army : MonoBehaviour {
     public void Defend(SolarSystem system)
     {
         system.AddArmy(this);
-        SetArmyStatus(ArmyStatus.Idle);
+        if(movementController.GetSystemTarget() == system)
+        {
+            SetArmyStatus(ArmyStatus.Idle);
+        }
+        
     }
 
     private void OnReachedSystem(SolarSystem system)
@@ -240,7 +246,7 @@ public class Army : MonoBehaviour {
     {
         meshRenderer.enabled = show;
         capsuleCollider.enabled = show;
-        selectableComponent.enabled = show;
+        selectableComponent.SetShown(show);
     }
 
 }

@@ -17,5 +17,5 @@ MonoBehaviour:
   buildType: 2
   attackStrength: 80
   defenceStrength: 50
-  buildTime: 0
+  buildTime: 5
   portraitIcon: {fileID: 21300000, guid: c7592b8a754394d439baae5f6f5272ba, type: 3}

@@ -39,7 +39,7 @@ public class Attack : State
     {
         DiplomacyController diplomacy = empireController.GetDiplomacyController();
         foreach (Army army in empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Offensive
-                && c.GetArmyStatus() == Army.ArmyStatus.Idle))
+                && c.GetArmyStatus() == Army.ArmyStatus.Idle || c.GetArmyStatus() == Army.ArmyStatus.Training))
         {
             SolarSystem system = army.GetComponent<MovementController>().GetSystemLocation();
             List<SolarSystem> systems = system.GetNearbySystems();
@@ -52,7 +52,7 @@ public class Attack : State
                     List<Army> combinedOffence = new List<Army>();
                     float offence = 0;
                     foreach (Army systemArmy in system.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Offensive
-                        && c.GetArmyStatus() == Army.ArmyStatus.Idle))
+                        && c.GetArmyStatus() == Army.ArmyStatus.Idle || c.GetArmyStatus() == Army.ArmyStatus.Training))
                     {
                         combinedOffence.Add(systemArmy);
                         offence += systemArmy.GetAttackValue();
@@ -79,7 +79,9 @@ public class Attack : State
         fleet.SetLocation(currentSystem);
         foreach (Army army in combinedOffence)
         {
+            army.GetComponent<ArmyTrainer>().CancelAllTraining();
             army.SetArmyStatus(Army.ArmyStatus.Attacking);
+            
             fleet.AddArmy(army);
         }
 

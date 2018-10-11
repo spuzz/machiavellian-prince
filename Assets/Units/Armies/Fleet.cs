@@ -78,6 +78,7 @@ public class Fleet : MonoBehaviour
     {
         selectableComponent.SetColor(empire.GetColor());
         selectableComponent.UpdateName(empire.GetName() + " Fleet");
+        selectableComponent.SetShown(true);
         this.empire = empire;
     }
 

@@ -73,6 +73,7 @@ public class EmpireController : MonoBehaviour {
     private void FindEnemyBorderSystems()
     {
         enemyBorderSystems.Clear();
+        empireEnemyBorderSystems.Clear();
         foreach (SolarSystem system in empire.GetSystems())
         {
             foreach (SolarSystem neighbour in system.GetNearbySystems())
@@ -90,7 +91,6 @@ public class EmpireController : MonoBehaviour {
 
                     }
                    
-                    break;
                 }
             }
         }

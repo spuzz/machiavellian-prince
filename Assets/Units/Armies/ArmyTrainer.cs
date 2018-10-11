@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +19,12 @@ public class ArmyTrainer : MonoBehaviour {
         universe.onDayChanged += OnDayChange;
         
 	}
+
+    private void OnDestroy()
+    {
+        universe.onDayChanged -= OnDayChange;
+    }
+
     public UnitConfig GetUnitBuilding()
     {
         return unitToBuild;
@@ -66,5 +73,14 @@ public class ArmyTrainer : MonoBehaviour {
             }
         }
 
+    }
+
+    internal void CancelAllTraining()
+    {
+        if(IsBuilding())
+        {
+            unitToBuild = null;
+            army.SetArmyStatus(Army.ArmyStatus.Idle);
+        }
     }
 }

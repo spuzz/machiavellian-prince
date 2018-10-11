@@ -216,7 +216,7 @@ public abstract class State : ScriptableObject {
         foreach (Army army in empire.GetArmies())
         {
 
-            if (army.GetComponent<MovementController>().IsMoving() == false)
+            if (army.GetArmyStatus() == Army.ArmyStatus.Idle)
             {
                 float armyValue;
                 if (army.GetArmyType() == Army.ArmyType.Offensive)

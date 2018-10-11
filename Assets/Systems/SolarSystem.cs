@@ -50,8 +50,11 @@ public class SolarSystem : MonoBehaviour {
 
         m_universe = FindObjectOfType<Universe>();
         m_universe.onDayChanged += ProcessDayChange;
-        GetComponentInChildren<SelectableComponent>().UpdateName(m_name);
-        GetComponentInChildren<SelectableComponent>().SetUnitSelectorText("0");
+        SelectableComponent select = GetComponentInChildren<SelectableComponent>();
+        select.UpdateName(m_name);
+        select.SetUnitSelectorText("0");
+        select.SetShown(true);
+        name = m_name;
         FindNearbySystems();
 
     }

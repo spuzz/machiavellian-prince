@@ -37,7 +37,7 @@ public class SystemUI : MonoBehaviour {
     {
         this.system = nSystem;
 
-        armyUI.SetArmies(system.GetArmies());
+       
     }
 
     void Start()
@@ -84,6 +84,7 @@ public class SystemUI : MonoBehaviour {
             buildProgress.gameObject.SetActive(true);
             buildProgress.fillAmount = 1.0f - (float)buildController.GetDaysLeftToBuild() / (float)buildController.GetBuildingInConstruction().GetBuildTime();
         }
+        armyUI.SetArmies(system.GetArmies());
     }
 
 

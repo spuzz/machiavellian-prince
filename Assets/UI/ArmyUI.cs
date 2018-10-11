@@ -9,15 +9,19 @@ public class ArmyUI : MonoBehaviour {
     [SerializeField] GameObject scrollViewContent;
     public void SetArmies(List<Army> armies)
     {
-        ClearArmies();
-       
-        foreach(Army army in armies)
+        if(armies.Count != this.armies.Count)
         {
-            this.armies.Add(army);
-            GameObject armyPanelComp = Instantiate(armyPanel, scrollViewContent.transform);
+            ClearArmies();
 
-            armyPanelComp.GetComponent<ArmyPanel>().SetArmy(army);
+            foreach (Army army in armies)
+            {
+                this.armies.Add(army);
+                GameObject armyPanelComp = Instantiate(armyPanel, scrollViewContent.transform);
+
+                armyPanelComp.GetComponent<ArmyPanel>().SetArmy(army);
+            }
         }
+
     }
 
     public void AddArmy(Army army)
