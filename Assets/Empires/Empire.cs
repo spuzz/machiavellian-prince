@@ -169,12 +169,12 @@ public class Empire : MonoBehaviour {
         armies.Remove(army);
     }
 
-    public float GetTotalDefence()
+    public float GetTotalArmyStrength()
     {
         float total = 0;
         foreach(Army army in armies)
         {
-            total += army.GetDefenceValue();
+            total += army.GetArmyStrength();
         }
         return total;
     }
@@ -203,16 +203,6 @@ public class Empire : MonoBehaviour {
             }
         }
         return buildList;
-    }
-
-    public float GetTotalOffence()
-    {
-        float total = 0;
-        foreach (Army army in armies)
-        {
-            total += army.GetAttackValue();
-        }
-        return total;
     }
 
     public List<ColonyShip> GetColonyShips()
@@ -273,7 +263,17 @@ public class Empire : MonoBehaviour {
         {
             m_currentLeader.LeadEmpire(this, GetComponent<EmpireController>());
         }
-        
+
+        int goldChange = 0;
+        foreach(SolarSystem system in m_ownedSystems)
+        {
+            goldChange += system.GetNetIncome();
+        }
+        foreach(Army army in armies)
+        {
+            goldChange -= army.GetMaintenance();
+        }
+        AddGold(goldChange);
     }
 
 
@@ -284,6 +284,7 @@ public class Empire : MonoBehaviour {
         army.SetArmyType(type);
         army.SetEmpire(this);
         armies.Add(army);
+        system.AddArmy(army);
     }
 
     public int GetDefensiveArmies()

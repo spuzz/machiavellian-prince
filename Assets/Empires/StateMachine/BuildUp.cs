@@ -11,8 +11,6 @@ public class BuildUp : State
     {
         
         buildFunctions.Add(CheckArmies);
-        buildFunctions.Add(CheckMinDefence);
-        buildFunctions.Add(CheckMinOffence);
         defaultBuildFunctions.Add(BuildInfrastructure);
         defaultBuildFunctions.Add(TrainArmy);
     }

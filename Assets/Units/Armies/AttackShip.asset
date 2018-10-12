@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 165ea3ded8b538d4e9ca6842922f7a75, type: 3}
   m_Name: AttackShip
   m_EditorClassIdentifier: 
-  unitPrefab: {fileID: 1578640926330050, guid: 5f5db062cc90e764aa7f3a283180557e, type: 2}
+  unitPrefab: {fileID: 1968827993193832, guid: 1a23ec104e662b14d97b520835d11899, type: 2}
   Name: AttackShip
   baseCost: 1000
   buildType: 2

@@ -189,7 +189,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackValue: 100
   defenceValue: 100
-  name: Army
+  armyName: Army
+  maximumUnits: 20
+  maintenance: 20
+  armyBaseStrength: 100
 --- !u!114 &114821965814886024
 MonoBehaviour:
   m_ObjectHideFlags: 1

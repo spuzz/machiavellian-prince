@@ -10,8 +10,6 @@ public class Attack : State
     {
         buildFunctions = new List<BuildFunction>();
         buildFunctions.Add(CheckArmies);
-        buildFunctions.Add(CheckMinDefence);
-        buildFunctions.Add(CheckMinOffence);
         defaultBuildFunctions.Add(TrainArmy);
     }
     public override void RunArmyBehaviour(Empire empire, EmpireController empireController)
@@ -55,7 +53,7 @@ public class Attack : State
                         && c.GetArmyStatus() == Army.ArmyStatus.Idle || c.GetArmyStatus() == Army.ArmyStatus.Training))
                     {
                         combinedOffence.Add(systemArmy);
-                        offence += systemArmy.GetAttackValue();
+                        offence += systemArmy.GetArmyStrength();
                     }
 
                     if(offence > nearbySystem.GetDefence())

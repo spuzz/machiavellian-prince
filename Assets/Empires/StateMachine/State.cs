@@ -129,60 +129,6 @@ public abstract class State : ScriptableObject {
         return 0;
     }
 
-    protected int CheckMinDefence(Empire empire)
-    {
-
-        int total = 0;
-        foreach (UnitConfig config in empire.GetTrainingInProgress())
-        {
-            total += config.GetDefenceStrength();
-        }
-        if (empire.GetTotalDefence() + total < (minDefencePerSystem * empire.GetSystems().Count))
-        {
-            List<Army> armies = empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Defensive && c.GetArmyStatus() == Army.ArmyStatus.Idle);
-            if(armies.Count > 0)
-            {
-                armies.OrderBy(c => c.GetDefenceValue());
-                if (armies[0].GetComponent<ArmyTrainer>().TrainUnit(empire.GetDefenceConfig()))
-                {
-                    return 2;
-                }
-                else
-                {
-                    return 1;
-                }
-            }
-        }
-        return 0;
-
-    }
-
-    protected int CheckMinOffence(Empire empire)
-    {
-
-        int total = 0;
-        foreach (UnitConfig config in empire.GetTrainingInProgress())
-        {
-            total += config.GetAttackStrength();
-        }
-        if (empire.GetTotalOffence() + total < (minOffencePerSystem * empire.GetSystems().Count))
-        {
-            List<Army> armies = empire.GetArmies().FindAll(c => c.GetArmyType() == Army.ArmyType.Defensive && c.GetArmyStatus() == Army.ArmyStatus.Idle);
-            if (armies.Count > 0)
-            {
-                armies.OrderBy(c => c.GetAttackValue());
-                if (armies[0].GetComponent<ArmyTrainer>().TrainUnit(empire.GetAttackConfig()))
-                {
-                    return 2;
-                }
-                else
-                {
-                    return 1;
-                }
-            }
-        }
-        return 0;
-    }
 
     protected int BuildInfrastructure(Empire empire)
     {
@@ -219,14 +165,7 @@ public abstract class State : ScriptableObject {
             if (army.GetArmyStatus() == Army.ArmyStatus.Idle)
             {
                 float armyValue;
-                if (army.GetArmyType() == Army.ArmyType.Offensive)
-                {
-                    armyValue = army.GetAttackValue();
-                }
-                else
-                {
-                    armyValue = army.GetDefenceValue();
-                }
+                armyValue = army.GetArmyStrength();
                 if (smallestArmyValue == -1 || armyValue < smallestArmyValue)
                 {
                     smallestArmy = army;

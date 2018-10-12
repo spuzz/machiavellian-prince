@@ -12,9 +12,8 @@ public class Grow : State
     {
         buildFunctions = new List<BuildFunction>();
         buildFunctions.Add(CheckArmies);
-        buildFunctions.Add(CheckMinDefence);
-        buildFunctions.Add(CheckMinOffence);
         buildFunctions.Add(BuildColonyShip);
+        defaultBuildFunctions.Add(TrainArmy);
 
     }
     public override void RunArmyBehaviour(Empire empire, EmpireController empireController)

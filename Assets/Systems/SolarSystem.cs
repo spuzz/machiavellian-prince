@@ -142,7 +142,7 @@ public class SolarSystem : MonoBehaviour {
         int defence = baseDefence;
         foreach(Army army in armies)
         {
-            defence += army.GetDefenceValue();
+            defence += army.GetArmyStrength();
         }
         return defence;
     }
@@ -152,7 +152,7 @@ public class SolarSystem : MonoBehaviour {
         int offence = 0;
         foreach (Army army in armies)
         {
-            offence += army.GetAttackValue();
+            offence += army.GetArmyStrength();
         }
         return offence;
     }
@@ -181,10 +181,10 @@ public class SolarSystem : MonoBehaviour {
         int totalDefence = GetDefence();
 
 
-        if (attackingArmy.GetAttackValue() > totalDefence)
+        if (attackingArmy.GetArmyStrength() > totalDefence)
         {
-            int attackLeft = attackingArmy.GetAttackValue() - totalDefence;
-            float percLost = ((float)attackLeft / (float)attackingArmy.GetAttackValue());
+            int attackLeft = attackingArmy.GetArmyStrength() - totalDefence;
+            float percLost = ((float)attackLeft / (float)attackingArmy.GetArmyStrength());
             attackingArmy.DepleteArmy(percLost);
 
             while (armies.Count != 0)
@@ -197,7 +197,7 @@ public class SolarSystem : MonoBehaviour {
         }
         else
         {
-            int defenceLeft = totalDefence - attackingArmy.GetAttackValue();
+            int defenceLeft = totalDefence - attackingArmy.GetArmyStrength();
             if (defenceLeft == 0)
             {
                 defenceLeft = 1;
@@ -331,7 +331,7 @@ public class SolarSystem : MonoBehaviour {
             m_foodAvailable = m_foodAvailable + m_foodProduction - m_foodConsumption;
             m_powerAvailable = m_powerAvailable + m_powerProduction - m_powerConsumption;
 
-            CalculateProduction();
+            //CalculateProduction();
         }
         
     }

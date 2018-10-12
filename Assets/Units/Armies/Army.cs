@@ -5,16 +5,13 @@ using UnityEngine;
 
 public class Army : MonoBehaviour {
 
-    SelectableComponent selectableComponent;
-    MeshRenderer meshRenderer;
-    CapsuleCollider capsuleCollider;
     public enum ArmyStatus
     {
         Idle,
         Training,
         Attacking,
         Moving,
-        
+
     }
 
     public enum ArmyType
@@ -23,20 +20,29 @@ public class Army : MonoBehaviour {
         Offensive
     }
 
+
+    SelectableComponent selectableComponent;
+    MeshRenderer meshRenderer;
+    CapsuleCollider capsuleCollider;
+
     Empire empire;
     MovementController movementController;
     [SerializeField] int attackValue = 100;
     [SerializeField] int defenceValue = 100;
-    [SerializeField] string name = "Army";
-
+    [SerializeField] string armyName = "Army";
+    List<Unit> units;
+    [SerializeField] int maximumUnits = 20;
+    [SerializeField] int maintenance = 50;
+    [SerializeField] int armyBaseStrength;
     ArmyStatus armyStatus;
     ArmyType armyType;
     Fleet fleet;
 
     private void Awake()
     {
+        units = new List<Unit>();
         selectableComponent = GetComponentInChildren<SelectableComponent>();
-        selectableComponent.UpdateName(name);
+        selectableComponent.UpdateName(armyName);
         selectableComponent.SetScale(0.04f);
         meshRenderer = GetComponentInChildren<MeshRenderer>();
         capsuleCollider = GetComponentInChildren<CapsuleCollider>();
@@ -52,13 +58,27 @@ public class Army : MonoBehaviour {
         SetArmyStatus(armyStatus);
     }
 
-    void Start()
+    public int GetMaintenance()
     {
-
-        
-
-
+        int maint = 0;
+        maint += maintenance;
+        foreach(Unit unit in units)
+        {
+            maint += unit.GetMaintenance();
+        }
+        return maint;
     }
+
+    public IEnumerable<Unit> GetUnits()
+    {
+        return units;
+    }
+
+    public int GetMaxUnits()
+    {
+        return maximumUnits;
+    }
+
     public Fleet GetFleet()
     {
         return fleet;
@@ -72,7 +92,7 @@ public class Army : MonoBehaviour {
 
     public string GetName()
     {
-        return name;
+        return armyName;
     }
 
     public void SetArmyType(ArmyType type)
@@ -131,41 +151,90 @@ public class Army : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    public void Merge(Army army)
+    public bool Merge(Army army)
     {
-        attackValue += army.attackValue;
-        defenceValue += army.defenceValue;
+        if(units.Count + army.GetUnitCount() > maximumUnits)
+        {
+            return false;
+        }
+        foreach(Unit unit in army.GetUnits())
+        {
+            unit.transform.SetParent(transform);
+            units.Add(unit);
+        }
         army.DestroyArmy();
+
+        return true;
+    }
+
+    public int GetUnitCount()
+    {
+        return units.Count;
     }
 
     public void DepleteArmy(float perc)
     {
-        if(perc > 100)
+        if(perc > 1)
         {
-            perc = 100;
+            perc = 1;
         }
-        if(perc < 0)
+        if(perc <= 0)
         {
-            perc = 0;
+            throw new ArgumentException();
         }
 
-        attackValue = (int)Mathf.Ceil(attackValue * perc);
-        defenceValue = (int)Mathf.Ceil(defenceValue * perc);
-    }
-    public int GetAttackValue()
-    {
-        return attackValue;
-    }
+        if (units.Count == 0)
+        {
+            return;
+        }
 
-    public int GetDefenceValue()
+        float totalUnits = units.Count;
+        int numberDestroyed = Convert.ToInt32(totalUnits * perc);
+
+        if(numberDestroyed == 0)
+        {
+            return;
+        }
+        units.RemoveRange(0, numberDestroyed);
+
+        //attackValue = (int)Mathf.Ceil(attackValue * perc);
+        //defenceValue = (int)Mathf.Ceil(defenceValue * perc);
+    }
+    //public int GetAttackValue()
+    //{
+    //    return attackValue;
+    //}
+
+    //public int GetDefenceValue()
+    //{
+    //    return defenceValue;
+    //}
+
+    public int GetArmyStrength()
     {
-        return defenceValue;
+        int strength = 0;
+        strength += armyBaseStrength;
+        foreach (Unit unit in units)
+        {
+            strength += unit.GetPower();
+        }
+        return strength;
     }
 
     public void Addunit(UnitConfig unitConfig)
     {
-        attackValue += unitConfig.GetAttackStrength();
-        defenceValue += unitConfig.GetDefenceStrength();
+        if(units.Count < maximumUnits)
+        {
+            Unit unit = Instantiate(unitConfig.GetUnitPrefab(), transform).GetComponent<Unit>();
+            units.Add(unit);
+        }
+        else
+        {
+            throw (new InvalidOperationException());
+        }
+        
+        //attackValue += unitConfig.GetAttackStrength();
+        //defenceValue += unitConfig.GetDefenceStrength();
     }
 
     public void MoveToNearestEnemy()

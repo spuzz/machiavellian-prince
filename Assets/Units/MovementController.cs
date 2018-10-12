@@ -10,7 +10,7 @@ public class MovementController : MonoBehaviour {
     [SerializeField] SolarSystem systemLocation;
     [SerializeField] SolarSystem destinationSystem;
     [SerializeField] SolarSystem systemTarget;
-
+    
     Universe universe;
     SpeedUI speedUI;
 
@@ -20,6 +20,7 @@ public class MovementController : MonoBehaviour {
     Queue<SolarSystem> path = new Queue<SolarSystem>();
     Empire currentEmpire;
     bool blocking;
+    bool internalMovementOnly = true;
 
     // New Delegates
     public delegate void OnReachedSystem(SolarSystem system); // declare new delegate type
@@ -100,6 +101,11 @@ public class MovementController : MonoBehaviour {
     public void SetBlocking(bool block)
     {
         blocking = block;
+    }
+
+    public void SetInternalMovementOnly(bool internalMovement)
+    {
+        internalMovementOnly = internalMovement;
     }
 
     public bool MoveTo(SolarSystem system)
@@ -246,6 +252,12 @@ public class MovementController : MonoBehaviour {
         }
         else
         {
+            if(internalMovementOnly && destinationSystem.GetEmpire() && destinationSystem.GetEmpire() != currentEmpire)
+            {
+                destinationSystem = currentRoute.GetDestination(destinationSystem);
+                path.Clear();
+                systemTarget = destinationSystem;
+            }
             Vector3 direction = (destinationSystem.transform.position - transform.position).normalized;
             transform.position = transform.position + (direction * (movementSpeed * (Time.deltaTime * speedUI.GetSpeed())));
         }

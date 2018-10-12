@@ -14,6 +14,7 @@ public class Fleet : MonoBehaviour
         movementController = GetComponent<MovementController>();
         movementController.onReachedSystem += OnReachedSystem;
         movementController.onLeaveSystem += OnLeaveSystem;
+        movementController.SetInternalMovementOnly(false);
         selectableComponent = GetComponentInChildren<SelectableComponent>();
         selectableComponent.UpdateName("Fleet");
         selectableComponent.SetScale(0.04f);
@@ -102,19 +103,19 @@ public class Fleet : MonoBehaviour
         }
     }
 
-    public int GetAttackValue()
+    public int GetFleetStrength()
     {
         int attackValue = 0;
         foreach(Army army in armies)
         {
-            attackValue += army.GetAttackValue();
+            attackValue += army.GetArmyStrength();
         }
         return attackValue;
     }
     private void Attack(SolarSystem system)
     {
         float defence = system.GetDefence();
-        if (GetAttackValue() <= 0)
+        if (GetFleetStrength() <= 0)
         {
             DestroyFleet();
             return;
@@ -142,10 +143,10 @@ public class Fleet : MonoBehaviour
         int totalDefence = enemySystem.GetDefence();
 
 
-        if (GetAttackValue() > totalDefence)
+        if (GetFleetStrength() > totalDefence)
         {
-            int attackLeft = GetAttackValue() - totalDefence;
-            float percLost = ((float)attackLeft / (float)GetAttackValue());
+            int attackLeft = GetFleetStrength() - totalDefence;
+            float percLost = ((float)attackLeft / (float)GetFleetStrength());
             foreach (Army army in armies)
             {
                 army.DepleteArmy(percLost);
@@ -156,7 +157,7 @@ public class Fleet : MonoBehaviour
         }
         else
         {
-            int defenceLeft = totalDefence - GetAttackValue();
+            int defenceLeft = totalDefence - GetFleetStrength();
             if (defenceLeft == 0)
             {
                 defenceLeft = 1;

@@ -35,8 +35,8 @@ public class ArmyPanel : MonoBehaviour {
         {
             armyTrainer = army.GetComponent<ArmyTrainer>();
             armyName.text = army.GetName();
-            offence.text = army.GetAttackValue().ToString();
-            defence.text = army.GetDefenceValue().ToString();
+            offence.text = army.GetArmyStrength().ToString();
+            defence.text = army.GetArmyStrength().ToString();
             status.text = army.GetArmyStatus().ToString();
         }
 

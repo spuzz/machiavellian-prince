@@ -45,8 +45,8 @@ public class EmpireUI : MonoBehaviour {
             
             systems.text = empire.GetSystems().Count.ToString();
             armies.text = empire.GetArmies().Count.ToString();
-            offence.text = empire.GetTotalOffence().ToString();
-            defence.text = empire.GetTotalDefence().ToString();
+            offence.text = empire.GetTotalArmyStrength().ToString();
+            defence.text = empire.GetTotalArmyStrength().ToString();
             economy.text = empire.GetGold().ToString();
         }
     }
