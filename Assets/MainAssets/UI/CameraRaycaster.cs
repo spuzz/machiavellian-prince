@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,8 +15,11 @@ public class CameraRaycaster : MonoBehaviour {
     public delegate void OnMouseOverSystem(SolarSystem system); // declare new delegate type
     public event OnMouseOverSystem onMouseOverSystem; // instantiate an observer set
 
-	// Update is called once per frame
-	void Update () {
+    public delegate void OnMouseRightClicked(Ray ray); // declare new delegate type
+    public event OnMouseRightClicked onMouseRightClicked; // instantiate an observer set
+
+                                                      // Update is called once per frame
+    void Update () {
         screenRect = new Rect(0, 0, Screen.width, Screen.height);
         // Check if pointer is over an interactable UI element
         if (EventSystem.current.IsPointerOverGameObject())
@@ -34,8 +38,19 @@ public class CameraRaycaster : MonoBehaviour {
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (RayCastForSystem(ray)) { return; }
+            if (CheckRightClick(ray)) { return; }
         }
 
+    }
+
+    private bool CheckRightClick(Ray ray)
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            onMouseRightClicked(ray);
+            return true;
+        }
+        return false;
     }
 
     private bool RayCastForSystem(Ray ray)

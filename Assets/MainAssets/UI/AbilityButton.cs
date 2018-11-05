@@ -26,6 +26,11 @@ public class AbilityButton : MonoBehaviour {
         
     }
 
+    public void SetAbility(AbilityConfig ability)
+    {
+        abilityConfig = ability;
+    }
+
     public void ActivateAbility()
     {
 
@@ -38,6 +43,12 @@ public class AbilityButton : MonoBehaviour {
         icon.enabled = true;
         icon.sprite = abilityConfig.GetButtonImage();
     }
+
+    public void SetInteractable(bool interact)
+    {
+        button.interactable = interact;
+    }
+
 
     public void TurnOffButton()
     {

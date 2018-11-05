@@ -19,6 +19,7 @@ public class Player : MonoBehaviour {
     {
         universe = FindObjectOfType<Universe>();
         HireAgent(AgentTypes[0]);
+
         universe.onSystemOwnerChanged += OnSystemChange;
         universe.onLeaderLoyaltyChanged += OnLeaderLoyaltyChange;
         universe.onLeaderDeath += OnLeaderDeath;
@@ -38,6 +39,21 @@ public class Player : MonoBehaviour {
     {
         return agents.Count;
     }
+
+    public IEnumerable<GameObject> GetAgents()
+    {
+        return agents;
+    }
+
+    public GameObject GetAgent(int number)
+    {
+        if(number < 0 || number >= agents.Count)
+        {
+            return null;
+        }
+        return agents[number];
+    }
+
 
     public int GetTotalLeadersControlled()
     {
@@ -66,7 +82,7 @@ public class Player : MonoBehaviour {
             {
                 agent.GetComponent<Agent>().AddAbility(ability);
             }
-
+            agent.GetComponent<Agent>().SetPortrait(agentConfig.GetRandomPortrait());
             agents.Add(agent);
             gold -= agentConfig.GetCost();
             return true;

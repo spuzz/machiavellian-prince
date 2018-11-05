@@ -18,6 +18,7 @@ public class SelectableComponent : MonoBehaviour {
     Button unitSelecter;
     Canvas canvas;
     HUD hud;
+    HumanController humanController;
     float scale = 0.1f;
     Color color = Color.white;
     bool showCanvas;
@@ -34,6 +35,7 @@ public class SelectableComponent : MonoBehaviour {
         unitSelecter.onClick.AddListener(UnitSelected);
         hud = FindObjectOfType<HUD>();
         unitSelecter.enabled = false;
+        humanController = FindObjectOfType<HumanController>();
     }
 
 
@@ -90,6 +92,7 @@ public class SelectableComponent : MonoBehaviour {
     public void Selected()
     {
         hud.SelectObject(transform.parent.gameObject);
+        humanController.SelectObject(transform.parent.gameObject);
         //SolarSystem system = GetComponentInParent<SolarSystem>();
         //if (system)
         //{

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class AgentConfig : ScriptableObject {
     [SerializeField] string Name;
     [SerializeField] int baseCost;
     [SerializeField] List<AbilityConfig> abilities;
+    [SerializeField] List<Sprite> portraits;
 
     public GameObject GetAgentPrefab()
     {
@@ -22,5 +24,15 @@ public class AgentConfig : ScriptableObject {
     public List<AbilityConfig> GetAbilities()
     {
         return abilities;
+    }
+
+    public IEnumerable<Sprite> GetPortraits()
+    {
+        return portraits;
+    }
+
+    public Sprite GetRandomPortrait()
+    {
+        return portraits[UnityEngine.Random.Range(0, portraits.Count)];
     }
 }
