@@ -40,7 +40,7 @@ public class HUD : MonoBehaviour {
 
 
         Agent agent = selectedObject.GetComponent<Agent>();
-        if (agent)
+        if (agent && agent.GetPlayer().IsHumanPlayer())
         {
             agentUI.SelectAgent(agent);
         }

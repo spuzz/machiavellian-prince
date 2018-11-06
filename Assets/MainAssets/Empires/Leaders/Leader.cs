@@ -16,7 +16,6 @@ public class Leader : MonoBehaviour{
     bool inControl;
     Universe universe;
 
-    bool init = true;
     void Start()
     {
         personality.AddComponent(gameObject);
@@ -26,14 +25,6 @@ public class Leader : MonoBehaviour{
 
     private void Update()
     {
-        if(init)
-        {
-            if(m_controlledBy)
-            {
-                UpdateLoyalty(m_controlledBy);
-            }
-            init = false;
-        }
     }
 
     public string GetName()

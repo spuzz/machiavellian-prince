@@ -17,16 +17,22 @@ public class Agent : MonoBehaviour
 
     AICharacterControl aICharacterControl;
     AgentUI agentUI;
+    SelectableComponent select;
+    private void Awake()
+    {
+        aICharacterControl = GetComponent<AICharacterControl>();
+        select = GetComponentInChildren<SelectableComponent>();
+        agentUI = FindObjectOfType<AgentUI>();
+        
+    }
 
     private void Start()
     {
-        SelectableComponent select = GetComponentInChildren<SelectableComponent>();
-        aICharacterControl = GetComponent<AICharacterControl>();
-        agentUI = FindObjectOfType<AgentUI>();
+        
         select.UpdateName(agentName);
-        select.SetScale(0.06f);
+        select.SetScale(0.15f);
         select.SetShown(true);
-        select.SetColor(Color.black);
+       
     }
 
     private void Update()
@@ -64,6 +70,15 @@ public class Agent : MonoBehaviour
     public void SetPlayer(Player player)
     {
         this.player = player;
+        if(player.IsHumanPlayer())
+        {
+            select.SetColor(Color.white);
+       
+        }
+        else
+        {
+            select.SetColor(Color.black);
+        }
     }
 
     public SolarSystem GetTargetSystem()

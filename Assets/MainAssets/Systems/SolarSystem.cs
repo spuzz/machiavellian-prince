@@ -83,6 +83,7 @@ public class SolarSystem : MonoBehaviour {
         SelectableComponent select = GetComponentInChildren<SelectableComponent>();
         select.UpdateName(m_name);
         select.SetUnitSelectorText("0");
+        select.SetScale(0.06f);
         select.SetShown(true);
         name = m_name;
         FindNearbySystems();

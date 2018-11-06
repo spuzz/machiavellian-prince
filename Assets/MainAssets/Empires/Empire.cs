@@ -24,10 +24,31 @@ public class Empire : MonoBehaviour {
 
     // Resources
     [SerializeField] int gold;
-    void Start()
+    void Awake()
     {
         universe = FindObjectOfType<Universe>();
+        
+
+
+    }
+
+    void Start()
+    {
         universe.onDayChanged += ProcessDayChange;
+    }
+
+    void Update()
+    {
+        if (!m_currentLeader && m_allPotentialLeaders.Count > 0)
+        {
+            UpdateLeader(m_allPotentialLeaders[0]);
+
+        }
+
+    }
+
+    public void FindChildren()
+    {
         m_allPotentialLeaders = new List<Leader>(GetComponentsInChildren<Leader>());
 
         armies = new List<Army>(GetComponentsInChildren<Army>());
@@ -49,17 +70,11 @@ public class Empire : MonoBehaviour {
                 colonyShip.GetComponent<MovementController>().SetLocation(m_ownedSystems[0]);
             }
         }
-
     }
 
-    void Update()
+    public void PickLeader()
     {
-        if (!m_currentLeader && m_allPotentialLeaders.Count > 0)
-        {
-            UpdateLeader(m_allPotentialLeaders[0]);
-
-        }
-
+        UpdateLeader(m_allPotentialLeaders[UnityEngine.Random.Range(0, m_allPotentialLeaders.Count)]);
     }
 
     public void DestroyEmpire()

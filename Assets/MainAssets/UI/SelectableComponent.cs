@@ -84,9 +84,11 @@ public class SelectableComponent : MonoBehaviour {
             
             changeText = false;
         }
-
         transform.LookAt(cameraToLookAt.transform);
         transform.rotation = Quaternion.LookRotation(cameraToLookAt.transform.forward);
+        transform.position = transform.parent.position + (Vector3.forward * 2) + Vector3.up * 0.1f;
+
+
     }
 
     public void Selected()

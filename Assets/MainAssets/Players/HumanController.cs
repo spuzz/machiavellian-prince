@@ -67,7 +67,7 @@ public class HumanController : MonoBehaviour {
     {
 
         Agent agent = selectedObject.GetComponent<Agent>();
-        if (agent)
+        if (agent && agent.GetPlayer() == this.player)
         {
             selectedAgent = agent;
         }

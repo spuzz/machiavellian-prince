@@ -34,14 +34,18 @@ public class Universe : MonoBehaviour {
     float timeSinceLastDay;
 
     private GameObject selected;
+
+
     private Shader shaderOutline;
     private Shader shaderNoOutline;
+    private List<Empire> empires;
+    private List<Player> players;
 
-    
     SolarSystem[] systems;
 
     SpeedUI speedUI;
 
+    bool gameOver = false;
     public float GetMaxTravelDistance()
     {
         return maxTravelDistance;
@@ -59,13 +63,96 @@ public class Universe : MonoBehaviour {
         timeSinceLastDay = 0;
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        if (!gameOver)
+        {
+            timeSinceLastDay += Time.deltaTime * speedUI.GetSpeed();
+            int daysPassed = 0;
+            while (timeSinceLastDay > timePerDay)
+            {
+                daysPassed++;
+                currentDay++;
+                timeSinceLastDay -= timePerDay;
+            }
 
+            if (daysPassed > 0)
+            {
+                onDayChanged(daysPassed);
+            }
+        }
+
+
+    }
     private void CreateUniverse()
     {
         GenerateSystems();
         GenerateBorders();
+        GenerateEmpires();
+        GeneratePlayers();
+        EmpireFindChildren();
+        EmpirePickLeaders();
+        AssignPlayerEmpires();
+        PlayerHireInitialAgents();
+
     }
 
+    private void PlayerHireInitialAgents()
+    {
+        foreach(Player player in players)
+        {
+            player.HireInitialAgents();
+        }
+    }
+
+    private void EmpireFindChildren()
+    {
+        foreach (Empire empire in empires)
+        {
+            empire.FindChildren();
+        }
+    }
+
+    private void GeneratePlayers()
+    {
+        players = FindObjectsOfType<Player>().ToList();
+    }
+
+    private void AssignPlayerEmpires()
+    {
+        if (players.Count > empires.Count)
+        {
+            throw new InvalidProgramException();
+        }
+
+        int count = 0;
+        foreach(Player player in players)
+        {
+            player.TakeControlOfEmpire(empires[count]);
+            count++;
+        }
+    }
+
+    private void EmpirePickLeaders()
+    {
+        foreach(Empire empire in empires)
+        {
+            empire.PickLeader();
+        }
+    }
+
+    // TODO: temp code to get Empires from demo scene
+
+    private void GenerateEmpires()
+    {
+        empires = FindObjectsOfType<Empire>().ToList();
+    }
+
+    public IEnumerable<Empire> GetEmpires()
+    {
+        return empires;
+    }
 
     // TODO: temp code to get systems from demo scene
     private void GenerateSystems()
@@ -149,28 +236,11 @@ public class Universe : MonoBehaviour {
         
     }
 
-    // Update is called once per frame
-    void Update () {
 
-        
-        timeSinceLastDay += Time.deltaTime * speedUI.GetSpeed();
-        int daysPassed = 0;
-        while(timeSinceLastDay > timePerDay)
-        {
-            daysPassed++;
-            currentDay++;
-            timeSinceLastDay -= timePerDay;
-        }
-
-        if(daysPassed > 0)
-        {
-            onDayChanged(daysPassed);
-        }
-    }
 
     public void CheckEndGame()
     {
-        Empire[] empires = FindObjectsOfType<Empire>();
+        
         int empiresAlive = 0;
         foreach(Empire empire in empires)
         {
@@ -185,7 +255,22 @@ public class Universe : MonoBehaviour {
         }
     }
 
+    public void GameOver()
+    {
+        Debug.Log("GameOver");
+    }
+    public Empire GetNeutralEmpire()
+    {
+        foreach(Empire empire in empires)
+        {
+            if(empire.GetLeader().ControlledBy() == null)
+            {
+                return empire;
+            }
+        }
+        return null;
 
+    }
 
     public delegate void OnDayChanged(int days); // declare new delegate type
     public event OnDayChanged onDayChanged; // instantiate an observer set

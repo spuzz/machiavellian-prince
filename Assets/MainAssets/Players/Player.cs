@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,16 +16,74 @@ public class Player : MonoBehaviour {
     List<Leader> leadersControlled = new List<Leader>();
     int systemsControlled;
     int empiresControlled;
-    private void Start()
+    List<Empire> empires = new List<Empire>();
+    bool alive = true;
+
+    private void Awake()
     {
         universe = FindObjectOfType<Universe>();
-        HireAgent(AgentTypes[0]);
+        empiresControlled = 0;
+    }
 
+    private void Start()
+    {
         universe.onSystemOwnerChanged += OnSystemChange;
         universe.onLeaderLoyaltyChanged += OnLeaderLoyaltyChange;
         universe.onLeaderDeath += OnLeaderDeath;
         universe.onEmpireLeaderChange += OnEmpireLeaderChange;
+
     }
+
+    private void Update()
+    {
+        if(alive && empires.Count == 0)
+        {
+            PlayerLost();
+        }
+    }
+
+    public void TakeControlOfEmpire(Empire empire)
+    {
+        foreach (Leader leader in empire.GetPotentialLeaders())
+        {
+            leader.IncreaseInfluence(this, 1000);
+            OnLeaderLoyaltyChange(leader);
+        }
+        UpdateStats();
+    }
+
+    public void HireInitialAgents()
+    {
+        HireAgent(AgentTypes[0]);
+    }
+
+    private void PlayerLost()
+    {
+        if(IsHumanPlayer())
+        {
+            universe.GameOver();
+        }
+        else
+        {
+            alive = false;
+            foreach(GameObject agent in agents)
+            {
+                Destroy(agent);
+            }
+            agents.Clear();
+        }
+    }
+
+    public bool IsHumanPlayer()
+    {
+        if(GetComponent<HumanController>())
+        {
+            return true;
+        }
+        return false;
+    }
+
+
 
     public int GetPlayerNumber() { return playerNumber;  }
     public string GetPlayerName() { return playerName; }
@@ -74,16 +133,19 @@ public class Player : MonoBehaviour {
     {
         if(gold >= agentConfig.GetCost())
         {
-            GameObject agent = Instantiate(agentConfig.GetAgentPrefab());
-            agent.GetComponent<Agent>().SetPlayer(this);
-            //agent.GetComponent<Agent>().SetTargetSystem(system);
-            agent.GetComponent<Agent>().SetAgentName("Agent Smith");
+            GameObject agent = Instantiate(agentConfig.GetAgentPrefab(),transform.Find("Agents"));
+            Agent agentComponent = agent.GetComponent<Agent>();
+            agentComponent.SetPlayer(this);
+            agent.transform.position = empires[0].GetSystems()[0].transform.position;
+            agentComponent.SetTargetSystem(empires[0].GetSystems()[0]);
+            agentComponent.SetAgentName("Agent Smith");
             foreach(AbilityConfig ability in agentConfig.GetAbilities())
             {
-                agent.GetComponent<Agent>().AddAbility(ability);
+                agentComponent.AddAbility(ability);
             }
-            agent.GetComponent<Agent>().SetPortrait(agentConfig.GetRandomPortrait());
+            agentComponent.SetPortrait(agentConfig.GetRandomPortrait());
             agents.Add(agent);
+            
             gold -= agentConfig.GetCost();
             return true;
         }
@@ -97,12 +159,14 @@ public class Player : MonoBehaviour {
     {
         empiresControlled = 0;
         systemsControlled = 0;
+        empires.Clear();
         foreach (Leader leader in leadersControlled)
         {
             if (leader.IsInControl())
             {
                 Empire empire = leader.GetEmpire();
                 empiresControlled += 1;
+                empires.Add(empire);
                 systemsControlled += empire.GetTotalSystemsControlled();
             }
 
