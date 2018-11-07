@@ -13,7 +13,7 @@ namespace RPG.Characters
 
         public override AbilityBehaviour GetBehaviourComponent(GameObject gameObjectToAttachTo)
         {
-            return gameObjectToAttachTo.AddComponent<DefaultBehaviour>();
+            return gameObjectToAttachTo.AddComponent<BribeBehaviour>();
         }
 
         public float GetInfluence()

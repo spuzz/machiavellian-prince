@@ -7,14 +7,17 @@ public class AbilityButton : MonoBehaviour {
 
     [SerializeField] AbilityConfig abilityConfig;
     [SerializeField] Image icon;
+    MissionDialog missionDialog;
     Image buttonImage;
     Button button;
+    HumanController humanController;
     private void Awake()
     {
         buttonImage = GetComponent<Image>();
         button = GetComponent<Button>();
-
-        if(abilityConfig)
+        missionDialog = FindObjectOfType<MissionDialog>();
+        humanController = FindObjectOfType<HumanController>();
+        if (abilityConfig)
         {
             TurnOnButton();
         }
@@ -34,6 +37,12 @@ public class AbilityButton : MonoBehaviour {
     public void ActivateAbility()
     {
 
+        Agent selectedAgent = humanController.GetSelectedAgent();
+        if (selectedAgent && abilityConfig)
+        {
+            missionDialog.UseAbility(abilityConfig, selectedAgent,selectedAgent.GetCurrentSystem().gameObject);
+        }
+       
     }
 
     public void TurnOnButton()

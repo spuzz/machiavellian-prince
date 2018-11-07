@@ -17,6 +17,7 @@ public class HumanController : MonoBehaviour {
 
     SystemUI systemUI;
     AgentUI agentUI;
+
     void Start () {
         player = GetComponent<Player>();
         systemUI = FindObjectOfType<SystemUI>();
@@ -25,6 +26,29 @@ public class HumanController : MonoBehaviour {
         var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
         cameraRaycaster.onMouseOverSystem += ProcessMouseOverSystem;
         cameraRaycaster.onMouseRightClicked += ProcessMouseRightClick;
+    }
+
+    void Update()
+    {
+        if (!selectedAgent && player.GetTotalAgents() > 0)
+        {
+            GameObject agent = player.GetAgent(0);
+            SelectObject(agent);
+            agentUI.SelectAgent(agent.GetComponent<Agent>());
+        }
+        goldText.SetText(player.GetGold().ToString());
+        agentText.SetText(player.GetTotalAgents().ToString());
+        leadersText.SetText(player.GetTotalLeadersControlled().ToString());
+        empireText.SetText(player.GetEmpiresControlled().ToString());
+        systemText.SetText(player.GetSystemsControlled().ToString());
+
+
+
+    }
+
+    public Agent GetSelectedAgent()
+    {
+        return selectedAgent;
     }
 
     private void ProcessMouseOverSystem(SolarSystem system)
@@ -45,23 +69,7 @@ public class HumanController : MonoBehaviour {
     }
 
 
-    // Update is called once per frame
-    void Update () {
-        if (!selectedAgent && player.GetTotalAgents() > 0)
-        {
-            GameObject agent = player.GetAgent(0);
-            SelectObject(agent);
-            agentUI.SelectAgent(agent.GetComponent<Agent>());
-        }
-        goldText.SetText(player.GetGold().ToString());
-        agentText.SetText(player.GetTotalAgents().ToString());
-        leadersText.SetText(player.GetTotalLeadersControlled().ToString());
-        empireText.SetText(player.GetEmpiresControlled().ToString());
-        systemText.SetText(player.GetSystemsControlled().ToString());
 
-
-
-    }
 
     public void SelectObject(GameObject selectedObject)
     {

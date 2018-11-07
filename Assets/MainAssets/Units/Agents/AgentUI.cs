@@ -21,7 +21,7 @@ public class AgentUI : MonoBehaviour {
             {
                 EnableAbilities(true);
             }
-            else if( buttonsEnabled == true)
+            else if(!currentAgent.GetCurrentSystem() && buttonsEnabled == true)
             {
                 EnableAbilities(false);
             }

@@ -29,9 +29,9 @@ public abstract class AbilityConfig : ScriptableObject
         behaviour.SetConfig(this);
     }
 
-    public void Use(GameObject target = null)
+    public void Use(GameObject target = null, Agent agent = null)
     {
-        behaviour.Use(target);
+        behaviour.Use(target, agent);
     }
 
     public float GetCost()

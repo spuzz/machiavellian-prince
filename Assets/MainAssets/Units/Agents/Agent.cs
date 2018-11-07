@@ -23,7 +23,8 @@ public class Agent : MonoBehaviour
         aICharacterControl = GetComponent<AICharacterControl>();
         select = GetComponentInChildren<SelectableComponent>();
         agentUI = FindObjectOfType<AgentUI>();
-        
+
+
     }
 
     private void Start()
@@ -127,6 +128,7 @@ public class Agent : MonoBehaviour
 
     public void AddAbility(AbilityConfig ability)
     {
+        ability.AddComponent(gameObject);
         abilities.Add(ability);
     }
     public IEnumerable<AbilityConfig> GetAbilities()

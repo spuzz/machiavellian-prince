@@ -94,6 +94,16 @@ public class Player : MonoBehaviour {
         return gold;
     }
 
+    public bool UseGold(int cost)
+    {
+        if(gold < cost)
+        {
+            return false;
+        }
+        gold -= cost;
+        return true;
+    }
+
     public int GetTotalAgents()
     {
         return agents.Count;
