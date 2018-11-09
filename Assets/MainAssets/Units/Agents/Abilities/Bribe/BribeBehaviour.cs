@@ -31,9 +31,9 @@ namespace RPG.Characters
                 leader.IncreaseInfluence(agent.GetPlayer(), (config as BribeConfig).GetInfluence());
             }
             
-            PlayParticleEffect();
-            PlayAbilitySound();
-            PlayAnimation();
+            PlayParticleEffect(agent.gameObject);
+            PlayAbilitySound(agent.gameObject);
+            PlayAnimation(agent.gameObject);
         }
     }
 }

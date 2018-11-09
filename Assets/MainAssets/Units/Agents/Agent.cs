@@ -15,35 +15,29 @@ public class Agent : MonoBehaviour
     [SerializeField] float stoppingDistance = 2.0f;
     [SerializeField] SolarSystem systemLocation;
 
-    AICharacterControl aICharacterControl;
+    AgentMovementController agentMovementController;
+    AbilityController abilityController;
     AgentUI agentUI;
     SelectableComponent select;
     private void Awake()
     {
-        aICharacterControl = GetComponent<AICharacterControl>();
+        agentMovementController = GetComponent<AgentMovementController>();
         select = GetComponentInChildren<SelectableComponent>();
         agentUI = FindObjectOfType<AgentUI>();
-
+        abilityController = FindObjectOfType<AbilityController>();
 
     }
 
     private void Start()
     {
-        
+        agentMovementController.onReachedTarget += OnReachTarget;
         select.UpdateName(agentName);
         select.SetScale(0.15f);
         select.SetShown(true);
        
     }
 
-    private void Update()
-    {
-        if(targetSystem && Vector3.Distance(transform.position,targetSystem.transform.position) <= stoppingDistance)
-        {
-            OnReachTargetSystem();
-        }
-    }
-    private void OnReachTargetSystem()
+    private void OnReachTarget()
     {
         if(targetSystem)
         {
@@ -51,6 +45,7 @@ public class Agent : MonoBehaviour
             systemLocation.AddAgent(this);
         }
         targetSystem = null;
+        
     }
 
     public Player GetPlayer()
@@ -94,7 +89,7 @@ public class Agent : MonoBehaviour
 
     public void SetTargetSystem(SolarSystem system)
     {
-        aICharacterControl.SetTarget(system.transform.position);
+        agentMovementController.SetTarget(system.transform.position);
         if (targetSystem)
         {
             targetSystem.RemoveAgent(this);
@@ -106,7 +101,7 @@ public class Agent : MonoBehaviour
 
     public void SetTarget(Vector3 position)
     {
-        aICharacterControl.SetTarget(position);
+        agentMovementController.SetTarget(position);
         if (targetSystem)
         {
             targetSystem.RemoveAgent(this);
@@ -128,7 +123,7 @@ public class Agent : MonoBehaviour
 
     public void AddAbility(AbilityConfig ability)
     {
-        ability.AddComponent(gameObject);
+        abilityController.AddAbilityConfig(ability);
         abilities.Add(ability);
     }
     public IEnumerable<AbilityConfig> GetAbilities()

@@ -89,6 +89,11 @@ public class Empire : MonoBehaviour {
             colonyShips[0].DestroyColonyShip();
         }
 
+        while (m_allPotentialLeaders.Count != 0)
+        {
+            m_allPotentialLeaders[0].KillLeader();
+        }
+
         FindObjectOfType<Universe>().CheckEndGame();
     }
 

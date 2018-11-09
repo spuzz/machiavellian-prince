@@ -15,14 +15,14 @@ public abstract class AbilityBehaviour : MonoBehaviour
         config = configToSet;
     }
 
-    protected void PlayParticleEffect()
+    protected void PlayParticleEffect(GameObject gameObjectTarget)
     {
         GameObject particles = config.GetParticlePrefab();
 
         if (particles != null)
         {
-            var particleObject = Instantiate(particles, gameObject.transform.position, particles.transform.rotation);
-            particleObject.transform.parent = transform;
+            var particleObject = Instantiate(particles, gameObjectTarget.transform.position, particles.transform.rotation);
+            particleObject.transform.parent = gameObjectTarget.transform;
             particleObject.GetComponent<ParticleSystem>().Play();
             StartCoroutine(DestroyParticleWhenFinished(particleObject));
         }
@@ -38,14 +38,14 @@ public abstract class AbilityBehaviour : MonoBehaviour
         yield return new WaitForEndOfFrame();
     }
 
-    protected void PlayAbilitySound()
+    protected void PlayAbilitySound(GameObject gameObjectTarget)
     {
         var abilitySound = config.GetRandomAudioClip();
-        var audioSource = GetComponent<AudioSource>();
+        var audioSource = gameObjectTarget.GetComponent<AudioSource>();
         audioSource.PlayOneShot(abilitySound);
     }
 
-    protected void PlayAnimation()
+    protected void PlayAnimation(GameObject gameObjectTarget)
     {
         //var abilityAnimation = config.GetAbilityAnimation();
         //var overrideController = GetComponent<Character>().GetOverrideController();

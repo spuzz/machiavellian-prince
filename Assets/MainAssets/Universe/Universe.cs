@@ -241,6 +241,22 @@ public class Universe : MonoBehaviour {
     public void CheckEndGame()
     {
         
+        foreach(Player player in players)
+        {
+            List<Player> playersAlive = players.FindAll(c => c.IsAlive() == true);
+            if(playersAlive.Count == 1)
+            {
+                if(playersAlive[0].IsHumanPlayer())
+                {
+                    Victory();
+                }
+                else
+                {
+                    GameOver();
+                }
+            }
+        }
+
         int empiresAlive = 0;
         foreach(Empire empire in empires)
         {
@@ -251,6 +267,7 @@ public class Universe : MonoBehaviour {
         }
         if (empiresAlive <= 1)
         {
+            Debug.Log("Shouldn't get here");
             SceneManager.LoadScene(0);
         }
     }
@@ -258,7 +275,15 @@ public class Universe : MonoBehaviour {
     public void GameOver()
     {
         Debug.Log("GameOver");
+        SceneManager.LoadScene(0);
     }
+
+    public void Victory()
+    {
+        Debug.Log("Victory");
+        SceneManager.LoadScene(0);
+    }
+
     public Empire GetNeutralEmpire()
     {
         foreach(Empire empire in empires)

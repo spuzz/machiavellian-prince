@@ -43,7 +43,6 @@ public class HumanController : MonoBehaviour {
         systemText.SetText(player.GetSystemsControlled().ToString());
 
 
-
     }
 
     public Agent GetSelectedAgent()

@@ -42,6 +42,10 @@ public class Player : MonoBehaviour {
         }
     }
 
+    public bool IsAlive()
+    {
+        return alive;
+    }
     public void TakeControlOfEmpire(Empire empire)
     {
         foreach (Leader leader in empire.GetPotentialLeaders())
@@ -71,6 +75,7 @@ public class Player : MonoBehaviour {
                 Destroy(agent);
             }
             agents.Clear();
+            universe.CheckEndGame();
         }
     }
 
@@ -185,7 +190,7 @@ public class Player : MonoBehaviour {
 
     private void OnSystemChange(SolarSystem system)
     {
-        systemsControlled = 0;
+    
         UpdateStats();
     }
 
@@ -201,6 +206,7 @@ public class Player : MonoBehaviour {
         {
             leadersControlled.Add(leader);
         }
+        UpdateStats();
     }
 
     private void OnLeaderDeath(Leader leader)
@@ -209,6 +215,7 @@ public class Player : MonoBehaviour {
         {
             leadersControlled.Remove(leader);
         }
+        UpdateStats();
     }
 
     private void OnEmpireLeaderChange(Empire empire, Leader leader)

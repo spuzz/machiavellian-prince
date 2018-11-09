@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114434258942715286}
   - component: {fileID: 23460315754395812}
   - component: {fileID: 33141043807553572}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Corona
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37,7 +37,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4308624966377732}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Thick Corona
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 114831256288232574}
   - component: {fileID: 23198893998092444}
   - component: {fileID: 33597365721304424}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Corona (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 114931852663579294}
   - component: {fileID: 23403424519442566}
   - component: {fileID: 33547779755149850}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Corona (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 23165254098215304}
   - component: {fileID: 114776703169909600}
   - component: {fileID: 114286564029936620}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4920343994569714}
   - component: {fileID: 108715480877642636}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 198328460646118856}
   - component: {fileID: 199832320901755236}
   - component: {fileID: 114156063795313762}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Star
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4772633467773268}
   - component: {fileID: 114102785705747888}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: UISocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 114902440289911314}
   - component: {fileID: 23585955475912604}
   - component: {fileID: 33465549022648858}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Corona (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,7 +180,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4560204034409336}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TravelRoutes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 114642226530522776}
   - component: {fileID: 23341475488781862}
   - component: {fileID: 33580957789020202}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Corona (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -214,7 +214,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4645392816005836}
   - component: {fileID: 114985958366617232}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1512818379177648}
-  m_LocalRotation: {x: -0.59300953, y: -0, z: -0, w: 0.8051955}
+  m_LocalRotation: {x: -0.6505795, y: -0, z: -0, w: 0.75943816}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
