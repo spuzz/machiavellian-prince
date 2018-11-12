@@ -27,9 +27,6 @@ public class Empire : MonoBehaviour {
     void Awake()
     {
         universe = FindObjectOfType<Universe>();
-        
-
-
     }
 
     void Start()

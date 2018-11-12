@@ -51,7 +51,7 @@ Shader "Unlit/AlphaMask" {
 						fixed4 col = tex2D(_MainTex, i.texcoord);
 
 
-						return fixed4(col.r, col.g, col.b, 0.8 - col.r);
+						return fixed4(0.2, 0.2, 0.2, 0.8 - col.r);
 					}
 				ENDCG
 			}

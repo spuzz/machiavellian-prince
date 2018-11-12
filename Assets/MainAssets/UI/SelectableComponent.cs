@@ -22,6 +22,8 @@ public class SelectableComponent : MonoBehaviour {
     float scale = 0.1f;
     Color color = Color.white;
     bool showCanvas;
+    bool visible = false;
+    bool onMap = false;
     void Start()
     {
         cameraToLookAt = Camera.main;
@@ -66,7 +68,30 @@ public class SelectableComponent : MonoBehaviour {
     public void SetShown(bool show)
     {
         changeText = true;
-        showCanvas = show;
+        onMap = show;
+        if (visible && onMap)
+        {
+            showCanvas = true;
+        }
+        else
+        {
+            showCanvas = false;
+        }
+        
+    }
+
+    public void SetVisible(bool vis)
+    {
+        changeText = true;
+        visible = vis;
+        if(onMap && visible)
+        {
+            showCanvas = true;
+        }
+        else
+        {
+            showCanvas = false;
+        }
     }
     private void LateUpdate()
     {

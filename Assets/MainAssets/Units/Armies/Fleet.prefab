@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4402885085794898}
   - component: {fileID: 114396348228878812}
   - component: {fileID: 114549267200033650}
+  - component: {fileID: 135715622332832552}
   m_Layer: 0
   m_Name: Fleet
   m_TagString: Untagged
@@ -112,3 +113,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyCanvasPrefab: {fileID: 1122356316611208, guid: ac7d95046188a7a46af7f4e8e71b925c,
     type: 2}
+--- !u!135 &135715622332832552
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1283125283680274}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}

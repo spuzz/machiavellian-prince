@@ -11,8 +11,13 @@ public class Player : MonoBehaviour {
     [SerializeField] List<GameObject> agents;
     [SerializeField] List<AgentConfig> AgentTypes;
     [SerializeField] long gold;
+    [SerializeField] bool isVisible = false;
 
+    List<GameObject> visibleObjects = new List<GameObject>();
+    
     Universe universe;
+    FogCamera fogCamera;
+
     List<Leader> leadersControlled = new List<Leader>();
     int systemsControlled;
     int empiresControlled;
@@ -22,6 +27,8 @@ public class Player : MonoBehaviour {
     private void Awake()
     {
         universe = FindObjectOfType<Universe>();
+        fogCamera = FindObjectOfType<FogCamera>();
+
         empiresControlled = 0;
     }
 
@@ -39,7 +46,13 @@ public class Player : MonoBehaviour {
         if(alive && empires.Count == 0)
         {
             PlayerLost();
+            return;
         }
+        if (alive && isVisible)
+        {
+            UpdateVisiblity();
+        }
+
     }
 
     public bool IsAlive()
@@ -88,8 +101,29 @@ public class Player : MonoBehaviour {
         return false;
     }
 
+    public void SetVislble(bool visible)
+    {
+        isVisible = visible;
+        if (isVisible)
+        {
+            foreach (GameObject agent in agents)
+            {
+                fogCamera.AddObject(agent.transform);
+            }
+        }
+        else
+        {
+            foreach (GameObject agent in agents)
+            {
+                fogCamera.RemoveObject(agent.transform);
+            }
+        }
+    }
 
-
+    public bool IsVisible()
+    {
+        return isVisible;
+    }
     public int GetPlayerNumber() { return playerNumber;  }
     public string GetPlayerName() { return playerName; }
     public Color GetPlayerColor() { return playerColor; }
@@ -162,6 +196,12 @@ public class Player : MonoBehaviour {
             agents.Add(agent);
             
             gold -= agentConfig.GetCost();
+
+            if(isVisible)
+            {
+                fogCamera.AddObject(agent.transform);
+            }
+            
             return true;
         }
         else
@@ -186,11 +226,20 @@ public class Player : MonoBehaviour {
             }
 
         }
+
     }
+
+    private void UpdateVisiblity()
+    {
+        foreach(GameObject agent in agents)
+        {
+            fogCamera.UpdateObject(agent);
+        }
+    }
+
 
     private void OnSystemChange(SolarSystem system)
     {
-    
         UpdateStats();
     }
 

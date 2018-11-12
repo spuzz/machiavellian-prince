@@ -15,6 +15,7 @@ public class Universe : MonoBehaviour {
     [SerializeField] float maxTravelDistance = 1000.0f;
     [SerializeField] float borderDistance = 20.0f;
 
+    FogCamera fogCamera;
     public int mainPlayer = 1;
     int currentDay;
     public delegate void OnSystemOwnerChanged(SolarSystem system); 
@@ -49,6 +50,11 @@ public class Universe : MonoBehaviour {
     public float GetMaxTravelDistance()
     {
         return maxTravelDistance;
+    }
+
+    private void Awake()
+    {
+        fogCamera = FindObjectOfType<FogCamera>();
     }
     void Start () {
         currentDay = 1;
@@ -95,7 +101,19 @@ public class Universe : MonoBehaviour {
         EmpirePickLeaders();
         AssignPlayerEmpires();
         PlayerHireInitialAgents();
+        PlayerSetVisible();
 
+    }
+
+    private void PlayerSetVisible()
+    {
+        foreach (Player player in players)
+        {
+            if(player.IsHumanPlayer())
+            {
+                player.SetVislble(true);
+            }
+        }
     }
 
     private void PlayerHireInitialAgents()
@@ -209,21 +227,83 @@ public class Universe : MonoBehaviour {
     public void SystemChange(SolarSystem system)
     {
         onSystemOwnerChanged(system);
+        if (system.GetEmpire().GetLeader().ControlledBy() && system.GetEmpire().GetLeader().ControlledBy().IsVisible())
+        {
+            AddSystemToVisible(system);
+        }
+        else
+        {
+            RemoveSystemFromVisible(system);
+        }
+    }
+
+    private void AddSystemToVisible(SolarSystem system)
+    {
+        fogCamera.AddObject(system.transform);
+        foreach(SolarSystem neighbour in system.GetNearbySystems())
+        {
+            fogCamera.AddObject(neighbour.transform);
+        }
+    }
+
+    private void RemoveSystemFromVisible(SolarSystem system)
+    {
+        fogCamera.RemoveObject(system.transform);
+        foreach (SolarSystem neighbour in system.GetNearbySystems())
+        {
+            bool stillVisible = false;
+            foreach(SolarSystem neighboursNeighbour in neighbour.GetNearbySystems())
+            {
+                Empire empire = neighboursNeighbour.GetEmpire();
+                if (empire && empire.GetLeader().ControlledBy() && empire.GetLeader().ControlledBy().IsVisible() == true)
+                {
+                    stillVisible = true;
+                }
+            }
+            if(stillVisible == false)
+            {
+                fogCamera.RemoveObject(neighbour.transform);
+            }
+            
+        }
     }
 
     public void LeaderLoyaltyChange(Leader leader)
     {
         onLeaderLoyaltyChanged(leader);
+        UpdateEmpireVisibility(leader.GetEmpire());
+    }
+
+    private void UpdateEmpireVisibility(Empire empire)
+    {
+        if (empire.GetLeader().ControlledBy() && empire.GetLeader().ControlledBy().IsVisible())
+        {
+            foreach (SolarSystem system in empire.GetSystems())
+            {
+                AddSystemToVisible(system);
+            }
+        }
+        else
+        {
+            
+            foreach (SolarSystem system in empire.GetSystems())
+            {
+                RemoveSystemFromVisible(system);
+            }
+        }
+
     }
 
     public void LeaderDeath(Leader leader)
     {
         onLeaderDeath(leader);
+        UpdateEmpireVisibility(leader.GetEmpire());
     }
 
     public void EmpireLeaderChange(Empire empire, Leader leader)
     {
         onEmpireLeaderChange(empire, leader);
+        UpdateEmpireVisibility(leader.GetEmpire());
     }
 
 
