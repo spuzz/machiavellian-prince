@@ -55,6 +55,11 @@ public class Player : MonoBehaviour {
 
     }
 
+    public SolarSystem GetHomeSystem()
+    {
+        return empires[0].GetSystems()[0];
+    }
+
     public bool IsAlive()
     {
         return alive;

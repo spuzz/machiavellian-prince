@@ -30,8 +30,7 @@ public class Universe : MonoBehaviour {
     public delegate void OnEmpireLeaderChange(Empire empire, Leader leader);
     public event OnEmpireLeaderChange onEmpireLeaderChange;
 
-    private int xSize = 100;
-    private int ySize = 100;
+    private Vector3 mapSize = new Vector3(100.0f, 0 , 100.0f);
     float timeSinceLastDay;
 
     private GameObject selected;
@@ -91,6 +90,11 @@ public class Universe : MonoBehaviour {
 
 
     }
+
+    public Vector3 GetMapSize()
+    {
+        return mapSize;
+    }
     private void CreateUniverse()
     {
         GenerateSystems();
@@ -102,7 +106,23 @@ public class Universe : MonoBehaviour {
         AssignPlayerEmpires();
         PlayerHireInitialAgents();
         PlayerSetVisible();
+        SetCamera();
 
+    }
+
+    private void SetCamera()
+    {
+        CameraController camera = FindObjectOfType<CameraController>();
+        camera.SetMapSize(mapSize);
+        foreach(Player player in players)
+        {
+            if(player.IsHumanPlayer())
+            {
+                SolarSystem homeSystem = player.GetHomeSystem();
+                camera.SetPosition(new Vector3(homeSystem.transform.position.x, 0, homeSystem.transform.position.z));
+            }
+        }
+        
     }
 
     private void PlayerSetVisible()

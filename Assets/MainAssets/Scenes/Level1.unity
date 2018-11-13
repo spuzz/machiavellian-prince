@@ -4596,6 +4596,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 672cce6a075db834ea7156c6ead832d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxDistance: 300
+  minDistance: 50
+  scrollSpeed: 30
+  mapWidthLimitOnZoomedIn: 1
+  mapHeightLimitOnZoomedIn: 1
+  mapWidthLimitOnZoomedOut: 0
+  mapHeightLimitOnZoomedOut: 0
 --- !u!4 &1546422154 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4671750867870028, guid: 68426e088882b2b44ba1d8e3279ba79e,

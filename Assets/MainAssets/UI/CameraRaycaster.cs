@@ -11,6 +11,7 @@ public class CameraRaycaster : MonoBehaviour {
     [SerializeField] Texture2D systemCursor = null;
 
     Rect screenRect = new Rect(0, 0, Screen.width, Screen.height);
+
     // New Delegates
     public delegate void OnMouseOverSystem(SolarSystem system); // declare new delegate type
     public event OnMouseOverSystem onMouseOverSystem; // instantiate an observer set
@@ -18,10 +19,11 @@ public class CameraRaycaster : MonoBehaviour {
     public delegate void OnMouseRightClicked(Ray ray); // declare new delegate type
     public event OnMouseRightClicked onMouseRightClicked; // instantiate an observer set
 
-                                                      // Update is called once per frame
+                                       
     void Update () {
         screenRect = new Rect(0, 0, Screen.width, Screen.height);
         // Check if pointer is over an interactable UI element
+
         if (EventSystem.current.IsPointerOverGameObject())
         {
             // Impiment UI Interaction
@@ -31,6 +33,8 @@ public class CameraRaycaster : MonoBehaviour {
             PerformRayCasts();
         }
     }
+
+
 
     void PerformRayCasts()
     {
