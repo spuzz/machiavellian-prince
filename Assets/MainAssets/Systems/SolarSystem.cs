@@ -25,6 +25,7 @@ public class SolarSystem : MonoBehaviour {
     [SerializeField] Empire empire;
     [SerializeField] int baseDefence = 100;
     [SerializeField] GameObject travelRoutePrefab;
+    [SerializeField] GameObject outline;
     GameObject border;
     Player m_owner;
     Star star;
@@ -87,6 +88,7 @@ public class SolarSystem : MonoBehaviour {
         select.SetShown(true);
         name = m_name;
         FindNearbySystems();
+        outline.SetActive(false);
 
     }
 
@@ -300,6 +302,19 @@ public class SolarSystem : MonoBehaviour {
             agents.Remove(agent);
         }
     }
+
+    public void SelectSystem(bool select)
+    {
+        if(select)
+        {
+            outline.SetActive(true);
+        }
+        else
+        {
+            outline.SetActive(false);
+        }
+    }
+
     private void SetOwner()
     {
         if(empire)

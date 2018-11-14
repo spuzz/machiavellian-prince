@@ -12,24 +12,33 @@ public class AgentMovementController : MonoBehaviour {
     SpeedUI speedUI;
     Vector3 target;
     bool moving = false;
+    Transform targetTransform;
+    MeshRenderer meshRenderer;
     // Update is called once per frame
 
     private void Awake()
     {
         speedUI = FindObjectOfType<SpeedUI>();
+        targetTransform = FindObjectOfType<TargetTransform>().transform;
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
     }
     void Update ()
     {
         if(moving)
         {
             UpdatePosition();
+            
         }
+
         
+
     }
 
     public void SetTarget(Vector3 newTarget)
     {
         target = newTarget;
+        targetTransform.position = target;
+        meshRenderer.transform.LookAt(targetTransform);
         moving = true;
     }
 

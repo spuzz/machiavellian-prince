@@ -13,19 +13,27 @@ public class HumanController : MonoBehaviour {
     [SerializeField] TextMeshProUGUI empireText;
     [SerializeField] TextMeshProUGUI systemText;
     [SerializeField] MeshCollider movementPlane;
+
     Agent selectedAgent;
 
     SystemUI systemUI;
     AgentUI agentUI;
+    HUD hud;
 
-    void Start () {
-        player = GetComponent<Player>();
+    private void Awake()
+    {
+        hud = FindObjectOfType<HUD>();
         systemUI = FindObjectOfType<SystemUI>();
         agentUI = FindObjectOfType<AgentUI>();
+    }
+    void Start () {
+        player = GetComponent<Player>();
+
 
         var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
         cameraRaycaster.onMouseOverSystem += ProcessMouseOverSystem;
         cameraRaycaster.onMouseRightClicked += ProcessMouseRightClick;
+
     }
 
     void Update()
@@ -34,7 +42,7 @@ public class HumanController : MonoBehaviour {
         {
             GameObject agent = player.GetAgent(0);
             SelectObject(agent);
-            agentUI.SelectAgent(agent.GetComponent<Agent>());
+            hud.SelectObject(agent);
         }
         goldText.SetText(player.GetGold().ToString());
         agentText.SetText(player.GetTotalAgents().ToString());
@@ -70,10 +78,10 @@ public class HumanController : MonoBehaviour {
 
 
 
-    public void SelectObject(GameObject selectedObject)
+    public void SelectObject(GameObject selectObject)
     {
 
-        Agent agent = selectedObject.GetComponent<Agent>();
+        Agent agent = selectObject.GetComponent<Agent>();
         if (agent && agent.GetPlayer() == this.player)
         {
             selectedAgent = agent;

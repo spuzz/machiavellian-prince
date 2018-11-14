@@ -14,18 +14,24 @@ public class Agent : MonoBehaviour
     [SerializeField] Sprite portrait;
     [SerializeField] float stoppingDistance = 2.0f;
     [SerializeField] SolarSystem systemLocation;
+    [SerializeField] MeshRenderer mesh;
+    [SerializeField] Material meshMaterial;
 
+    MeshRenderer renderer;
     AgentMovementController agentMovementController;
     AbilityController abilityController;
     AgentUI agentUI;
     SelectableComponent select;
+
+
+
     private void Awake()
     {
         agentMovementController = GetComponent<AgentMovementController>();
         select = GetComponentInChildren<SelectableComponent>();
         agentUI = FindObjectOfType<AgentUI>();
         abilityController = FindObjectOfType<AbilityController>();
-
+        renderer = GetComponentInChildren<MeshRenderer>();
     }
 
     private void Start()
@@ -34,7 +40,7 @@ public class Agent : MonoBehaviour
         select.UpdateName(agentName);
         select.SetScale(0.15f);
         select.SetShown(true);
-       
+
     }
 
     private void OnReachTarget()
@@ -121,6 +127,25 @@ public class Agent : MonoBehaviour
         portrait = sprite;
     }
 
+
+    public void SelectAgent(bool select)
+    {
+        List<Material> materials = new List<Material>();
+        renderer.GetMaterials(materials);
+        if (select)
+        {
+            materials.Add(meshMaterial);
+        }
+        else
+        {
+            if(materials.Count > 1)
+            {
+                materials.Remove(materials[1]);
+            }
+            
+        }
+        renderer.materials = materials.ToArray();
+    }
     public void AddAbility(AbilityConfig ability)
     {
         abilityController.AddAbilityConfig(ability);
