@@ -37,6 +37,7 @@ GameObject:
   - component: {fileID: 114782035467463608}
   - component: {fileID: 114523309782625746}
   - component: {fileID: 114004033617517662}
+  - component: {fileID: 114401473169580356}
   m_Layer: 0
   m_Name: Empire
   m_TagString: Untagged
@@ -140,6 +141,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2bdff956063bb3489b716086ff3ebe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114401473169580356
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1450198476770086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2729e8cf4b9abe84690e42464b92aafb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goldPerc: 0
+  gold: 0
+  playerGoldPerc: 0
+  playerGold: 0
+  defencePerc: 0
+  defence: 0
+  buildingCostPerc: 0
+  buildingCost: 0
+  unitCostPerc: 0
+  unitCost: 0
+  abilityCostPerc: 0
+  abilityCost: 0
+  abilitySuccessPerc: 0
 --- !u!114 &114523309782625746
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -44,7 +44,8 @@ public class Universe : MonoBehaviour {
     SolarSystem[] systems;
 
     SpeedUI speedUI;
-
+    SystemUI systemUI;
+    HUD hud;
     bool gameOver = false;
     public float GetMaxTravelDistance()
     {
@@ -54,6 +55,8 @@ public class Universe : MonoBehaviour {
     private void Awake()
     {
         fogCamera = FindObjectOfType<FogCamera>();
+        systemUI = FindObjectOfType<SystemUI>();
+        hud = FindObjectOfType<HUD>();
     }
     void Start () {
         currentDay = 1;
@@ -106,11 +109,12 @@ public class Universe : MonoBehaviour {
         AssignPlayerEmpires();
         PlayerHireInitialAgents();
         PlayerSetVisible();
-        SetCamera();
+        SetUI();
 
     }
 
-    private void SetCamera()
+
+    private void SetUI()
     {
         CameraController camera = FindObjectOfType<CameraController>();
         camera.SetMapSize(mapSize);
@@ -120,6 +124,7 @@ public class Universe : MonoBehaviour {
             {
                 SolarSystem homeSystem = player.GetHomeSystem();
                 camera.SetPosition(new Vector3(homeSystem.transform.position.x, 0, homeSystem.transform.position.z));
+                hud.SelectObject(homeSystem.gameObject);
             }
         }
         
@@ -155,6 +160,13 @@ public class Universe : MonoBehaviour {
     private void GeneratePlayers()
     {
         players = FindObjectsOfType<Player>().ToList();
+        foreach(Player player in players)
+        {
+            if(player.IsHumanPlayer())
+            {
+                systemUI.SetPlayer(player);
+            }
+        }
     }
 
     private void AssignPlayerEmpires()

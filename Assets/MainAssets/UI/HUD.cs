@@ -9,13 +9,15 @@ public class HUD : MonoBehaviour {
     AgentUI agentUI;
     GameObject currentObjectSelected;
 
-    void Start()
+    private void Awake()
     {
-        GetComponent<Canvas>().enabled = true;
         systemUI = FindObjectOfType<SystemUI>();
         armyUI = FindObjectOfType<ArmyUI>();
         agentUI = FindObjectOfType<AgentUI>();
-
+    }
+    void Start()
+    {
+        GetComponent<Canvas>().enabled = true;
     }
 
     // Update is called once per frame
@@ -30,7 +32,7 @@ public class HUD : MonoBehaviour {
         if (system)
         {
             systemUI.gameObject.SetActive(true);
-            systemUI.SetSystem(system);
+            systemUI.UpdateSystem(system);
             system.SelectSystem(true);
             SelectNewObject(system.gameObject);
             return;

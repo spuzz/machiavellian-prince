@@ -9,14 +9,6 @@ public class SystemUI : MonoBehaviour {
     [SerializeField] SolarSystem system;
 
     [SerializeField] TextMeshProUGUI systemName;
-    [SerializeField] TextMeshProUGUI empireName;
-    [SerializeField] TextMeshProUGUI pop;
-    [SerializeField] TextMeshProUGUI food;
-    [SerializeField] TextMeshProUGUI power;
-    [SerializeField] TextMeshProUGUI armies;
-    [SerializeField] TextMeshProUGUI offence;
-    [SerializeField] TextMeshProUGUI defence;
-    [SerializeField] TextMeshProUGUI economy;
     [SerializeField] Button buildQueue;
     [SerializeField] Image buildProgress;
 
@@ -24,55 +16,36 @@ public class SystemUI : MonoBehaviour {
 
     [SerializeField] ArmyUI armyUI;
 
-    EmpireUI empireUI;
+    [SerializeField] Player player;
+
+    [SerializeField] List<PlayerBuildingButton> playerBuildingButtons;
+    //EmpireUI empireUI;
     BuildController buildController;
-    
-
-    public SolarSystem GetSystem()
+    PlayerBuildingController playerBuildingController;
+    PlayerBuildingDialog playerBuildingDialog;
+    IEnumerable<PlayerBuilding> playerBuildings;
+    private void Awake()
     {
-        return system;
+        playerBuildingController = GetComponent<PlayerBuildingController>();
+        buildController = system.GetComponent<BuildController>();
+        playerBuildingDialog = FindObjectOfType<PlayerBuildingDialog>();
+        playerBuildingButtons = new List<PlayerBuildingButton>(GetComponentsInChildren<PlayerBuildingButton>());
     }
-
-    public void SetSystem(SolarSystem nSystem)
-    {
-        this.system = nSystem;
-
-       
-    }
-
     void Start()
     {
         var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
         cameraRaycaster.onMouseOverSystem += ProcessMouseOverSystem;
 
-        empireUI = FindObjectOfType<EmpireUI>();
+            
         armyUI = FindObjectOfType<ArmyUI>();
     }
 
-    // Update is called once per frame
-    void Update () {
+    void Update()
+    {
         empire = system.GetEmpire();
-        buildController = system.GetComponent<BuildController>();
-        pop.text = system.GetCurrentPopulation().ToString();
-        food.text = system.GetFoodAvailable().ToString();
-        power.text = system.GetPowerAvailable().ToString();
+        
         systemName.text = system.GetName().ToString();
-        if(empire)
-        {
-            empireName.text = empire.GetName().ToString();
-            empireUI.SetEmpire(empire);
-            empireUI.gameObject.SetActive(true);
-        }
-        else
-        {
-            empireName.text = "None";
-            empireUI.gameObject.SetActive(false);
-        }
-        armies.text = system.GetTotalArmies().ToString();
-        offence.text = system.GetOffence().ToString();
-        defence.text = system.GetDefence().ToString();
-        economy.text = system.GetNetIncome().ToString();
-        if(!buildController.IsBuilding())
+        if (!buildController.IsBuilding())
         {
             buildQueue.gameObject.SetActive(false);
             buildProgress.gameObject.SetActive(false);
@@ -84,16 +57,52 @@ public class SystemUI : MonoBehaviour {
             buildProgress.gameObject.SetActive(true);
             buildProgress.fillAmount = 1.0f - (float)buildController.GetDaysLeftToBuild() / (float)buildController.GetBuildingInConstruction().GetBuildTime();
         }
+
+
         armyUI.SetArmies(system.GetArmies());
+
+        foreach (PlayerBuilding building in playerBuildings)
+        {
+            playerBuildingButtons[building.GetBuildingNumber()].TurnOnButton(building);
+        }
     }
 
 
+    public SolarSystem GetSystem()
+    {
+        return system;
+    }
+
+    public void UpdateSystem(SolarSystem nSystem)
+    {
+        this.system = nSystem;
+        playerBuildings = system.GetComponent<PlayerBuildingController>().GetPlayerBuildings(player);
+
+        for(int buildingNumber = 0; buildingNumber < 5; buildingNumber++)
+        {
+            playerBuildingButtons[buildingNumber].TurnOffButton();
+        }
+
+    }
+
+    public void BuildingSelected(PlayerBuildingButton playerBuildingButton, bool isEmpty)
+    {
+        if(isEmpty)
+        {
+            int buildingNumber = playerBuildingButtons.FindIndex(c => c == playerBuildingButton);
+            playerBuildingDialog.Activate(system, player,buildingNumber);
+        }
+    }
+    public void SetPlayer(Player player)
+    {
+        this.player = player;
+    }
 
     private void ProcessMouseOverSystem(SolarSystem system)
     {
         if (Input.GetMouseButton(0) == true)
         {
-            SetSystem(system);
+            UpdateSystem(system);
         }
     }
 }
