@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: CorporationEffect2
   m_EditorClassIdentifier: 
   goldPerc: 10
-  gold: 50
-  playerGoldPerc: 1
+  gold: 10
+  playerGoldPerc: 10
   playerGold: 5
   defencePerc: 0
   defence: 0

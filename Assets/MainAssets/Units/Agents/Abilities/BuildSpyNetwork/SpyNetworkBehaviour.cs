@@ -16,9 +16,16 @@ namespace RPG.Characters
             }
             Leader leader;
             SolarSystem system = target.GetComponent<SolarSystem>();
+            Player player = agent.GetPlayer();
+
+            if(!player.UseGold(Convert.ToInt32(config.GetCost())))
+            {
+                return;
+            }
+
             if(system)
             {
-                //system.GetComponent<PlayerBuildingController>().BuildPlayerBuilding((config as SpyNetworkConfig).GetSpyNetworkConfig(),agent.GetPlayer());
+                system.GetComponent<PlayerBuildingController>().BuildSpyNetwork(player);
 
             }
              

@@ -16,6 +16,7 @@ MonoBehaviour:
   Name: Assassin
   baseCost: 100
   abilities:
+  - {fileID: 11400000, guid: b424c3c90fcfb144ea75abf3385c5da0, type: 2}
   - {fileID: 11400000, guid: 6b4f4607bbd0d554eb99a30ffc91c4cc, type: 2}
   portraits:
   - {fileID: 21300000, guid: feef51b154a79a94b9cb3ce0b049dda7, type: 3}

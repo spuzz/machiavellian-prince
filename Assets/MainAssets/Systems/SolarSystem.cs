@@ -34,6 +34,7 @@ public class SolarSystem : MonoBehaviour {
     List<Army> armies = new List<Army>();
     List<SolarSystem> nearbySystems = new List<SolarSystem>();
     List<TravelRoute> travelRoutes = new List<TravelRoute>();
+    Effects effects;
 
     void Awake()
     {
@@ -72,6 +73,7 @@ public class SolarSystem : MonoBehaviour {
         star.SetTemperature(temp);
         starScale = UnityEngine.Random.Range(0.5f, 2.0f);
         star.transform.localScale = new Vector3(starScale, starScale, starScale);
+        effects = GetComponent<Effects>();
     }
 
 
@@ -389,8 +391,12 @@ public class SolarSystem : MonoBehaviour {
 
     public int GetNetIncome()
     {
-        return income - maintenance;
+        float effectsOnIncome = effects.gold;
+        effectsOnIncome += empire.GetComponent<Effects>().gold;
+        float incomeAfterEffects = (income + effectsOnIncome) * (100f + (empire.GetComponent<Effects>().goldPerc + effects.goldPerc))/ 100f;
+        return Convert.ToInt32(incomeAfterEffects);
     }
+
     private void CalculateProduction()
     {
         if(empire)

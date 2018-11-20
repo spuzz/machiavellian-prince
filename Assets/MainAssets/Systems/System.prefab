@@ -876,6 +876,8 @@ MonoBehaviour:
   maxPlayerBuildings: 5
   playerBuildingGameObject: {fileID: 1622625469169822, guid: 4d6596ba3299cdb4bb0ae54b036bd6f5,
     type: 2}
+  spyNetworkBuilding: {fileID: 1205155468467356, guid: d8cfb68f245f2f344a0f61b9af3b42ee,
+    type: 2}
 --- !u!114 &114286564029936620
 MonoBehaviour:
   m_ObjectHideFlags: 1

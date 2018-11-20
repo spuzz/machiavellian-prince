@@ -19,11 +19,14 @@ public class PlayerBuildingButton : MonoBehaviour {
     {
         systemUI = FindObjectOfType<SystemUI>();
     }
-    public void TurnOnButton(PlayerBuilding playerBuilding)
+    public void UpdateButtons(PlayerBuilding playerBuilding)
     {
+        button.gameObject.SetActive(true);
+        upgradeButton.gameObject.SetActive(true);
         button.interactable = true;
         icon.sprite = playerBuilding.GetImage();
         upgradeButton.interactable = true;
+
     }
 
     public void SetInteractable(bool interact)
@@ -35,8 +38,21 @@ public class PlayerBuildingButton : MonoBehaviour {
 
     public void TurnOffButton()
     {
+        button.gameObject.SetActive(true);
+        upgradeButton.gameObject.SetActive(true);
         icon.sprite = DefaultImage;
+        button.interactable = true;
         upgradeButton.interactable = false;
+
+    }
+
+    public void HideButton()
+    {
+        
+        button.interactable = false;
+        button.gameObject.SetActive(false);
+        upgradeButton.interactable = false;
+        upgradeButton.gameObject.SetActive(false);
     }
 
     public void OnButtonClick()

@@ -19,6 +19,8 @@ public class SystemUI : MonoBehaviour {
     [SerializeField] Player player;
 
     [SerializeField] List<PlayerBuildingButton> playerBuildingButtons;
+
+    [SerializeField] TextMeshProUGUI noSpyNetworkText;
     //EmpireUI empireUI;
     BuildController buildController;
     PlayerBuildingController playerBuildingController;
@@ -63,7 +65,7 @@ public class SystemUI : MonoBehaviour {
 
         foreach (PlayerBuilding building in playerBuildings)
         {
-            playerBuildingButtons[building.GetBuildingNumber()].TurnOnButton(building);
+            playerBuildingButtons[building.GetBuildingNumber()].UpdateButtons(building);
         }
     }
 
@@ -76,12 +78,27 @@ public class SystemUI : MonoBehaviour {
     public void UpdateSystem(SolarSystem nSystem)
     {
         this.system = nSystem;
-        playerBuildings = system.GetComponent<PlayerBuildingController>().GetPlayerBuildings(player);
-
-        for(int buildingNumber = 0; buildingNumber < 5; buildingNumber++)
+        PlayerBuildingController playerBuildingController = system.GetComponent<PlayerBuildingController>();
+        if (playerBuildingController.GetPlayerSpyNetwork(player))
         {
-            playerBuildingButtons[buildingNumber].TurnOffButton();
+            noSpyNetworkText.gameObject.SetActive(false);
+            playerBuildings = playerBuildingController.GetPlayerBuildings(player);
+
+            for (int buildingNumber = 0; buildingNumber < 5; buildingNumber++)
+            {
+                playerBuildingButtons[buildingNumber].TurnOffButton();
+            }
         }
+        else
+        {
+            playerBuildings = new List<PlayerBuilding>();
+            for (int buildingNumber = 0; buildingNumber < 5; buildingNumber++)
+            {
+                playerBuildingButtons[buildingNumber].HideButton();
+            }
+            noSpyNetworkText.gameObject.SetActive(true);
+        }
+
 
     }
 

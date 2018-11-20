@@ -6,41 +6,62 @@ public class PlayerBuildingController : MonoBehaviour {
 
     [SerializeField] int maxPlayerBuildings = 5;
     Dictionary<Player, List<PlayerBuilding>> playerBuildings = new Dictionary<Player, List<PlayerBuilding>>();
+    Dictionary<Player,SpyNetwork> playerSpyNetworks = new Dictionary<Player, SpyNetwork>();
     [SerializeField] GameObject playerBuildingGameObject;
-    bool isBuilding = false;
+    [SerializeField] GameObject spyNetworkBuilding;
     int daysLeftOnBuild = 0;
     PlayerBuildingConfig currentConfig;
 
-    public bool IsBuilding()
-    {
-        return isBuilding;
-    }
 
     public IEnumerable<PlayerBuilding> GetPlayerBuildings(Player player)
     {
-        if(!playerBuildings.ContainsKey(player))
+        if (playerBuildings.ContainsKey(player))
         {
-            playerBuildings.Add(player,new List<PlayerBuilding>());
+            return playerBuildings[player];
         }
-        return playerBuildings[player];
+        else
+        {
+            return new List<PlayerBuilding>();
+        }
+        
+    }
+
+    public SpyNetwork GetPlayerSpyNetwork(Player player)
+    {
+        if(playerSpyNetworks.ContainsKey(player))
+        {
+            return playerSpyNetworks[player];
+        }
+        return null;
+    }
+
+    public bool BuildSpyNetwork(Player player)
+    {
+        if(playerSpyNetworks.ContainsKey(player))
+        {
+            return false;
+        }
+        SpyNetwork spyNetwork = Instantiate(spyNetworkBuilding, transform.Find("PlayerBuildings")).GetComponent<SpyNetwork>();
+        playerSpyNetworks.Add(player, spyNetwork);
+        playerBuildings.Add(player, new List<PlayerBuilding>());
+        player.AddSystemWithBuildings(GetComponent<SolarSystem>());
+        return true;
     }
 
     public bool BuildPlayerBuilding(PlayerBuildingConfig playerBuildingConfig, Player player, int buildingNumber)
     {
-        if(isBuilding == true)
+
+        if(!playerSpyNetworks.ContainsKey(player))
         {
             return false;
         }
 
-        if(!playerBuildings.ContainsKey(player))
-        {
-            playerBuildings.Add(player, new List<PlayerBuilding>());
-        }
-
-        if(playerBuildings[player].Count >= maxPlayerBuildings)
+        if (playerBuildings[player].Count >= maxPlayerBuildings)
         {
             return false;
         }
+
+
 
 
         PlayerBuilding playerBuilding = Instantiate(playerBuildingGameObject, transform.Find("PlayerBuildings")).GetComponent<PlayerBuilding>();
@@ -53,17 +74,4 @@ public class PlayerBuildingController : MonoBehaviour {
 
     }
 
-    public void OnDayChange(int days)
-    {
-        if (IsBuilding())
-        {
-            daysLeftOnBuild -= days;
-            if (daysLeftOnBuild <= 0)
-            {
-                isBuilding = false;
-               
-            }
-        }
-
-    }
 }

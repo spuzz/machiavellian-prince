@@ -180,6 +180,7 @@ public class Universe : MonoBehaviour {
         foreach(Player player in players)
         {
             player.TakeControlOfEmpire(empires[count]);
+            empires[count].GetSystems()[0].GetComponent<PlayerBuildingController>().BuildSpyNetwork(player);
             count++;
         }
     }

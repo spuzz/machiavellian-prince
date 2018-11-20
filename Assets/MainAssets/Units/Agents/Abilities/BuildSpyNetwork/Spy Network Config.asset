@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c645b9fa0aa0a4140a8edc961f9bf212, type: 3}
   m_Name: Spy Network Config
   m_EditorClassIdentifier: 
-  cost: 0
+  cost: 500
   particlePrefab: {fileID: 1099143663832246, guid: 63c1d0155159aa64cb4810519b35da17,
     type: 2}
   abilityAnimation: {fileID: 0}
@@ -20,4 +20,4 @@ MonoBehaviour:
   abilityName: Build Spy Network
   targetType: 1
   buttonImage: {fileID: 21300000, guid: 348c0058fec5040f293b6731a46e86a2, type: 3}
-  spyNetworkConfig: {fileID: 11400000, guid: 3e944e7cae6fd4e43a7698d8a047cbea, type: 2}
+  spyNetworkConfig: {fileID: 0}

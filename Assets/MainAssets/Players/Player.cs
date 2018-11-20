@@ -14,7 +14,8 @@ public class Player : MonoBehaviour {
     [SerializeField] bool isVisible = false;
 
     List<GameObject> visibleObjects = new List<GameObject>();
-    
+    [SerializeField] List<SolarSystem> systemsWithBuildings = new List<SolarSystem>();
+
     Universe universe;
     FogCamera fogCamera;
 
@@ -38,8 +39,10 @@ public class Player : MonoBehaviour {
         universe.onLeaderLoyaltyChanged += OnLeaderLoyaltyChange;
         universe.onLeaderDeath += OnLeaderDeath;
         universe.onEmpireLeaderChange += OnEmpireLeaderChange;
+        universe.onDayChanged += OnDayChange;
 
     }
+
 
     private void Update()
     {
@@ -132,6 +135,11 @@ public class Player : MonoBehaviour {
     public int GetPlayerNumber() { return playerNumber;  }
     public string GetPlayerName() { return playerName; }
     public Color GetPlayerColor() { return playerColor; }
+
+    public void AddSystemWithBuildings(SolarSystem system)
+    {
+        systemsWithBuildings.Add(system);
+    }
 
     public long GetGold()
     {
@@ -242,6 +250,31 @@ public class Player : MonoBehaviour {
         }
     }
 
+    private void OnDayChange(int days)
+    {
+        int goldChange = 0;
+        foreach(SolarSystem system in systemsWithBuildings)
+        {
+            float systemGold = system.GetNetIncome() / 10.0f;
+            float percentageAdjustment = 100;
+            PlayerBuildingController playerBuildingController = system.GetComponent<PlayerBuildingController>();
+            foreach(PlayerBuilding playerBuilding in playerBuildingController.GetPlayerBuildings(this))
+            {
+                if(!playerBuilding.IsInConstrution())
+                {
+                    IEnumerable<BuildingEffectConfig> effects = playerBuilding.GetEffects();
+                    foreach (BuildingEffectConfig effect in effects)
+                    {
+                        systemGold += effect.GetPlayerGold();
+                        percentageAdjustment += effect.GetPlayerGoldPerc();
+                    }
+                }
+
+            }
+            goldChange += Convert.ToInt32(systemGold * (percentageAdjustment / 100f));
+        }
+        gold += goldChange;
+    }
 
     private void OnSystemChange(SolarSystem system)
     {
