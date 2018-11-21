@@ -20,6 +20,11 @@ public class Empire : MonoBehaviour {
     [SerializeField] GameObject fleetPrefab;
     Universe universe;
 
+    // New Delegates
+    public delegate void OnVisibleObjectUpdated(GameObject visibleObject, bool isVisible); // declare new delegate type
+    public event OnVisibleObjectUpdated onVisibleObjectupdated; // instantiate an observer set
+
+
     bool isAlive = true;
 
     // Resources
@@ -80,6 +85,7 @@ public class Empire : MonoBehaviour {
         while(armies.Count !=0)
         {
             armies[0].DestroyArmy();
+
         }
         while (colonyShips.Count != 0)
         {
@@ -195,6 +201,7 @@ public class Empire : MonoBehaviour {
         if(!m_ownedSystems.Find(c => c.GetName() == system.GetName()))
         {
             m_ownedSystems.Add(system);
+            UpdateVisibleObject(system.gameObject, true);
         }
         
     }
@@ -204,6 +211,7 @@ public class Empire : MonoBehaviour {
         if (m_ownedSystems.Find(c => c.GetName() == system.GetName()))
         {
             m_ownedSystems.Remove(system);
+            UpdateVisibleObject(system.gameObject, false);
         }
         if(m_ownedSystems.Count == 0)
         {
@@ -226,6 +234,7 @@ public class Empire : MonoBehaviour {
     public void RemoveArmy(Army army)
     {
         armies.Remove(army);
+        onVisibleObjectupdated(army.gameObject, false);
     }
 
     public float GetTotalArmyStrength()
@@ -273,10 +282,13 @@ public class Empire : MonoBehaviour {
     {
         ship.SetEmpire(this);
         colonyShips.Add(ship);
+        UpdateVisibleObject(ship.gameObject, true);
     }
+
     public void RemoveColonyShip(ColonyShip colonyShip)
     {
         colonyShips.Remove(colonyShip);
+        UpdateVisibleObject(colonyShip.gameObject, false);
     }
 
     public List<Leader> GetPotentialLeaders()
@@ -325,6 +337,16 @@ public class Empire : MonoBehaviour {
         army.SetEmpire(this);
         armies.Add(army);
         system.AddArmy(army);
+        UpdateVisibleObject(army.gameObject, true);
+
+    }
+
+    private void UpdateVisibleObject(GameObject visibleObject, bool visible)
+    {
+        if (onVisibleObjectupdated != null)
+        {
+            onVisibleObjectupdated(visibleObject, visible);
+        }
     }
 
     public int GetDefensiveArmies()

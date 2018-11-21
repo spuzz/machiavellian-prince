@@ -24,6 +24,12 @@ public class SelectableComponent : MonoBehaviour {
     bool showCanvas;
     bool visible = false;
     bool onMap = false;
+    FogCamera fogCamera;
+
+    private void Awake()
+    {
+        fogCamera = FindObjectOfType<FogCamera>();
+    }
     void Start()
     {
         cameraToLookAt = Camera.main;
@@ -95,7 +101,14 @@ public class SelectableComponent : MonoBehaviour {
     }
     private void LateUpdate()
     {
-        if(changeText == true)
+        if (visible)
+        {
+            if (fogCamera.IsGameObjectVisible(gameObject.transform.parent.gameObject) == false)
+            {
+                SetVisible(false);
+            }
+        }
+        if (changeText == true)
         {
             canvas.enabled = showCanvas;
             button.GetComponent<Image>().color = color;

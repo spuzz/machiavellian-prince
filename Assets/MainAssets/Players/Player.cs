@@ -18,7 +18,7 @@ public class Player : MonoBehaviour {
 
     Universe universe;
     FogCamera fogCamera;
-
+    PlayerVisibility playerVisibility;
     List<Leader> leadersControlled = new List<Leader>();
     int systemsControlled;
     int empiresControlled;
@@ -29,7 +29,7 @@ public class Player : MonoBehaviour {
     {
         universe = FindObjectOfType<Universe>();
         fogCamera = FindObjectOfType<FogCamera>();
-
+        
         empiresControlled = 0;
     }
 
@@ -50,10 +50,6 @@ public class Player : MonoBehaviour {
         {
             PlayerLost();
             return;
-        }
-        if (alive && isVisible)
-        {
-            UpdateVisiblity();
         }
 
     }
@@ -114,17 +110,27 @@ public class Player : MonoBehaviour {
         isVisible = visible;
         if (isVisible)
         {
-            foreach (GameObject agent in agents)
+            playerVisibility = GetComponent<PlayerVisibility>();
+            foreach(Empire empire in empires)
             {
-                fogCamera.AddObject(agent.transform);
+                playerVisibility.AddEmpire(empire);
+                foreach(SolarSystem system in empire.GetSystems())
+                {
+                    if(system.GetComponent<PlayerBuildingController>().GetPlayerSpyNetwork(this))
+                    {
+                        playerVisibility.AddObject(system.gameObject);
+                    }
+                }
             }
+            foreach(GameObject agent in agents)
+            {
+                playerVisibility.AddObject(agent);
+            }
+
         }
         else
         {
-            foreach (GameObject agent in agents)
-            {
-                fogCamera.RemoveObject(agent.transform);
-            }
+            playerVisibility = null;
         }
     }
 
@@ -132,6 +138,7 @@ public class Player : MonoBehaviour {
     {
         return isVisible;
     }
+
     public int GetPlayerNumber() { return playerNumber;  }
     public string GetPlayerName() { return playerName; }
     public Color GetPlayerColor() { return playerColor; }
@@ -212,7 +219,7 @@ public class Player : MonoBehaviour {
 
             if(isVisible)
             {
-                fogCamera.AddObject(agent.transform);
+                playerVisibility.AddObject(agent.gameObject);
             }
             
             return true;
@@ -227,28 +234,32 @@ public class Player : MonoBehaviour {
     {
         empiresControlled = 0;
         systemsControlled = 0;
-        empires.Clear();
-        foreach (Leader leader in leadersControlled)
+        foreach (Empire empire in empires)
         {
-            if (leader.IsInControl())
-            {
-                Empire empire = leader.GetEmpire();
-                empiresControlled += 1;
-                empires.Add(empire);
-                systemsControlled += empire.GetTotalSystemsControlled();
-            }
-
+            empiresControlled += 1;
+            systemsControlled += empire.GetTotalSystemsControlled();
         }
 
     }
 
-    private void UpdateVisiblity()
+    private void AddEmpire(Empire empire)
     {
-        foreach(GameObject agent in agents)
+        empires.Add(empire);
+        if(playerVisibility)
         {
-            fogCamera.UpdateObject(agent);
+            playerVisibility.AddEmpire(empire);
+        }
+
+    }
+    private void RemoveEmpire(Empire empire)
+    {
+        empires.Remove(empire);
+        if (playerVisibility)
+        {
+            playerVisibility.RemoveEmpire(empire);
         }
     }
+
 
     private void OnDayChange(int days)
     {
@@ -287,11 +298,19 @@ public class Player : MonoBehaviour {
         if(leadersControlled.Contains(leader))
         {
             leadersControlled.Remove(leader);
+            if (empires.Contains(leader.GetEmpire()))
+            {
+                RemoveEmpire(leader.GetEmpire());
+            }
         }
 
         if(leader.ControlledBy() == this)
         {
             leadersControlled.Add(leader);
+            if (!empires.Contains(leader.GetEmpire()))
+            {
+                AddEmpire(leader.GetEmpire());
+            }
         }
         UpdateStats();
     }
@@ -307,6 +326,21 @@ public class Player : MonoBehaviour {
 
     private void OnEmpireLeaderChange(Empire empire, Leader leader)
     {
+        if (leader.ControlledBy() == this)
+        {
+            if (!empires.Contains(empire))
+            {
+                AddEmpire(empire);
+            }
+        }
+        else
+        {
+            if (empires.Contains(empire))
+            {
+                RemoveEmpire(empire);
+            }
+        }
         UpdateStats();
     }
+
 }

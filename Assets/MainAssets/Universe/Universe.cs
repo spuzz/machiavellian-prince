@@ -273,32 +273,11 @@ public class Universe : MonoBehaviour {
     private void AddSystemToVisible(SolarSystem system)
     {
         fogCamera.AddObject(system.transform);
-        foreach(SolarSystem neighbour in system.GetNearbySystems())
-        {
-            fogCamera.AddObject(neighbour.transform);
-        }
     }
 
     private void RemoveSystemFromVisible(SolarSystem system)
     {
         fogCamera.RemoveObject(system.transform);
-        foreach (SolarSystem neighbour in system.GetNearbySystems())
-        {
-            bool stillVisible = false;
-            foreach(SolarSystem neighboursNeighbour in neighbour.GetNearbySystems())
-            {
-                Empire empire = neighboursNeighbour.GetEmpire();
-                if (empire && empire.GetLeader().ControlledBy() && empire.GetLeader().ControlledBy().IsVisible() == true)
-                {
-                    stillVisible = true;
-                }
-            }
-            if(stillVisible == false)
-            {
-                fogCamera.RemoveObject(neighbour.transform);
-            }
-            
-        }
     }
 
     public void LeaderLoyaltyChange(Leader leader)

@@ -69,7 +69,7 @@ public class HumanController : MonoBehaviour {
     private void ProcessMouseRightClick(Ray ray)
     {
         RaycastHit raycast = new RaycastHit();
-        if (selectedAgent && movementPlane.Raycast(ray, out raycast, 200))
+        if (selectedAgent && movementPlane.Raycast(ray, out raycast, 1200))
         {
             selectedAgent.SetTarget(raycast.point);
         }
