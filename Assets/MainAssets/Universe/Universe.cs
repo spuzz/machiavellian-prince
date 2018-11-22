@@ -56,6 +56,7 @@ public class Universe : MonoBehaviour {
     {
         fogCamera = FindObjectOfType<FogCamera>();
         systemUI = FindObjectOfType<SystemUI>();
+        speedUI = FindObjectOfType<SpeedUI>();
         hud = FindObjectOfType<HUD>();
     }
     void Start () {
@@ -67,7 +68,7 @@ public class Universe : MonoBehaviour {
 
         
         CreateUniverse();
-        speedUI = FindObjectOfType<SpeedUI>();
+        
         timeSinceLastDay = 0;
     }
 
@@ -94,6 +95,18 @@ public class Universe : MonoBehaviour {
 
     }
 
+    public float GetSpeed()
+    {
+        return speedUI.GetSpeed();
+    }
+    public int GetCurrentDay()
+    {
+        return currentDay;
+    }
+    public float GetTimePerDay()
+    {
+        return timePerDay;
+    }
     public Vector3 GetMapSize()
     {
         return mapSize;
@@ -107,7 +120,7 @@ public class Universe : MonoBehaviour {
         EmpireFindChildren();
         EmpirePickLeaders();
         AssignPlayerEmpires();
-        PlayerHireInitialAgents();
+        PlayerDefaultSetup();
         PlayerSetVisible();
         SetUI();
 
@@ -141,11 +154,17 @@ public class Universe : MonoBehaviour {
         }
     }
 
-    private void PlayerHireInitialAgents()
+    private void PlayerDefaultSetup()
     {
+
         foreach(Player player in players)
         {
-            player.HireInitialAgents();
+            GameObject playerBaseGameObject = Instantiate(player.GetPlayerBasePrefab(), player.transform.Find("PlayerBases"));
+            PlayerBase playerBase = playerBaseGameObject.GetComponent<PlayerBase>();
+            playerBase.SetPlayer(player);
+            playerBase.transform.position = player.GetHomeSystem().transform.position + RandomDirection();
+            player.AddPlayerBase(playerBase);
+            playerBase.HireAgent(playerBase.GetDefaultConfig());
         }
     }
 
@@ -391,4 +410,15 @@ public class Universe : MonoBehaviour {
 
     public delegate void OnDayChanged(int days); // declare new delegate type
     public event OnDayChanged onDayChanged; // instantiate an observer set
+
+    private Vector3 RandomDirection()
+    {
+        var x = UnityEngine.Random.Range(-1f, 1f);
+        var z = UnityEngine.Random.Range(-1f, 1f);
+        var distance = UnityEngine.Random.Range(4f, 8f);
+        var direction = new Vector3(x, 0f, z);
+        //if you need the vector to have a specific length:
+        direction = direction.normalized * distance;
+        return direction;
+    }
 }

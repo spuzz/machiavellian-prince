@@ -12,6 +12,7 @@ public class Player : MonoBehaviour {
     [SerializeField] List<AgentConfig> AgentTypes;
     [SerializeField] long gold;
     [SerializeField] bool isVisible = false;
+    [SerializeField] GameObject playerBasePrefab;
 
     List<GameObject> visibleObjects = new List<GameObject>();
     [SerializeField] List<SolarSystem> systemsWithBuildings = new List<SolarSystem>();
@@ -20,11 +21,12 @@ public class Player : MonoBehaviour {
     FogCamera fogCamera;
     PlayerVisibility playerVisibility;
     List<Leader> leadersControlled = new List<Leader>();
+    List<PlayerBase> playerBases = new List<PlayerBase>();
     int systemsControlled;
     int empiresControlled;
     List<Empire> empires = new List<Empire>();
     bool alive = true;
-
+    
     private void Awake()
     {
         universe = FindObjectOfType<Universe>();
@@ -42,7 +44,6 @@ public class Player : MonoBehaviour {
         universe.onDayChanged += OnDayChange;
 
     }
-
 
     private void Update()
     {
@@ -73,11 +74,31 @@ public class Player : MonoBehaviour {
         UpdateStats();
     }
 
-    public void HireInitialAgents()
+    public void AddPlayerBase(PlayerBase playerBase)
     {
-        HireAgent(AgentTypes[0]);
+        playerBases.Add(playerBase);
+        if (isVisible)
+        {
+            playerVisibility.AddObject(playerBase.gameObject);
+        }
     }
 
+    public GameObject GetPlayerBasePrefab()
+    {
+        return playerBasePrefab;
+    }
+
+
+    public void AddAgent(GameObject agent)
+    {
+        agents.Add(agent);
+
+
+        if (isVisible)
+        {
+            playerVisibility.AddObject(agent.gameObject);
+        }
+    }
     private void PlayerLost()
     {
         if(IsHumanPlayer())
@@ -125,6 +146,11 @@ public class Player : MonoBehaviour {
             foreach(GameObject agent in agents)
             {
                 playerVisibility.AddObject(agent);
+            }
+
+            foreach (PlayerBase playerBase in playerBases)
+            {
+                playerVisibility.AddObject(playerBase.gameObject);
             }
 
         }
@@ -198,37 +224,7 @@ public class Player : MonoBehaviour {
         return empiresControlled;
     }
 
-    public bool HireAgent(AgentConfig agentConfig)
-    {
-        if(gold >= agentConfig.GetCost())
-        {
-            GameObject agent = Instantiate(agentConfig.GetAgentPrefab(),transform.Find("Agents"));
-            Agent agentComponent = agent.GetComponent<Agent>();
-            agentComponent.SetPlayer(this);
-            agent.transform.position = empires[0].GetSystems()[0].transform.position;
-            agentComponent.SetTargetSystem(empires[0].GetSystems()[0]);
-            agentComponent.SetAgentName("Agent Smith");
-            foreach(AbilityConfig ability in agentConfig.GetAbilities())
-            {
-                agentComponent.AddAbility(ability);
-            }
-            agentComponent.SetPortrait(agentConfig.GetRandomPortrait());
-            agents.Add(agent);
-            
-            gold -= agentConfig.GetCost();
 
-            if(isVisible)
-            {
-                playerVisibility.AddObject(agent.gameObject);
-            }
-            
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
 
     private void UpdateStats()
     {

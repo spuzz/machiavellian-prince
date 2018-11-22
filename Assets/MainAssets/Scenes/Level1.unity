@@ -1122,41 +1122,36 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114387593807456930, guid: ee5c180b909dc74469bd5d042326d890,
+    - target: {fileID: 114887914697435482, guid: ee5c180b909dc74469bd5d042326d890,
         type: 2}
-      propertyPath: PlayerColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114387593807456930, guid: ee5c180b909dc74469bd5d042326d890,
+      propertyPath: goldText
+      value: 
+      objectReference: {fileID: 544117433}
+    - target: {fileID: 114887914697435482, guid: ee5c180b909dc74469bd5d042326d890,
         type: 2}
-      propertyPath: PlayerColor.g
-      value: 0.77205884
-      objectReference: {fileID: 0}
-    - target: {fileID: 114387593807456930, guid: ee5c180b909dc74469bd5d042326d890,
+      propertyPath: agentText
+      value: 
+      objectReference: {fileID: 1402993178}
+    - target: {fileID: 114887914697435482, guid: ee5c180b909dc74469bd5d042326d890,
         type: 2}
-      propertyPath: PlayerColor.b
-      value: 0.10116625
-      objectReference: {fileID: 0}
-    - target: {fileID: 114387593807456930, guid: ee5c180b909dc74469bd5d042326d890,
+      propertyPath: leadersText
+      value: 
+      objectReference: {fileID: 19173539}
+    - target: {fileID: 114887914697435482, guid: ee5c180b909dc74469bd5d042326d890,
         type: 2}
-      propertyPath: playerColor.r
-      value: 0.26600945
-      objectReference: {fileID: 0}
-    - target: {fileID: 114387593807456930, guid: ee5c180b909dc74469bd5d042326d890,
+      propertyPath: empireText
+      value: 
+      objectReference: {fileID: 912455932}
+    - target: {fileID: 114887914697435482, guid: ee5c180b909dc74469bd5d042326d890,
         type: 2}
-      propertyPath: playerColor.g
-      value: 0.8897059
-      objectReference: {fileID: 0}
-    - target: {fileID: 114387593807456930, guid: ee5c180b909dc74469bd5d042326d890,
+      propertyPath: systemText
+      value: 
+      objectReference: {fileID: 2062881665}
+    - target: {fileID: 114887914697435482, guid: ee5c180b909dc74469bd5d042326d890,
         type: 2}
-      propertyPath: playerColor.b
-      value: 0.18317476
-      objectReference: {fileID: 0}
-    - target: {fileID: 114387593807456930, guid: ee5c180b909dc74469bd5d042326d890,
-        type: 2}
-      propertyPath: gold
-      value: 1000
-      objectReference: {fileID: 0}
+      propertyPath: movementPlane
+      value: 
+      objectReference: {fileID: 2018229561}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee5c180b909dc74469bd5d042326d890, type: 2}
   m_IsPrefabAsset: 0
@@ -6593,7 +6588,8 @@ Prefab:
       propertyPath: gold
       value: 1000
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114887914697435482, guid: ee5c180b909dc74469bd5d042326d890, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: ee5c180b909dc74469bd5d042326d890, type: 2}
   m_IsPrefabAsset: 0
 --- !u!4 &625170066 stripped
@@ -12965,7 +12961,8 @@ Prefab:
       propertyPath: gold
       value: 1000
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114887914697435482, guid: ee5c180b909dc74469bd5d042326d890, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: ee5c180b909dc74469bd5d042326d890, type: 2}
   m_IsPrefabAsset: 0
 --- !u!4 &1320847800 stripped
@@ -14189,7 +14186,8 @@ Prefab:
       propertyPath: gold
       value: 1000
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114887914697435482, guid: ee5c180b909dc74469bd5d042326d890, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: ee5c180b909dc74469bd5d042326d890, type: 2}
   m_IsPrefabAsset: 0
 --- !u!4 &1466328711 stripped
@@ -14838,8 +14836,8 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1200
-  field of view: 30
+  far clip plane: 2100
+  field of view: 15
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -14894,10 +14892,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 672cce6a075db834ea7156c6ead832d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDistance: 1000
-  minDistance: 200
+  maxDistance: 2000
+  minDistance: 150
   startDistance: 300
-  scrollSpeed: 200
+  scrollSpeed: 300
   mapWidthLimitOnZoomedIn: 1
   mapHeightLimitOnZoomedIn: 1
   mapWidthLimitOnZoomedOut: 0
@@ -21564,28 +21562,6 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 2105563645}
   m_Script: {fileID: 11500000, guid: 23b689dca62bd0349a9d0be950805fe5, type: 3}
---- !u!1 &2109508595 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1028917090819386, guid: ee5c180b909dc74469bd5d042326d890,
-    type: 2}
-  m_PrefabInternal: {fileID: 82130322}
---- !u!114 &2109508596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2109508595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea90fe58325ddd9468fadf9af16e782d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  goldText: {fileID: 544117433}
-  agentText: {fileID: 1402993178}
-  leadersText: {fileID: 19173539}
-  empireText: {fileID: 912455932}
-  systemText: {fileID: 2062881665}
-  movementPlane: {fileID: 2018229561}
 --- !u!1 &2113021457
 GameObject:
   m_ObjectHideFlags: 0

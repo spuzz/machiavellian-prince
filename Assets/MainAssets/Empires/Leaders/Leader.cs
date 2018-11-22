@@ -16,7 +16,7 @@ public class Leader : MonoBehaviour{
     bool inControl;
     Universe universe;
 
-    void Start()
+    private void Awake()
     {
         personality.AddComponent(gameObject);
         empire = GetComponentInParent<Empire>();

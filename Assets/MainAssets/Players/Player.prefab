@@ -11,6 +11,21 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1028917090819386}
   m_IsPrefabAsset: 1
+--- !u!1 &1018851595303636
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4839235843290906}
+  m_Layer: 0
+  m_Name: PlayerBases
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1028917090819386
 GameObject:
   m_ObjectHideFlags: 0
@@ -21,6 +36,7 @@ GameObject:
   - component: {fileID: 4645934845947922}
   - component: {fileID: 114387593807456930}
   - component: {fileID: 114913914015064584}
+  - component: {fileID: 114887914697435482}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -62,13 +78,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1028917090819386}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4513468432162716}
+  - {fileID: 4839235843290906}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4839235843290906
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1018851595303636}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4645934845947922}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114387593807456930
 MonoBehaviour:
@@ -83,13 +113,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: Spuz
   playerNumber: 1
-  playerColor: {r: 0, g: 0, b: 0, a: 0}
+  playerColor: {r: 0.26600945, g: 0.8897059, b: 0.18317476, a: 0}
   agents: []
   AgentTypes:
   - {fileID: 11400000, guid: 845392894c9f5bd4aa16befe01caa343, type: 2}
-  gold: 0
+  gold: 1000
   isVisible: 0
+  playerBasePrefab: {fileID: 1430544025431896, guid: dc6dfd525d8a1854d9a9be97b1038705,
+    type: 2}
   systemsWithBuildings: []
+--- !u!114 &114887914697435482
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1028917090819386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea90fe58325ddd9468fadf9af16e782d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goldText: {fileID: 0}
+  agentText: {fileID: 0}
+  leadersText: {fileID: 0}
+  empireText: {fileID: 0}
+  systemText: {fileID: 0}
+  movementPlane: {fileID: 0}
 --- !u!114 &114913914015064584
 MonoBehaviour:
   m_ObjectHideFlags: 1

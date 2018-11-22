@@ -25,9 +25,10 @@ public class HumanController : MonoBehaviour {
         hud = FindObjectOfType<HUD>();
         systemUI = FindObjectOfType<SystemUI>();
         agentUI = FindObjectOfType<AgentUI>();
+        player = GetComponent<Player>();
     }
     void Start () {
-        player = GetComponent<Player>();
+        
 
 
         var cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
