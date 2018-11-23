@@ -11,15 +11,20 @@ public class PlayerBase : MonoBehaviour {
     [SerializeField] List<BaseModuleConfig> availableModules;
     [SerializeField] List<AgentConfig> availableAgentTypes;
     [SerializeField] int range = 100;
-
+    [SerializeField] Material meshMaterial;
     BuildTracker buildTracker;
 
     BaseModuleConfig baseModuleInConstruction = null;
     long trackerID;
+
+    
+
+    MeshRenderer renderer;
     private void Awake()
     {
         baseModules = new List<BaseModule>();
         buildTracker = GetComponent<BuildTracker>();
+        renderer = GetComponentInChildren<MeshRenderer>();
         buildTracker.onBuildComplete += onModuleFinished;
     }
 
@@ -48,6 +53,24 @@ public class PlayerBase : MonoBehaviour {
         return availableAgentTypes;
     }
 
+    public void SelectBase(bool select)
+    {
+        List<Material> materials = new List<Material>();
+        renderer.GetMaterials(materials);
+        if (select)
+        {
+            materials.Add(meshMaterial);
+        }
+        else
+        {
+            if (materials.Count > 1)
+            {
+                materials.Remove(materials[1]);
+            }
+
+        }
+        renderer.materials = materials.ToArray();
+    }
     public bool BuildModule(BaseModuleConfig baseModuleConfig)
     {
         if(baseModuleInConstruction)
@@ -142,7 +165,7 @@ public class PlayerBase : MonoBehaviour {
     {
         var x = UnityEngine.Random.Range(-1f, 1f);
         var z = UnityEngine.Random.Range(-1f, 1f);
-        var distance = UnityEngine.Random.Range(1f, 3f);
+        var distance = UnityEngine.Random.Range(5f, 10f);
         var direction = new Vector3(x, 0f, z);
         //if you need the vector to have a specific length:
         direction = direction.normalized * distance;

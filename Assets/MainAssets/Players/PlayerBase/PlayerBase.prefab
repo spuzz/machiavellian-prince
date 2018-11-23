@@ -200,6 +200,7 @@ MonoBehaviour:
   availableAgentTypes:
   - {fileID: 11400000, guid: 845392894c9f5bd4aa16befe01caa343, type: 2}
   range: 100
+  meshMaterial: {fileID: 2100000, guid: b93a73e3d0e7a6b4b9a3bc59f99f0ee2, type: 2}
 --- !u!114 &114593161164007624
 MonoBehaviour:
   m_ObjectHideFlags: 1

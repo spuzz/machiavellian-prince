@@ -38,7 +38,7 @@ public class Agent : MonoBehaviour
     {
         agentMovementController.onReachedTarget += OnReachTarget;
         select.UpdateName(agentName);
-        select.SetScale(0.15f);
+        select.SetScale(0.06f);
         select.SetShown(true);
 
     }
